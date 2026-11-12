@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b18">
+  <meta name="description" content="RIVORA — One World. Endless Cinema. Discover Bollywood, Hollywood and global entertainment.">
+  <title>RIVORA — One World. Endless Cinema.</title>
+  <style>
+    :root {
+      --bg:#080b18; --panel:#11172b; --panel-light:#171f39;
+      --cyan:#42d9ff; --purple:#9255ff; --text:#f5f6ff;
+      --muted:#a5aec7; --border:#28324f; --danger:#ff6b80;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+    body.modal-open{overflow:hidden}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+    header{min-height:76px;padding:15px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;position:sticky;top:0;z-index:20;background:rgba(8,11,24,.96);border-bottom:1px solid #202945;backdrop-filter:blur(12px)}
+    .logo{color:var(--cyan);background:linear-gradient(90deg,var(--cyan),#a78bfa);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;font-size:30px;font-weight:900;letter-spacing:2px}
+    nav{display:flex;align-items:center;gap:23px}
+    nav a,.nav-button{color:var(--muted);text-decoration:none;font-size:14px;background:none;border:0}
+    nav a:hover,.nav-button:hover{color:var(--cyan)}
+    .hero{min-height:410px;padding:80px 7%;display:flex;align-items:center;background:radial-gradient(ellipse at 82% 48%,rgba(115,58,205,.48),transparent 45%),radial-gradient(ellipse at 65% 100%,rgba(25,139,255,.18),transparent 48%),linear-gradient(110deg,#080b18,#101a38);border-bottom:1px solid var(--border)}
+    .hero-content{max-width:650px}
+    .eyebrow{color:var(--cyan);letter-spacing:4px;font-size:12px;margin-bottom:20px}
+    .hero h1{font-size:clamp(46px,9vw,82px);line-height:1;letter-spacing:2px;margin-bottom:18px}
+    .hero h1 span{color:var(--cyan)}
+    .hero p{color:var(--muted);line-height:1.7;max-width:470px}
+    .primary-button{margin-top:27px;padding:13px 23px;border:0;border-radius:30px;color:white;font-weight:700;background:linear-gradient(90deg,#168bff,#923cff)}
+    .primary-button:hover{filter:brightness(1.12)}
+    .section{padding:36px 6%}
+    .section-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:22px}
+    .section-heading h2{font-size:23px}
+    .section-heading h2::before{content:"";display:inline-block;width:4px;height:23px;background:var(--purple);margin-right:12px;vertical-align:middle;border-radius:5px}
+    .search-box{display:flex;gap:8px;width:min(100%,340px)}
+    .search-box input{min-width:0;width:100%;padding:11px 13px;color:white;background:var(--panel);border:1px solid #303957;border-radius:9px;outline:none}
+    .search-box input:focus{border-color:var(--cyan)}
+    .search-box button{padding:0 18px;color:white;background:var(--purple);border:0;border-radius:9px}
+    .filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+    .filter{padding:8px 17px;color:var(--muted);background:transparent;border:1px solid #303957;border-radius:20px}
+    .filter.active,.filter:hover{color:white;background:#7139d5;border-color:#7139d5}
+    .movie-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+    .movie-card{overflow:hidden;background:var(--panel);border:1px solid #252e49;border-radius:12px;transition:transform .25s,border-color .25s}
+    .movie-card:hover{transform:translateY(-5px);border-color:var(--cyan)}
+    .poster{height:190px;padding:15px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:23px;font-weight:900;letter-spacing:2px;background:linear-gradient(145deg,#152e63,#6429a5)}
+    .poster.p2{background:linear-gradient(145deg,#5a210f,#c14c22)}
+    .poster.p3{background:linear-gradient(145deg,#174c55,#17234e)}
+    .poster.p4{background:linear-gradient(145deg,#48204f,#132c5e)}
+    .movie-info{padding:14px}
+    .movie-info h3{font-size:16px;margin-bottom:8px}
+    .movie-info p{color:var(--muted);font-size:12px;line-height:1.5}
+    .secondary-button{margin-top:13px;padding:8px 12px;color:white;background:transparent;border:1px solid var(--purple);border-radius:7px}
+    .secondary-button:hover{background:rgba(146,85,255,.16)}
+    .empty{display:none;grid-column:1/-1;padding:40px 10px;color:var(--muted);text-align:center}
+    .about-copy{color:var(--muted);line-height:1.8}
+    footer{margin-top:30px;padding:35px 6%;color:var(--muted);text-align:center;line-height:2;font-size:13px;border-top:1px solid #252e49}
+    footer strong{color:var(--cyan);font-size:20px}
+    .modal{display:none;position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.85);backdrop-filter:blur(10px)}
+    .modal.open{display:flex}
+    .modal-content{position:relative;width:100%;max-width:510px;max-height:min(85vh,700px);overflow:auto;padding:29px;background:var(--panel);border:1px solid #7352dc;border-radius:18px;box-shadow:0 0 35px rgba(120,65,255,.2);animation:modalEnter .22s ease}
+    @keyframes modalEnter{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+    .modal-close{position:absolute;top:10px;right:15px;color:white;background:transparent;border:0;font-size:29px}
+    .modal-label{margin-bottom:17px;color:var(--cyan);font-size:11px;letter-spacing:3px}
+    .modal-content h2{margin-bottom:12px;font-size:30px;padding-right:24px}
+    .modal-content p{margin-bottom:17px;color:var(--muted);line-height:1.7}
+    .watchlist-button{padding:12px 20px;color:white;font-weight:700;background:linear-gradient(90deg,#168bff,#a32aff);border:0;border-radius:25px}
+    .watchlist-button:disabled{opacity:.8;cursor:default}
+    .list-items{display:grid;gap:10px;margin-top:15px}
+    .list-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;background:var(--panel-light);border:1px solid var(--border);border-radius:9px}
+    .list-item span{font-size:14px}
+    .remove-button{padding:7px 10px;color:#fff;background:transparent;border:1px solid var(--danger);border-radius:7px;font-size:12px}
+    .list-empty{color:var(--muted);line-height:1.6}
+    .status-message{min-height:18px;margin-top:10px;color:var(--muted);font-size:12px}
+    @media(max-width:800px){nav{gap:13px}nav a,.nav-button{font-size:12px}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:480px){header{padding:13px 5%;flex-wrap:wrap}.logo{font-size:25px}nav{order:2;width:100%;justify-content:space-between}.hero{min-height:330px;padding:55px 6%}.hero h1{font-size:49px}.section{padding:28px 5%}.section-heading{align-items:stretch}.search-box{width:100%}.poster{height:145px;font-size:18px}.modal-content{padding:25px 21px}}
+  </style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="#" aria-label="RIVORA home">RIVORA.</a>
+    <nav aria-label="Main navigation">
+      <a href="#">Home</a>
+      <a href="#movies">Movies</a>
+      <a href="#features">About</a>
+      <button class="nav-button" type="button" id="myListNav">My List</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">BOLLYWOOD • HOLLYWOOD • BEYOND</div>
+        <h1>RIVORA<span>.</span></h1>
+        <p>One World. Endless Cinema. Discover a new dimension of entertainment with stories from around the world.</p>
+        <button class="primary-button" type="button" id="exploreButton">Explore Movies →</button>
+      </div>
+    </section>
+
+    <section class="section" id="movies">
+      <div class="section-heading">
+        <h2>Explore Cinema</h2>
+        <div class="search-box">
+          <input type="search" id="searchInput" placeholder="Search movies..." aria-label="Search movies">
+          <button type="button" id="searchButton">Go</button>
+        </div>
+      </div>
+      <div class="filters" aria-label="Movie categories">
+        <button class="filter active" type="button" data-category="All" aria-pressed="true">All</button>
+        <button class="filter" type="button" data-category="Bollywood" aria-pressed="false">Bollywood</button>
+        <button class="filter" type="button" data-category="Hollywood" aria-pressed="false">Hollywood</button>
+        <button class="filter" type="button" data-category="Sci-Fi" aria-pressed="false">Sci-Fi</button>
+      </div>
+      <div class="movie-grid" id="movieGrid">
+        <article class="movie-card" data-title="The Last Kingdom" data-category="Bollywood">
+          <div class="poster">THE<br>LAST KINGDOM</div>
+          <div class="movie-info"><h3>The Last Kingdom</h3><p>Bollywood • Action • 2026</p><button class="secondary-button details-button" type="button" data-title="The Last Kingdom">View Details</button></div>
+        </article>
+        <article class="movie-card" data-title="Solar Drift" data-category="Hollywood">
+          <div class="poster p2">SOLAR<br>DRIFT</div>
+          <div class="movie-info"><h3>Solar Drift</h3><p>Hollywood • Adventure • 2026</p><button class="secondary-button details-button" type="button" data-title="Solar Drift">View Details</button></div>
+        </article>
+        <article class="movie-card" data-title="Beyond Earth" data-category="Sci-Fi">
+          <div class="poster p3">BEYOND<br>EARTH</div>
+          <div class="movie-info"><h3>Beyond Earth</h3><p>Sci-Fi • Mystery • 2026</p><button class="secondary-button details-button" type="button" data-title="Beyond Earth">View Details</button></div>
+        </article>
+        <article class="movie-card" data-title="Dark Horizon" data-category="Bollywood">
+          <div class="poster p4">DARK<br>HORIZON</div>
+          <div class="movie-info"><h3>Dark Horizon</h3><p>Bollywood • Thriller • 2026</p><button class="secondary-button details-button" type="button" data-title="Dark Horizon">View Details</button></div>
+        </article>
+        <div class="empty" id="emptyMessage" role="status">No matching movies found.</div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="section-heading"><h2>Enter The RIVORA Universe</h2></div>
+      <p class="about-copy">A global entertainment discovery platform. Explore cinema across languages, cultures and genres. More stories. More discoveries. One universe.</p>
+    </section>
+  </main>
+
+  <footer>
+    <strong>RIVORA.</strong>
+    <p>ONE WORLD. ENDLESS CINEMA.</p>
+    <p>Only authorized movie information and viewing links.</p>
+    <p>© <span id="currentYear">2026</span> RIVORA. All rights reserved.</p>
+  </footer>
+
+  <div class="modal" id="movieModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" type="button" id="closeMovieModal" aria-label="Close">&times;</button>
+      <div class="modal-label">RIVORA CINEMA EXPERIENCE</div>
+      <h2 id="modalTitle">Movie Title</h2>
+      <p id="modalCategory"></p>
+      <p id="modalDescription"></p>
+      <button class="watchlist-button" id="watchlistButton" type="button">+ Add to My List</button>
+      <p class="status-message" id="movieStatus" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="modal" id="listModal" role="dialog" aria-modal="true" aria-labelledby="listTitle" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" type="button" id="closeListModal" aria-label="Close">&times;</button>
+      <div class="modal-label">YOUR PERSONAL COLLECTION</div>
+      <h2 id="listTitle">My RIVORA List</h2>
+      <div id="listItems" class="list-items"></div>
+      <p class="status-message" id="listStatus" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    // Fictional sample content. Replace with authorized movie metadata later.
+    const movieData = {
+      "The Last Kingdom": {
+        category: "Bollywood • Action • 2026",
+        description: "A cinematic action adventure. This is fictional sample content for the RIVORA website prototype."
+      },
+      "Solar Drift": {
+        category: "Hollywood • Adventure • 2026",
+        description: "An adventure through an unknown world. This is fictional sample content for the RIVORA website prototype."
+      },
+      "Beyond Earth": {
+        category: "Sci-Fi • Mystery • 2026",
+        description: "Explore a mysterious universe beyond our planet. This is fictional sample content for the RIVORA website prototype."
+      },
+      "Dark Horizon": {
+        category: "Bollywood • Thriller • 2026",
+        description: "A mysterious cinematic thriller. This is fictional sample content for the RIVORA website prototype."
+      }
+    };
+
+    const searchInput = document.getElementById("searchInput");
+    const cards = Array.from(document.querySelectorAll(".movie-card"));
+    const filterButtons = Array.from(document.querySelectorAll(".filter"));
+    const emptyMessage = document.getElementById("emptyMessage");
+    const movieModal = document.getElementById("movieModal");
+    const listModal = document.getElementById("listModal");
+    const watchlistKey = "rivoraWatchlist";
+    let activeCategory = "All";
+    let currentMovie = "";
+    let lastFocusedElement = null;
+
+    document.getElementById("currentYear").textContent = String(new Date().getFullYear());
+
+    function applyMovieFilters() {
+      const query = searchInput.value.trim().toLocaleLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const title = (card.dataset.title || "").toLocaleLowerCase();
+        const cardText = card.textContent.toLocaleLowerCase();
+        const category = card.dataset.category || "";
+        const matchesSearch = !query || title.includes(query) || cardText.includes(query);
+        const matchesCategory = activeCategory === "All" || category === activeCategory;
+        const visible = matchesSearch && matchesCategory;
+        card.hidden = !visible;
+        if (visible) visibleCount++;
+      });
+
+      emptyMessage.style.display = visibleCount === 0 ? "block" : "none";
+    }
+
+    function openModal(modal, focusTarget) {
+      lastFocusedElement = document.activeElement;
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      if (focusTarget) focusTarget.focus();
+    }
+
+    function closeModal(modal) {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      if (!movieModal.classList.contains("open") && !listModal.classList.contains("open")) {
+        document.body.classList.remove("modal-open");
+      }
+      if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+        lastFocusedElement.focus();
+      }
+    }
+
+    function getWatchlist() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(watchlistKey) || "[]");
+        if (!Array.isArray(saved)) return [];
+        return [...new Set(saved.filter(item => typeof item === "string" && Object.prototype.hasOwnProperty.call(movieData, item)))];
+      } catch (error) {
+        console.warn("RIVORA watchlist could not be read:", error);
+        return [];
+      }
+    }
+
+    function saveWatchlist(list) {
+      try {
+        localStorage.setItem(watchlistKey, JSON.stringify(list));
+        return true;
+      } catch (error) {
+        console.error("RIVORA watchlist could not be saved:", error);
+        return false;
+      }
+    }
+
+    function updateWatchlistButton() {
+      const button = document.getElementById("watchlistButton");
+      const saved = getWatchlist().includes(currentMovie);
+      button.textContent = saved ? "✓ Added to My List" : "+ Add to My List";
+      button.disabled = saved;
+    }
+
+    function showDetails(title) {
+      const movie = movieData[title];
+      if (!movie) return;
+      currentMovie = title;
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalCategory").textContent = movie.category;
+      document.getElementById("modalDescription").textContent = movie.description;
+      document.getElementById("movieStatus").textContent = "";
+      updateWatchlistButton();
+      openModal(movieModal, document.getElementById("closeMovieModal"));
+    }
+
+    function addToWatchlist() {
+      if (!currentMovie) return;
+      const list = getWatchlist();
+      if (list.includes(currentMovie)) {
+        updateWatchlistButton();
+        return;
+      }
+      list.push(currentMovie);
+      if (saveWatchlist(list)) {
+        updateWatchlistButton();
+        document.getElementById("movieStatus").textContent = "Added to your list on this browser.";
+      } else {
+        document.getElementById("movieStatus").textContent = "Could not save. Check your browser storage settings.";
+      }
+    }
+
+    function renderWatchlist() {
+      const container = document.getElementById("listItems");
+      const list = getWatchlist();
+      container.replaceChildren();
+
+      if (list.length === 0) {
+        const message = document.createElement("p");
+        message.className = "list-empty";
+        message.textContent = "Your list is empty. Open a movie and select Add to My List.";
+        container.appendChild(message);
+        return;
+      }
+
+      list.forEach(title => {
+        const row = document.createElement("div");
+        row.className = "list-item";
+        const name = document.createElement("span");
+        name.textContent = title;
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-button";
+        remove.textContent = "Remove";
+        remove.setAttribute("aria-label", "Remove " + title + " from My List");
+        remove.addEventListener("click", () => {
+          const updated = getWatchlist().filter(item => item !== title);
+          if (saveWatchlist(updated)) {
+            renderWatchlist();
+            updateWatchlistButton();
+            document.getElementById("listStatus").textContent = "Movie removed from your list.";
+          } else {
+            document.getElementById("listStatus").textContent = "Could not update your list.";
+          }
+        });
+        row.append(name, remove);
+        container.appendChild(row);
+      });
+    }
+
+    function showWatchlist() {
+      renderWatchlist();
+      document.getElementById("listStatus").textContent = "";
+      openModal(listModal, document.getElementById("closeListModal"));
+    }
+
+    document.getElementById("searchButton").addEventListener("click", applyMovieFilters);
+    searchInput.addEventListener("input", applyMovieFilters);
+    searchInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") applyMovieFilters();
+    });
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach(item => {
+          item.classList.remove("active");
+          item.setAttribute("aria-pressed", "false");
+        });
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+        activeCategory = button.dataset.category || "All";
+        applyMovieFilters();
+      });
+    });
+
+    document.querySelectorAll(".details-button").forEach(button => {
+      button.addEventListener("click", () => showDetails(button.dataset.title));
+    });
+
+    document.getElementById("exploreButton").addEventListener("click", () => {
+      document.getElementById("movies").scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("myListNav").addEventListener("click", showWatchlist);
+    document.getElementById("watchlistButton").addEventListener("click", addToWatchlist);
+    document.getElementById("closeMovieModal").addEventListener("click", () => closeModal(movieModal));
+    document.getElementById("closeListModal").addEventListener("click", () => closeModal(listModal));
+
+    [movieModal, listModal].forEach(modal => {
+      modal.addEventListener("click", event => {
+        if (event.target === modal) closeModal(modal);
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        if (movieModal.classList.contains("open")) closeModal(movieModal);
+        else if (listModal.classList.contains("open")) closeModal(listModal);
+      }
+    });
+
+    applyMovieFilters();
+  </script>
+</body>
+</html>
