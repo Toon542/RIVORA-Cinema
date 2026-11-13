@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b18">
+<title>RIVORA | Admin Intelligence</title>
+<style>
+:root{--bg:#080b18;--panel:#11172b;--panel2:#171f39;--cyan:#42d9ff;--purple:#9255ff;--text:#f5f6ff;--muted:#a5aec7;--border:#28324f;--danger:#ff7185;--ok:#70e6b1}
+*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{padding:20px 6%;border-bottom:1px solid var(--border);background:#0b1020;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-size:27px;font-weight:900;letter-spacing:3px;color:var(--cyan)}.logo span{color:var(--purple)}header p{margin-top:7px;color:var(--muted);font-size:12px;letter-spacing:2px}
+main{width:min(900px,92%);margin:35px auto}.heading{margin-bottom:25px}.heading small{color:var(--cyan);letter-spacing:3px}.heading h1{font-size:clamp(27px,6vw,42px);margin:12px 0}.heading p{color:var(--muted);line-height:1.7}
+.panel{padding:23px;margin-bottom:22px;background:var(--panel);border:1px solid var(--border);border-radius:15px}.panel h2{font-size:19px;margin-bottom:20px}
+label{display:block;color:var(--muted);font-size:13px;margin:15px 0 8px}input{width:100%;padding:14px;border:1px solid var(--border);border-radius:9px;outline:none;background:var(--panel2);color:white;font-size:15px}input:focus{border-color:var(--cyan)}
+button{cursor:pointer;border:0;border-radius:9px;padding:13px 20px;color:white;font-weight:bold}.primary{width:100%;margin-top:20px;background:linear-gradient(90deg,#168bff,#923cff)}button:disabled{opacity:.6;cursor:wait}.secondary{background:transparent;border:1px solid var(--cyan);padding:10px 15px}.logout{background:transparent;border:1px solid var(--border);padding:9px 13px;color:var(--muted)}
+.status{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.6}.status.error{color:var(--danger)}.status.success{color:var(--ok)}.notice{color:var(--muted);font-size:12px;line-height:1.7;margin-top:17px}.hidden{display:none!important}
+.preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.preview-item{padding:14px;background:var(--panel2);border-radius:9px;overflow-wrap:anywhere;min-width:0}.preview-item small{color:var(--cyan);display:block;margin-bottom:8px}.preview-item p{font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.candidate{padding:16px;margin-top:12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px}.candidate p{color:var(--muted);font-size:13px;margin-top:7px;line-height:1.5}.topline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.topline .spacer{flex:1}.pill{font-size:11px;color:var(--ok);border:1px solid #28634e;padding:5px 9px;border-radius:30px}
+footer{padding:25px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--border)}
+@media(max-width:520px){.preview-grid{grid-template-columns:1fr}.panel{padding:18px}}
+.series-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.series-toolbar input,.series-toolbar select{flex:1;min-width:120px}
+.episode-card{border:1px solid var(--border);border-radius:11px;margin-top:12px;background:var(--panel2);overflow:hidden}
+.episode-head{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:14px;flex-wrap:wrap}
+.episode-head strong{font-size:14px}
+.episode-body{padding:0 14px 16px}
+.quality-block{border-top:1px solid var(--border);padding-top:12px;margin-top:12px}
+.quality-block h4{font-size:13px;color:var(--cyan);margin-bottom:8px}
+.link-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.link-grid input{min-width:0;padding:10px;font-size:13px}
+.small-btn{padding:9px 12px;background:transparent;border:1px solid var(--border);color:var(--text)}
+.field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.field-row input{min-width:0}
+@media(max-width:520px){.link-grid,.field-row{grid-template-columns:1fr}}
+textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:white;font:14px Arial,sans-serif;outline:none}textarea:focus,select:focus{border-color:var(--cyan)}.upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.upload-grid>div{min-width:0}.upload-grid input[type=file]{padding:10px;font-size:12px}.upload-panel{border-top:1px solid var(--border);margin-top:18px;padding-top:8px}@media(max-width:520px){.upload-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="logo">RIVORA<span>.</span></div><p>SMART MOVIE INTELLIGENCE</p></div>
+  <button class="logout hidden" id="logoutBtn" type="button">LOG OUT</button>
+</header>
+<main>
+<section class="heading">
+  <small>ADMIN CONTROL CENTER / V1.3</small>
+  <h1>Movie Intelligence</h1>
+  <p>Discover movie information, review the returned metadata and approve it manually before any future save operation.</p>
+</section>
+
+<section class="panel" id="loginPanel">
+  <h2>00 / Secure Admin Login</h2>
+  <label for="adminPin">6-digit Admin PIN</label>
+  <input id="adminPin" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="Enter your private PIN">
+  <button class="primary" id="loginBtn" type="button">SECURE LOGIN →</button>
+  <p class="status" id="loginStatus" aria-live="polite">Your session will remain in this page's memory only.</p>
+  <p class="notice">Never share your PIN. This page does not save the PIN or session token in localStorage.</p>
+</section>
+
+<section class="panel hidden" id="searchPanel">
+  <div class="topline"><h2>01 / Movie Search</h2><span class="spacer"></span><span class="pill">AUTHENTICATED</span></div>
+  <label for="movieName">Movie Name</label><input id="movieName" type="text" maxlength="150" placeholder="Enter movie name">
+  <label for="releaseYear">Release Year</label><input id="releaseYear" type="number" min="1880" max="2100" placeholder="e.g. 2014">
+  <button class="primary" id="searchBtn" type="button">SEARCH MOVIE INTELLIGENCE →</button>
+  <p class="status" id="searchStatus" aria-live="polite">Ready for movie input.</p>
+</section>
+
+<section class="panel hidden" id="seriesPanel">
+  <div class="topline"><h2>02 / Hybrid Series Manager</h2><span class="spacer"></span><span class="pill">LOCAL DRAFT</span></div>
+  <p class="notice">Create a series, generate episodes in bulk, then edit any episode individually. Each episode supports up to 4 authorized URLs per quality. This stage keeps data in page memory only; it does not save to Supabase.</p>
+  <label for="seriesTitle">Series Name</label><input id="seriesTitle" maxlength="150" placeholder="Enter series name">
+  <div class="field-row">
+    <div><label for="seriesYear">Release Year</label><input id="seriesYear" type="number" min="1880" max="2100" placeholder="e.g. 2024"></div>
+    <div><label for="seasonNumber">Season Number</label><input id="seasonNumber" type="number" min="1" max="100" value="1"></div>
+  </div>
+  <label for="seasonTitle">Season Title (optional)</label><input id="seasonTitle" maxlength="150" placeholder="e.g. Season 1">
+  <div class="series-toolbar">
+    <input id="episodeCount" type="number" min="1" max="100" value="8" aria-label="Number of episodes">
+    <button class="secondary" id="generateEpisodesBtn" type="button">GENERATE EPISODES</button>
+  </div>
+  <p class="status" id="seriesStatus" aria-live="polite">Enter series details and generate episodes.</p>
+  <div id="episodesEditor"></div>
+  <button class="primary" id="seriesPreviewBtn" type="button">PREVIEW SERIES DRAFT →</button>
+  <div id="seriesPreview" class="candidate hidden"></div>
+  <p class="notice">Only use distribution URLs you are authorized to share. No data is saved or published in this UI prototype.</p>
+</section>
+
+<section class="panel hidden" id="previewSection">
+  <h2>03 / Metadata Preview</h2>
+  <div id="matchSummary" class="candidate hidden"></div>
+  <div class="preview-grid" id="previewGrid"></div>
+  <p class="notice">Preview only. Nothing has been saved or published. Verify the movie match, facts and image reuse permissions before approving. Metadata availability varies by title; missing fields are not errors.</p>
+</section>
+
+<section class="panel hidden" id="movieUploadPanel">
+  <div class="topline"><h2>04 / Movie Upload & Save</h2><span class="spacer"></span><span class="pill">ADMIN ONLY</span></div>
+  <p class="notice">Metadata, poster, backdrop, thumbnails and screenshots will be saved to Supabase. Images support both secure file uploads and direct HTTPS URLs. Only add distribution links that you have explicit permission to share. This form does not upload movie video files.</p>
+  <label for="uploadTitle">Movie Title *</label><input id="uploadTitle" maxlength="200" placeholder="Movie title">
+  <div class="field-row">
+    <div><label for="uploadYear">Release Year *</label><input id="uploadYear" type="number" min="1880" max="2100" placeholder="2003"></div>
+    <div><label for="uploadRuntime">Runtime (minutes)</label><input id="uploadRuntime" type="number" min="1" max="1000" placeholder="137"></div>
+  </div>
+  <label for="uploadOverview">Overview</label><textarea id="uploadOverview" rows="4" maxlength="10000" placeholder="Movie synopsis..."></textarea>
+  <div class="field-row">
+    <div><label for="uploadGenres">Genres (comma separated)</label><input id="uploadGenres" placeholder="Action, Adventure, Fantasy"></div>
+    <div><label for="uploadCast">Cast (comma separated)</label><input id="uploadCast" placeholder="Actor 1, Actor 2"></div>
+  </div>
+  <div class="field-row">
+    <div><label for="uploadRating">Rating (0–10)</label><input id="uploadRating" type="number" min="0" max="10" step="0.1" placeholder="8.1"></div>
+    <div><label for="uploadTmdb">TMDB ID (optional)</label><input id="uploadTmdb" type="number" min="1" placeholder="Movie ID"></div>
+  </div>
+  <label for="uploadTrailer">Official Trailer URL (HTTPS)</label><input id="uploadTrailer" type="url" placeholder="https://...">
+  <label for="uploadStatus">Publication Status</label><select id="uploadStatus"><option value="draft">Draft (recommended)</option><option value="published">Published</option></select>
+  <div class="upload-panel">
+    <h3>Movie Images</h3>
+    <div class="upload-grid">
+      <div><label for="posterFile">Poster (JPEG / PNG / WebP / AVIF)</label><input id="posterFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></div>
+      <div><label for="backdropFile">Backdrop</label><input id="backdropFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></div>
+      <div><label for="thumbnailFiles">Thumbnails — Upload files</label><input id="thumbnailFiles" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif"></div>
+      <div><label for="screenshotFiles">Screenshots — Upload files</label><input id="screenshotFiles" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif"></div>
+    </div>
+    <div class="field-row">
+      <div><label for="thumbnailUrls">Thumbnails — Direct HTTPS URLs (one per line)</label><textarea id="thumbnailUrls" rows="4" maxlength="12000" placeholder="https://your-image-host.example/thumbnail-1.jpg
+https://your-image-host.example/thumbnail-2.jpg"></textarea></div>
+      <div><label for="screenshotUrls">Screenshots — Direct HTTPS URLs (one per line)</label><textarea id="screenshotUrls" rows="4" maxlength="12000" placeholder="https://your-image-host.example/screenshot-1.jpg
+https://your-image-host.example/screenshot-2.jpg"></textarea></div>
+    </div>
+    <p class="notice">Upload files up to 10 MB each, or paste public HTTPS image URLs. You can mix both methods. Use images you own or have permission to use. A URL must point directly to a publicly viewable image.</p>
+  </div>
+  <div class="upload-panel">
+    <h3>Authorized Download Links</h3>
+    <label for="downloadLinks">One link per line: quality|HTTPS URL</label>
+    <textarea id="downloadLinks" rows="4" placeholder="720p|https://your-authorized-host.example/file
+1080p|https://your-authorized-host.example/file"></textarea>
+    <p class="notice">Supported qualities: 480p, 720p, 1080p, 2K, 4K. Do not add links to content you are not authorized to distribute.</p>
+  </div>
+  <button class="primary" id="saveMovieBtn" type="button">UPLOAD IMAGES & SAVE MOVIE →</button>
+  <p class="status" id="movieUploadStatus" aria-live="polite">Fill the movie details and select images.</p>
+</section>
+</main>
+<footer>RIVORA ADMIN INTELLIGENCE · ONE WORLD. ENDLESS CINEMA.</footer>
+
+<script>
+"use strict";
+
+// Public project configuration only. Never put service_role or sb_secret keys here.
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
+const ADMIN_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/RIVORA_Admin_Edge_Function_v2-ts";
+const METADATA_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/rivora-metadata-extractor";
+
+let adminSessionToken = null;
+const $ = id => document.getElementById(id);
+const setStatus = (id, message, kind = "") => {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = message;
+  el.className = "status" + (kind ? " " + kind : "");
+};
+
+async function postJson(url, body, token = null, needsPublicKey = false) {
+  let response;
+  try {
+    const headers = {"Content-Type":"application/json"};
+    if (needsPublicKey) headers.apikey = SUPABASE_PUBLISHABLE_KEY;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    response = await fetch(url, {
+      method:"POST",
+      headers,
+      body:JSON.stringify(body),
+      cache:"no-store"
+    });
+  } catch (error) {
+    throw new Error("Network error: server tak connection nahi ho paya. Internet aur Edge Function URL check karo.");
+  }
+
+  let data;
+  const raw = await response.text();
+  try { data = raw ? JSON.parse(raw) : {}; }
+  catch { throw new Error(`Server ne valid JSON response nahi diya (HTTP ${response.status}).`); }
+
+  if (!response.ok) {
+    if (response.status === 403 && data && typeof data.reason === "string") return data;
+    const reason = data?.error || data?.message || data?.reason || `Request failed (HTTP ${response.status}).`;
+    throw new Error(String(reason));
+  }
+  return data;
+}
+
+function clearSessionUI(message = "You are logged out.") {
+  adminSessionToken = null;
+  $("loginPanel").classList.remove("hidden");
+  $("searchPanel").classList.add("hidden");
+  $("seriesPanel").classList.add("hidden");
+  $("movieUploadPanel").classList.add("hidden");
+  $("previewSection").classList.add("hidden");
+  $("logoutBtn").classList.add("hidden");
+  $("adminPin").value = "";
+  setStatus("loginStatus", message, "success");
+}
+
+$("loginBtn").addEventListener("click", async () => {
+  const pin = $("adminPin").value.trim();
+  if (!/^\d{6}$/.test(pin)) {
+    setStatus("loginStatus", "Enter your 6-digit Admin PIN.", "error");
+    return;
+  }
+
+  const btn = $("loginBtn");
+  btn.disabled = true;
+  setStatus("loginStatus", "Verifying admin credentials...");
+
+  try {
+    const result = await postJson(ADMIN_URL, {action:"login", pin}, null, true);
+    if (result.success !== true || typeof result.token !== "string" || !result.token) {
+      if (result.reason === "too_many_attempts") {
+        throw new Error(`Too many attempts. Try again in about ${result.retry_after_minutes || 15} minutes.`);
+      }
+      if (result.reason === "max_sessions_reached") {
+  throw new Error("Maximum 5 active sessions reached. Please logout from another device.");
+      }
+      
+      throw new Error(result.error || result.message || result.reason || "Login was not approved. Edge Function response check karo.");
+    }
+
+    adminSessionToken = result.token;
+    $("adminPin").value = "";
+    $("loginPanel").classList.add("hidden");
+    $("searchPanel").classList.remove("hidden");
+    $("seriesPanel").classList.remove("hidden");
+    $("movieUploadPanel").classList.remove("hidden");
+    $("logoutBtn").classList.remove("hidden");
+    setStatus("searchStatus",
+      `Secure session active${result.expires_at ? ". Expires: " + new Date(result.expires_at).toLocaleString() : "."}`,
+      "success"
+    );
+  } catch (error) {
+    setStatus("loginStatus", error.message || "Login failed.", "error");
+  } finally {
+    btn.disabled = false;
+  }
+});
+  $("logoutBtn").addEventListener("click", async () => {
+  if (!adminSessionToken) {
+    clearSessionUI();
+    return;
+  }
+
+  const btn = $("logoutBtn");
+  btn.disabled = true;
+  btn.textContent = "LOGGING OUT...";
+
+  try {
+    const result = await postJson(
+      ADMIN_URL,
+      { action: "logout" },
+      adminSessionToken,
+      true
+    );
+
+    if (result.success !== true) {
+      throw new Error(result.reason || "Server logout failed.");
+    }
+
+    clearSessionUI(
+      "Successfully logged out. Other devices remain active."
+    );
+
+  } catch (error) {
+    setStatus(
+      "searchStatus",
+      "Logout failed: " + (error.message || "Unknown error"),
+      "error"
+    );
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "LOG OUT";
+  }
+});
+
+function displayValue(value) {
+  if (value === null || value === undefined || value === "") return "Not available from current sources";
+  if (Array.isArray(value)) return value.length ? value.map(v => typeof v === "object" ? JSON.stringify(v) : String(v)).join(", ") : "Not available from current sources";
+  if (typeof value === "object") return JSON.stringify(value, null, 2);
+  return String(value);
+}
+
+function renderMetadata(data) {
+  const metadata = data?.metadata || data?.data?.metadata || {};
+  const keys = [
+    ["Matched title", "matched_title"], ["Release year", "release_year"],
+    ["Match confidence", "match_confidence"], ["Overview", "overview"],
+    ["Release date", "release_date"], ["Genres", "genres"],
+    ["Director", "director"], ["Cast", "cast"],
+    ["Runtime (minutes)", "runtime_minutes"], ["Wikidata ID", "wikidata_id"],
+    ["Wikipedia title", "wikipedia_title"], ["Commons image filename", "commons_image_filename"],
+    ["Thumbnail reference", "thumbnail_reference"], ["Source URLs", "source_urls"]
+  ];
+  const grid = $("previewGrid");
+  grid.replaceChildren();
+  for (const [label, key] of keys) {
+    const card = document.createElement("div");
+    card.className = "preview-item";
+    const small = document.createElement("small");
+    small.textContent = label;
+    const p = document.createElement("p");
+    p.textContent = displayValue(metadata[key]);
+    card.append(small, p);
+    grid.append(card);
+  }
+  const summary = $("matchSummary");
+  summary.classList.remove("hidden");
+  summary.replaceChildren();
+  const title = document.createElement("strong");
+  title.textContent = metadata.matched_title || "Returned movie match";
+  const detail = document.createElement("p");
+  detail.textContent = `Requested: ${data?.movie_input?.movie_name || "—"} (${data?.movie_input?.release_year || "—"}). Confidence: ${displayValue(metadata.match_confidence)}.`;
+  summary.append(title, detail);
+  $("previewSection").classList.remove("hidden");
+}
+
+$("searchBtn").addEventListener("click", async () => {
+  if (!adminSessionToken) {
+    clearSessionUI("Session expired. Please log in again.");
+    return;
+  }
+
+  const name = $("movieName").value.trim();
+  const year = Number($("releaseYear").value);
+  const currentYear = new Date().getFullYear();
+  $("previewSection").classList.add("hidden");
+
+  if (!name) {
+    setStatus("searchStatus", "Please enter a movie name.", "error");
+    return;
+  }
+  if (!Number.isInteger(year) || year < 1880 || year > currentYear + 5) {
+    setStatus("searchStatus", `Enter a valid release year (1880–${currentYear + 5}).`, "error");
+    return;
+  }
+
+  const btn = $("searchBtn");
+  btn.disabled = true;
+  setStatus("searchStatus", "Searching movie metadata...");
+  try {
+    const result = await postJson(METADATA_URL, {movie_name:name, release_year:year}, adminSessionToken, false);
+    if (result.success !== true || !result.metadata) {
+      throw new Error(result.error || result.message || "Metadata was not returned by the service.");
+    }
+    renderMetadata(result);
+    const m = result.metadata || {};
+    $("uploadTitle").value = m.matched_title || name;
+    $("uploadYear").value = m.release_year || year;
+    $("uploadOverview").value = m.overview || "";
+    $("uploadRuntime").value = m.runtime_minutes || "";
+    $("uploadGenres").value = Array.isArray(m.genres) ? m.genres.join(", ") : (m.genres || "");
+    $("uploadCast").value = Array.isArray(m.cast) ? m.cast.join(", ") : (m.cast || "");
+    $("uploadRating").value = m.rating ?? "";
+    $("uploadTrailer").value = m.trailer_url || "";
+    setStatus("searchStatus", "Metadata received and copied to the upload form. Review it; nothing has been saved yet.", "success");
+  } catch (error) {
+    const message = error.message || "Metadata search failed.";
+    if (/invalid session|session expired/i.test(message)) {
+      clearSessionUI("Your admin session is no longer valid. Please log in again.");
+    } else {
+      setStatus("searchStatus", message, "error");
+    }
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// Secure image upload and movie save. Admin tokens remain in memory only.
+const SUPABASE_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co";
+const STORAGE_BUCKET = "rivora-movie-assets";
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+
+async function uploadImageFile(file) {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type) || file.size <= 0 || file.size > 10 * 1024 * 1024) {
+    throw new Error(`${file.name}: image type not supported or file is larger than 10 MB.`);
+  }
+  const signed = await postJson(ADMIN_URL, {
+    action: "create_upload_url", content_type: file.type, file_size: file.size
+  }, adminSessionToken, true);
+  if (signed.success !== true || !signed.path || !signed.token) throw new Error("Secure upload URL was not returned.");
+  const uploadUrl = `${SUPABASE_URL}/storage/v1/object/upload/sign/${STORAGE_BUCKET}/${signed.path.split("/").map(encodeURIComponent).join("/")}?token=${encodeURIComponent(signed.token)}`;
+  const response = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: { "apikey": SUPABASE_PUBLISHABLE_KEY, "Content-Type": file.type, "x-upsert": "false" },
+    body: file
+  });
+  if (!response.ok) {
+    const message = await response.text().catch(() => "");
+    throw new Error(`Image upload failed for ${file.name} (HTTP ${response.status}). ${message.slice(0,180)}`);
+  }
+  return signed.path;
+}
+
+function splitList(value) { return value.split(",").map(v => v.trim()).filter(Boolean); }
+
+$("saveMovieBtn").addEventListener("click", async () => {
+  if (!adminSessionToken) { clearSessionUI("Session expired. Please log in again."); return; }
+  const title = $("uploadTitle").value.trim();
+  const year = Number($("uploadYear").value);
+  const currentYear = new Date().getFullYear();
+  if (!title || title.length > 200 || !Number.isInteger(year) || year < 1880 || year > currentYear + 5) {
+    setStatus("movieUploadStatus", "Enter a valid movie title and release year.", "error"); return;
+  }
+  const ratingText = $("uploadRating").value.trim();
+  const rating = ratingText === "" ? null : Number(ratingText);
+  if (rating !== null && (!Number.isFinite(rating) || rating < 0 || rating > 10)) {
+    setStatus("movieUploadStatus", "Rating must be between 0 and 10.", "error"); return;
+  }
+  const downloadLinks = [];
+  const rawLinks = $("downloadLinks").value.split("\n").map(v => v.trim()).filter(Boolean);
+  for (const line of rawLinks) {
+    const splitAt = line.indexOf("|");
+    if (splitAt < 1) { setStatus("movieUploadStatus", `Invalid download link line: ${line}`, "error"); return; }
+    const quality = line.slice(0, splitAt).trim();
+    const download_url = line.slice(splitAt + 1).trim();
+    try { if (!new URL(download_url) || new URL(download_url).protocol !== "https:") throw new Error(); }
+    catch { setStatus("movieUploadStatus", `Only valid HTTPS links are accepted: ${download_url}`, "error"); return; }
+    if (!["480p", "720p", "1080p", "2K", "4K"].includes(quality)) { setStatus("movieUploadStatus", `Unsupported quality: ${quality}`, "error"); return; }
+    downloadLinks.push({ quality, download_url });
+  }
+  if (downloadLinks.length > 20) { setStatus("movieUploadStatus", "Maximum 20 download links allowed.", "error"); return; }
+
+  const btn = $("saveMovieBtn"); btn.disabled = true;
+  const images = []; let posterPath = null; let backdropPath = null;
+  try {
+    setStatus("movieUploadStatus", "Uploading poster and backdrop securely...");
+    const posterFile = $("posterFile").files[0];
+    const backdropFile = $("backdropFile").files[0];
+    if (posterFile) posterPath = await uploadImageFile(posterFile);
+    if (backdropFile) backdropPath = await uploadImageFile(backdropFile);
+
+    const thumbnailFiles = Array.from($("thumbnailFiles").files);
+    const screenshotFiles = Array.from($("screenshotFiles").files);
+    const parseImageUrls = (fieldId, label) => $(fieldId).value.split(/\r?\n/).map(v => v.trim()).filter(Boolean).map(value => {
+      if (value.length > 2048) throw new Error(`${label}: URL is too long.`);
+      let parsed;
+      try { parsed = new URL(value); } catch { throw new Error(`${label}: invalid URL — ${value}`); }
+      if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) {
+        throw new Error(`${label}: only public HTTPS image URLs are accepted — ${value}`);
+      }
+      return parsed.href;
+    });
+    const thumbnailUrls = parseImageUrls("thumbnailUrls", "Thumbnail");
+    const screenshotUrls = parseImageUrls("screenshotUrls", "Screenshot");
+    if (thumbnailFiles.length + screenshotFiles.length + thumbnailUrls.length + screenshotUrls.length > 30) {
+      throw new Error("Maximum 30 thumbnails and screenshots combined (uploads + URLs).");
+    }
+    let order = 0;
+    for (const file of thumbnailFiles) {
+      setStatus("movieUploadStatus", `Uploading thumbnail file ${order + 1}/${thumbnailFiles.length}...`);
+      images.push({ image_path: await uploadImageFile(file), image_type: "thumbnail", display_order: order++ });
+    }
+    for (const url of thumbnailUrls) images.push({ image_path: url, image_type: "thumbnail", display_order: order++ });
+    order = 0;
+    for (const file of screenshotFiles) {
+      setStatus("movieUploadStatus", `Uploading screenshot file ${order + 1}/${screenshotFiles.length}...`);
+      images.push({ image_path: await uploadImageFile(file), image_type: "screenshot", display_order: order++ });
+    }
+    for (const url of screenshotUrls) images.push({ image_path: url, image_type: "screenshot", display_order: order++ });
+
+    const payload = {
+      action: "save_movie", title, release_year: year,
+      overview: $("uploadOverview").value.trim(),
+      runtime: $("uploadRuntime").value.trim() || null,
+      genres: splitList($("uploadGenres").value),
+      cast_members: splitList($("uploadCast").value),
+      rating, tmdb_id: $("uploadTmdb").value.trim() || null,
+      trailer_url: $("uploadTrailer").value.trim() || null,
+      status: $("uploadStatus").value,
+      poster_path: posterPath, backdrop_path: backdropPath, images, download_links: downloadLinks
+    };
+    setStatus("movieUploadStatus", "Saving movie details and image/link records...");
+    const saved = await postJson(ADMIN_URL, payload, adminSessionToken, true);
+    if (saved.success !== true) {
+      const partial = saved.movie_id ? ` Movie ID: ${saved.movie_id}.` : "";
+      throw new Error((saved.error || "Movie save failed.") + partial);
+    }
+    setStatus("movieUploadStatus", `Movie saved successfully. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.length}.`, "success");
+  } catch (error) {
+    setStatus("movieUploadStatus", error.message || "Upload/save failed.", "error");
+  } finally { btn.disabled = false; }
+});
+
+// Hybrid Series Manager v1.2 — local preview only; no database writes are enabled.
+const SERIES_QUALITIES = ["480p", "720p", "1080p", "2K", "4K"];
+let seriesEpisodes = [];
+
+function safeText(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[ch]));
+}
+
+function makeEpisode(number) {
+  return {
+    number,
+    title: `Episode ${number}`,
+    overview: "",
+    open: number === 1,
+    links: Object.fromEntries(SERIES_QUALITIES.map(q => [q, ["", "", "", ""]]))
+  };
+}
+
+function renderEpisodeEditors() {
+  const host = $("episodesEditor");
+  host.replaceChildren();
+
+  seriesEpisodes.forEach((episode, index) => {
+    const card = document.createElement("article");
+    card.className = "episode-card";
+
+    const head = document.createElement("div");
+    head.className = "episode-head";
+    const title = document.createElement("strong");
+    title.textContent = `EPISODE ${String(index + 1).padStart(2, "0")}`;
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "small-btn";
+    toggle.textContent = episode.open ? "COLLAPSE −" : "EDIT EPISODE +";
+    toggle.addEventListener("click", () => {
+      episode.open = !episode.open;
+      renderEpisodeEditors();
+    });
+    head.append(title, toggle);
+    card.append(head);
+
+    if (episode.open) {
+      const body = document.createElement("div");
+      body.className = "episode-body";
+
+      const fields = document.createElement("div");
+      fields.className = "field-row";
+      fields.innerHTML = `
+        <div><label>Episode Number</label><input type="number" min="1" max="1000" data-ep="${index}" data-field="number" value="${Number(episode.number)}"></div>
+        <div><label>Episode Title</label><input maxlength="150" data-ep="${index}" data-field="title" value="${safeText(episode.title)}" placeholder="Episode title"></div>
+      `;
+
+      const overviewLabel = document.createElement("label");
+      overviewLabel.textContent = "Episode Overview (optional)";
+      const overview = document.createElement("input");
+      overview.maxLength = 2000;
+      overview.placeholder = "Short episode description";
+      overview.value = episode.overview;
+      overview.dataset.ep = index;
+      overview.dataset.field = "overview";
+      body.append(fields, overviewLabel, overview);
+
+      SERIES_QUALITIES.forEach(quality => {
+        const block = document.createElement("div");
+        block.className = "quality-block";
+        const h = document.createElement("h4");
+        h.textContent = `${quality} — maximum 4 authorized links`;
+        const grid = document.createElement("div");
+        grid.className = "link-grid";
+
+        for (let slot = 0; slot < 4; slot++) {
+          const input = document.createElement("input");
+          input.type = "url";
+          input.placeholder = `${quality} authorized URL ${slot + 1}`;
+          input.value = episode.links[quality][slot] || "";
+          input.dataset.ep = index;
+          input.dataset.quality = quality;
+          input.dataset.slot = slot;
+          input.setAttribute("aria-label", `${quality} link ${slot + 1}`);
+          grid.append(input);
+        }
+        block.append(h, grid);
+        body.append(block);
+      });
+
+      card.append(body);
+    }
+    host.append(card);
+  });
+}
+
+$("generateEpisodesBtn").addEventListener("click", () => {
+  const count = Number($("episodeCount").value);
+  if (!Number.isInteger(count) || count < 1 || count > 100) {
+    setStatus("seriesStatus", "Choose between 1 and 100 episodes.", "error");
+    return;
+  }
+
+  const previous = seriesEpisodes;
+  seriesEpisodes = Array.from({length:count}, (_, i) => previous[i] || makeEpisode(i + 1));
+  renderEpisodeEditors();
+  $("seriesPreview").classList.add("hidden");
+  setStatus("seriesStatus", `${count} episode editor(s) generated. Open any episode to edit it.`, "success");
+});
+
+$("episodesEditor").addEventListener("input", event => {
+  const el = event.target;
+  if (el.dataset.ep === undefined) return;
+
+  const index = Number(el.dataset.ep);
+  const episode = seriesEpisodes[index];
+  if (!episode) return;
+
+  if (el.dataset.quality) {
+    episode.links[el.dataset.quality][Number(el.dataset.slot)] = el.value.trim();
+  } else if (el.dataset.field) {
+    episode[el.dataset.field] = el.dataset.field === "number" ? Number(el.value) : el.value;
+  }
+  $("seriesPreview").classList.add("hidden");
+});
+
+function validHttpUrl(value) {
+  if (!value) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+$("seriesPreviewBtn").addEventListener("click", () => {
+  const title = $("seriesTitle").value.trim();
+  const year = Number($("seriesYear").value);
+  const season = Number($("seasonNumber").value);
+  const seasonTitle = $("seasonTitle").value.trim();
+
+  if (!adminSessionToken) {
+    clearSessionUI("Admin session expired. Please log in again.");
+    return;
+  }
+  if (!title) {
+    setStatus("seriesStatus", "Enter a series name.", "error");
+    return;
+  }
+  if (!Number.isInteger(year) || year < 1880 || year > new Date().getFullYear() + 5) {
+    setStatus("seriesStatus", "Enter a valid release year.", "error");
+    return;
+  }
+  if (!Number.isInteger(season) || season < 1 || season > 100) {
+    setStatus("seriesStatus", "Season number must be between 1 and 100.", "error");
+    return;
+  }
+  if (!seriesEpisodes.length) {
+    setStatus("seriesStatus", "Generate episodes first.", "error");
+    return;
+  }
+
+  const seen = new Set();
+  for (const ep of seriesEpisodes) {
+    if (!Number.isInteger(Number(ep.number)) || Number(ep.number) < 1 || !String(ep.title).trim()) {
+      setStatus("seriesStatus", "Every episode needs a valid episode number and title.", "error");
+      return;
+    }
+    if (seen.has(Number(ep.number))) {
+      setStatus("seriesStatus", `Duplicate episode number found: ${ep.number}.`, "error");
+      return;
+    }
+    seen.add(Number(ep.number));
+
+    for (const quality of SERIES_QUALITIES) {
+      for (const url of ep.links[quality]) {
+        if (url && !validHttpUrl(url)) {
+          setStatus("seriesStatus", `Episode ${ep.number}: ${quality} link must be a valid http/https URL.`, "error");
+          return;
+        }
+      }
+    }
+  }
+
+  const totalLinks = seriesEpisodes.reduce((sum, ep) =>
+    sum + SERIES_QUALITIES.reduce((n, q) => n + ep.links[q].filter(Boolean).length, 0), 0
+  );
+
+  const preview = $("seriesPreview");
+  preview.replaceChildren();
+  preview.classList.remove("hidden");
+
+  const heading = document.createElement("strong");
+  heading.textContent = `${title} (${year})`;
+  const seasonLine = document.createElement("p");
+  seasonLine.textContent = `${seasonTitle || "Season " + season} · ${seriesEpisodes.length} episodes · ${totalLinks} authorized link(s)`;
+  preview.append(heading, seasonLine);
+
+  const list = document.createElement("div");
+  list.style.marginTop = "12px";
+  seriesEpisodes.forEach(ep => {
+    const p = document.createElement("p");
+    const count = SERIES_QUALITIES.reduce((n, q) => n + ep.links[q].filter(Boolean).length, 0);
+    p.textContent = `Episode ${ep.number}: ${ep.title} — ${count} link(s)`;
+    list.append(p);
+  });
+  preview.append(list);
+
+  const note = document.createElement("p");
+  note.textContent = "Preview only. This draft has not been saved to Supabase or published.";
+  note.style.marginTop = "12px";
+  preview.append(note);
+
+  setStatus("seriesStatus", "Series draft validated successfully. It is still only in this page's memory.", "success");
+});
+
+// Keep the page responsive if the browser restores it from its back/forward cache.
+window.addEventListener("pageshow", () => {
+  if (!adminSessionToken) {
+    $("loginPanel").classList.remove("hidden");
+  }
+});
+</script>
+</body>
+</html>
