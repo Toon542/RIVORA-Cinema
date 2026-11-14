@@ -106,6 +106,19 @@
     .modal-label{margin-bottom:17px;color:var(--cyan);font-size:11px;letter-spacing:3px}
     .modal-content h2{margin-bottom:12px;font-size:30px;padding-right:24px}
     .modal-content p{margin-bottom:17px;color:var(--muted);line-height:1.7}
+    .modal-poster{display:none;width:100%;max-height:330px;object-fit:contain;background:#080b18;border-radius:12px;margin:0 0 18px;border:1px solid var(--border)}
+    .modal-section-title{font-size:15px;margin:20px 0 11px;color:var(--cyan);letter-spacing:.5px}
+    .movie-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px;margin-bottom:18px}
+    .gallery-thumb{width:100%;height:112px;object-fit:cover;border-radius:9px;border:1px solid var(--border);background:#080b18;cursor:zoom-in}
+    .gallery-thumb:hover{border-color:var(--cyan);transform:translateY(-2px)}
+    .download-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:9px;margin-bottom:18px}
+    .download-link{display:block;text-align:center;text-decoration:none;padding:12px 9px;border:1px solid var(--purple);border-radius:10px;background:rgba(146,85,255,.13);color:#fff;font-weight:700;font-size:13px}
+    .download-link:hover{background:rgba(146,85,255,.28);border-color:var(--cyan)}
+    .download-empty,.gallery-empty{color:var(--muted);font-size:12px;line-height:1.6}
+    .image-lightbox{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.94);align-items:center;justify-content:center;padding:20px}
+    .image-lightbox.open{display:flex}
+    .image-lightbox img{max-width:100%;max-height:88vh;object-fit:contain;border-radius:8px}
+    .image-lightbox button{position:absolute;top:15px;right:20px;background:#171f39;color:#fff;border:1px solid #58617c;border-radius:50%;width:42px;height:42px;font-size:25px}
     .watchlist-button{padding:12px 20px;color:white;font-weight:700;background:linear-gradient(90deg,#168bff,#a32aff);border:0;border-radius:25px}
     .watchlist-button:disabled{opacity:.8;cursor:default}
     .list-items{display:grid;gap:10px;margin-top:15px}
@@ -249,11 +262,21 @@
       <button class="modal-close" type="button" id="closeMovieModal" aria-label="Close">&times;</button>
       <div class="modal-label">RIVORA CINEMA EXPERIENCE</div>
       <h2 id="modalTitle">Movie Title</h2>
+      <img class="modal-poster" id="modalPoster" alt="Movie poster">
       <p id="modalCategory"></p>
       <p id="modalDescription"></p>
+      <h3 class="modal-section-title">MOVIE GALLERY</h3>
+      <div class="movie-gallery" id="movieGallery"><p class="gallery-empty">Gallery images will appear here when available.</p></div>
+      <h3 class="modal-section-title">AVAILABLE DOWNLOADS</h3>
+      <div class="download-list" id="downloadList"><p class="download-empty">Loading download options...</p></div>
       <button class="watchlist-button" id="watchlistButton" type="button">+ Add to My List</button>
       <p class="status-message" id="movieStatus" aria-live="polite"></p>
     </div>
+  </div>
+
+  <div class="image-lightbox" id="imageLightbox" role="dialog" aria-modal="true" aria-label="Movie image preview">
+    <button type="button" id="closeImageLightbox" aria-label="Close image preview">&times;</button>
+    <img id="lightboxImage" alt="Expanded movie image">
   </div>
 
   <div class="modal" id="listModal" role="dialog" aria-modal="true" aria-labelledby="listTitle" aria-hidden="true">
@@ -378,9 +401,96 @@
       document.getElementById("modalCategory").textContent = movie.category;
       document.getElementById("modalDescription").textContent = movie.description;
       document.getElementById("movieStatus").textContent = "";
+
+      const poster = document.getElementById("modalPoster");
+      poster.removeAttribute("src");
+      poster.style.display = movie.posterUrl ? "block" : "none";
+      if (movie.posterUrl) poster.src = movie.posterUrl;
+
+      renderMovieGallery(movie);
+      renderDownloadLinks(movie);
       updateWatchlistButton();
       openModal(movieModal, document.getElementById("closeMovieModal"));
     }
+
+    function renderMovieGallery(movie) {
+      const gallery = document.getElementById("movieGallery");
+      gallery.replaceChildren();
+      const images = Array.isArray(movie.images) ? movie.images : [];
+      if (!images.length) {
+        const empty = document.createElement("p");
+        empty.className = "gallery-empty";
+        empty.textContent = "No additional thumbnails or screenshots available.";
+        gallery.append(empty);
+        return;
+      }
+      images.forEach(item => {
+        if (!item || !item.url) return;
+        const image = document.createElement("img");
+        image.className = "gallery-thumb";
+        image.src = item.url;
+        image.alt = movie.title + " " + (item.image_type || "gallery image");
+        image.loading = "lazy";
+        image.addEventListener("click", () => {
+          const lightbox = document.getElementById("imageLightbox");
+          const expanded = document.getElementById("lightboxImage");
+          expanded.src = item.url;
+          expanded.alt = image.alt;
+          lightbox.classList.add("open");
+        });
+        gallery.append(image);
+      });
+      if (!gallery.children.length) {
+        const empty = document.createElement("p");
+        empty.className = "gallery-empty";
+        empty.textContent = "No additional thumbnails or screenshots available.";
+        gallery.append(empty);
+      }
+    }
+
+    function renderDownloadLinks(movie) {
+      const container = document.getElementById("downloadList");
+      container.replaceChildren();
+      const links = Array.isArray(movie.downloadLinks) ? movie.downloadLinks.slice() : [];
+      const order = { "480": 1, "720": 2, "1080": 3, "2k": 4, "4k": 5 };
+      links.sort((a, b) => (order[String(a.quality).toLowerCase()] || 99) - (order[String(b.quality).toLowerCase()] || 99));
+      if (!links.length) {
+        const empty = document.createElement("p");
+        empty.className = "download-empty";
+        empty.textContent = "No download links are currently available for this movie.";
+        container.append(empty);
+        return;
+      }
+      links.forEach(item => {
+        if (!item || typeof item.download_url !== "string" || !/^https:\/\//i.test(item.download_url)) return;
+        const link = document.createElement("a");
+        link.className = "download-link";
+        link.href = item.download_url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        const qualityLabel = String(item.quality).toUpperCase();
+        link.textContent = qualityLabel + (qualityLabel.includes("K") ? " DOWNLOAD" : "P DOWNLOAD");
+        container.append(link);
+      });
+      if (!container.children.length) {
+        const empty = document.createElement("p");
+        empty.className = "download-empty";
+        empty.textContent = "No valid download links are available.";
+        container.append(empty);
+      }
+    }
+
+    function closeImagePreview() {
+      document.getElementById("imageLightbox").classList.remove("open");
+      document.getElementById("lightboxImage").removeAttribute("src");
+    }
+    document.getElementById("closeImageLightbox").addEventListener("click", closeImagePreview);
+    document.getElementById("imageLightbox").addEventListener("click", event => {
+      if (event.target.id === "imageLightbox") closeImagePreview();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeImagePreview();
+    });
 
     function addToWatchlist() {
       if (!currentMovie) return;
@@ -567,6 +677,40 @@
     publishedDatabaseMovies = Array.isArray(movies)
       ? movies.filter(movie => movie && movie.status === "published" && movie.id && movie.title)
       : [];
+
+    // Public read-only related data. RLS must restrict both tables to published movies.
+    const movieIds = publishedDatabaseMovies.map(movie => movie.id);
+    let publicDownloadLinks = [];
+    let publicMovieImages = [];
+    if (movieIds.length) {
+      const idList = "(" + movieIds.map(id => String(id).replace(/[^a-zA-Z0-9-]/g, "")).join(",") + ")";
+      const relatedHeaders = {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY
+      };
+      const [linksResult, imagesResult] = await Promise.allSettled([
+        fetch(SUPABASE_URL + "/rest/v1/movie_download_links?select=id,movie_id,quality,download_url&movie_id=in." + encodeURIComponent(idList), { headers: relatedHeaders }),
+        fetch(SUPABASE_URL + "/rest/v1/movie_images?select=id,movie_id,image_path,image_type,display_order&movie_id=in." + encodeURIComponent(idList) + "&order=display_order.asc", { headers: relatedHeaders })
+      ]);
+      if (linksResult.status === "fulfilled" && linksResult.value.ok) {
+        publicDownloadLinks = await linksResult.value.json();
+      } else {
+        console.warn("RIVORA public download links could not be loaded. Check movie_download_links SELECT RLS.");
+      }
+      if (imagesResult.status === "fulfilled" && imagesResult.value.ok) {
+        publicMovieImages = await imagesResult.value.json();
+      } else {
+        console.warn("RIVORA movie gallery could not be loaded. Check movie_images SELECT RLS.");
+      }
+    }
+
+    function resolveMovieAsset(path) {
+      if (!path) return "";
+      if (/^https:\/\//i.test(path)) return path;
+      if (path.startsWith("/")) return "https://image.tmdb.org/t/p/w500" + path;
+      return SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" +
+        path.split("/").map(encodeURIComponent).join("/");
+    }
     const surpriseStatus = document.getElementById("surpriseStatus");
     if (surpriseStatus) {
       surpriseStatus.textContent = publishedDatabaseMovies.length
@@ -574,7 +718,7 @@
         : "No published movies are available for Surprise Me yet.";
     }
 
-    movies.forEach(movie => {
+    publishedDatabaseMovies.forEach(movie => {
       const title = movie.title || "Untitled Movie";
 
       const genres = Array.isArray(movie.genres)
@@ -597,24 +741,11 @@
 
       const posterPath = movie.poster_path || "";
 
-      if (posterPath) {
-        let posterURL = "";
-
-        if (/^https:\/\//i.test(posterPath)) {
-          posterURL = posterPath;
-        } else if (posterPath.startsWith("/")) {
-          posterURL = "https://image.tmdb.org/t/p/w500" + posterPath;
-        } else {
-          posterURL = SUPABASE_URL +
-            "/storage/v1/object/public/" +
-            BUCKET + "/" +
-            posterPath.split("/").map(encodeURIComponent).join("/");
-        }
-
+      const posterURL = resolveMovieAsset(posterPath);
+      if (posterURL) {
         poster.style.backgroundImage =
           "linear-gradient(transparent,rgba(0,0,0,.55)),url('" +
           posterURL.replace(/'/g, "%27") + "')";
-
         poster.style.backgroundSize = "cover";
         poster.style.backgroundPosition = "center";
       }
@@ -638,8 +769,18 @@
       button.textContent = "View Details";
 
       movieData[title] = {
-        category: genres + " • " + (movie.release_year || ""),
-        description: movie.overview || "No description available."
+        title,
+        movieId: movie.id,
+        category: genres + " • " + (movie.release_year || "") +
+          (movie.rating ? " • ★ " + movie.rating : ""),
+        description: movie.overview || "No description available.",
+        posterUrl: posterURL,
+        images: publicMovieImages
+          .filter(item => item && item.movie_id === movie.id &&
+            ["thumbnail", "screenshot"].includes(String(item.image_type).toLowerCase()))
+          .map(item => ({ ...item, url: resolveMovieAsset(item.image_path) }))
+          .filter(item => item.url),
+        downloadLinks: publicDownloadLinks.filter(item => item && item.movie_id === movie.id)
       };
 
       button.addEventListener("click", () => showDetails(title));
