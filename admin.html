@@ -293,7 +293,12 @@ async function postJson(url, body, token = null, needsPublicKey = false) {
   if (!response.ok) {
     if (response.status === 403 && data && typeof data.reason === "string") return data;
     const reason = data?.error || data?.message || data?.reason || `Request failed (HTTP ${response.status}).`;
-    throw new Error(String(reason));
+
+const detail = body?.action === "save_movie" && typeof data?.details === "string"
+  ? ` | Details: ${data.details}`
+  : "";
+
+throw new Error(String(reason) + detail);
   }
   return data;
 }
@@ -1000,7 +1005,11 @@ $("saveMovieBtn").addEventListener("click", async () => {
     const saved = await postJson(ADMIN_URL, payload, adminSessionToken, true);
     if (saved.success !== true) {
       const partial = saved.movie_id ? ` Movie ID: ${saved.movie_id}.` : "";
-      throw new Error((saved.error || "Movie save failed.") + partial);
+      const detail = typeof saved.details === "string"
+  ? ` | Details: ${saved.details}`
+  : "";
+
+throw new Error((saved.error || "Movie save failed.") + detail + partial);
     }
     setStatus("movieUploadStatus", `Movie saved successfully. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.length}.`, "success");
   } catch (error) {
