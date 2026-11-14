@@ -33,6 +33,45 @@
     .primary-button{margin-top:27px;padding:13px 23px;border:0;border-radius:30px;color:white;font-weight:700;background:linear-gradient(90deg,#168bff,#923cff)}
     .primary-button:hover{filter:brightness(1.12)}
     .section{padding:36px 6%}
+
+    .surprise-section{padding:30px 6%;background:radial-gradient(ellipse at 12% 50%,rgba(66,217,255,.10),transparent 42%),radial-gradient(ellipse at 88% 50%,rgba(146,85,255,.14),transparent 45%);border-bottom:1px solid var(--border)}
+    .surprise-shell{max-width:1120px;margin:0 auto;padding:25px;border:1px solid rgba(146,85,255,.42);border-radius:20px;background:linear-gradient(115deg,rgba(17,23,43,.96),rgba(23,31,57,.88));box-shadow:0 18px 55px rgba(0,0,0,.22);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:22px}
+    .surprise-kicker{color:var(--cyan);font-size:11px;letter-spacing:3px;font-weight:800;margin-bottom:9px}
+    .surprise-shell h2{font-size:clamp(22px,4vw,31px);margin-bottom:8px}.surprise-shell p{color:var(--muted);font-size:14px;line-height:1.65;max-width:620px}
+    .surprise-button{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:11px;min-width:205px;padding:16px 23px;border:1px solid rgba(255,255,255,.22);border-radius:15px;color:#fff;font-weight:800;font-size:15px;letter-spacing:.3px;background:linear-gradient(110deg,#087fc7,#6840d7 58%,#9b43d5);box-shadow:0 8px 28px rgba(83,83,220,.3);transition:transform .2s,box-shadow .2s,filter .2s;overflow:hidden}
+    .surprise-button::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.23),transparent 72%);transform:translateX(-120%);transition:transform .55s}
+    .surprise-button:hover{transform:translateY(-3px);box-shadow:0 13px 34px rgba(83,83,220,.42);filter:brightness(1.12)}.surprise-button:hover::before{transform:translateX(120%)}.surprise-button:active{transform:translateY(0)}.surprise-dice{font-size:22px;display:inline-block;animation:surpriseDice 3.2s ease-in-out infinite}
+    @keyframes surpriseDice{0%,75%,100%{transform:rotate(0)}82%{transform:rotate(-18deg) scale(1.12)}89%{transform:rotate(18deg) scale(1.12)}}
+    .surprise-result{display:none;max-width:1120px;margin:18px auto 0;padding:17px;border:1px solid rgba(66,217,255,.32);border-radius:16px;background:rgba(8,11,24,.82);grid-template-columns:112px minmax(0,1fr);gap:18px;align-items:center}
+    .surprise-result.visible{display:grid;animation:surpriseReveal .35s ease both}@keyframes surpriseReveal{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+    .surprise-poster{width:112px;aspect-ratio:2/3;object-fit:cover;border-radius:10px;background:var(--panel-light);border:1px solid var(--border)}
+    .surprise-result h3{font-size:20px;margin:4px 0 7px}.surprise-meta{color:var(--cyan)!important;font-size:12px!important;margin-bottom:7px}.surprise-overview{font-size:13px!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .surprise-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.surprise-actions button{padding:9px 13px;border-radius:8px;font-size:12px}.surprise-details{background:linear-gradient(90deg,#168bff,#923cff);color:white}.surprise-again{background:transparent;border:1px solid var(--cyan);color:var(--cyan)}.surprise-status{margin-top:10px;color:var(--muted);font-size:12px;min-height:16px}
+    @media(max-width:650px){.surprise-shell{grid-template-columns:1fr;padding:20px}.surprise-button{width:100%}.surprise-result{grid-template-columns:86px minmax(0,1fr);gap:12px;padding:13px}.surprise-poster{width:86px}.surprise-result h3{font-size:17px}}
+
+    /* RIVORA OS — public-site cinematic boot layer */
+    .rivora-os-boot{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:#050713;color:#f7f8ff;isolation:isolate;opacity:1;visibility:visible;transition:opacity .8s ease,visibility .8s ease}
+    .rivora-os-boot.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+    .rivora-os-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+    .rivora-os-vignette{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 45%,transparent 0%,rgba(3,5,15,.25) 45%,rgba(3,5,15,.88) 100%),linear-gradient(180deg,rgba(3,5,15,.1),rgba(3,5,15,.7))}
+    .rivora-os-content{width:min(760px,90vw);padding:30px 18px;text-align:center;animation:osContentIn 1s ease both}
+    .rivora-os-overline{font-size:10px;letter-spacing:5px;color:#76e7ff;font-weight:800;margin-bottom:17px}
+    .rivora-os-logo{font-size:clamp(42px,10vw,86px);font-weight:950;letter-spacing:clamp(5px,1.8vw,15px);line-height:1;background:linear-gradient(100deg,#fff,#65e5ff 42%,#ad85ff 75%,#fff);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:0 0 38px rgba(75,197,255,.15)}
+    .rivora-os-story{max-width:590px;margin:20px auto 24px;color:#d5d9ef;font-size:clamp(13px,2vw,16px);line-height:1.8;min-height:52px}
+    .rivora-os-progress{width:min(390px,80vw);height:3px;margin:0 auto 13px;background:rgba(255,255,255,.13);border-radius:9px;overflow:hidden}
+    .rivora-os-progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#43dfff,#a26cff);box-shadow:0 0 15px #58dfff;animation:osProgress 3.8s cubic-bezier(.2,.7,.2,1) forwards}
+    .rivora-os-status{color:#aeb8d8;font-size:10px;letter-spacing:2px;text-transform:uppercase}
+    .rivora-os-theme{margin-top:22px;color:#8e9bbb;font-size:11px;letter-spacing:1.6px}
+    .rivora-os-skip{margin-top:25px;padding:9px 17px;border:1px solid rgba(161,177,224,.35);border-radius:25px;background:rgba(10,16,35,.45);color:#dce6ff;font-size:11px;letter-spacing:1px}
+    .rivora-os-skip:hover{border-color:#5ee3ff;color:#fff}
+    .rivora-os-dock[hidden]{display:none}.rivora-os-dock{position:fixed;right:16px;bottom:16px;z-index:40;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 32px)}
+    .rivora-os-dock button,.rivora-os-panel button{border:1px solid rgba(108,174,255,.35);background:rgba(10,17,38,.92);color:#eaf3ff;padding:10px 13px;border-radius:12px;font-size:11px;box-shadow:0 7px 24px rgba(0,0,0,.25);backdrop-filter:blur(12px)}
+    .rivora-os-dock button:hover,.rivora-os-panel button:hover{border-color:#5ee3ff;background:#142448}
+    .rivora-os-panel{position:fixed;right:16px;bottom:68px;z-index:41;width:min(360px,calc(100vw - 32px));max-height:65vh;overflow:auto;padding:17px;border:1px solid rgba(108,174,255,.4);border-radius:17px;background:rgba(7,12,29,.97);box-shadow:0 18px 55px rgba(0,0,0,.45);color:#f4f7ff}
+    .rivora-os-panel[hidden]{display:none}.rivora-os-panel h3{font-size:16px;margin-bottom:7px}.rivora-os-panel p{color:#aab6d3;font-size:12px;line-height:1.6;margin-bottom:12px}.rivora-os-panel-list{display:grid;gap:8px}.rivora-os-fav-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px;border:1px solid #263556;border-radius:10px;background:#101a32;font-size:12px}.rivora-os-fav-row button{padding:6px 9px;color:#ffc1c8;border-color:#71404c}.rivora-os-current{color:#64e5ff!important;font-size:10px!important;letter-spacing:1.2px;text-transform:uppercase}
+    @keyframes osProgress{to{width:100%}}@keyframes osContentIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @media(prefers-reduced-motion:reduce){.rivora-os-boot,.rivora-os-content{transition:none;animation:none}.rivora-os-progress span{animation-duration:1s}}
+
     .section-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:22px}
     .section-heading h2{font-size:23px}
     .section-heading h2::before{content:"";display:inline-block;width:4px;height:23px;background:var(--purple);margin-right:12px;vertical-align:middle;border-radius:5px}
@@ -80,6 +119,36 @@
   </style>
 </head>
 <body>
+
+  <section class="rivora-os-boot" id="rivoraOsBoot" aria-label="RIVORA OS startup" aria-live="polite">
+    <canvas class="rivora-os-canvas" id="rivoraOsCanvas" aria-hidden="true"></canvas>
+    <div class="rivora-os-vignette" aria-hidden="true"></div>
+    <div class="rivora-os-content">
+      <div class="rivora-os-overline">CINEMATIC OPERATING SYSTEM · INITIALIZING</div>
+      <div class="rivora-os-logo">RIVORA</div>
+      <p class="rivora-os-story" id="rivoraOsStory">Preparing your cinematic universe...</p>
+      <div class="rivora-os-progress" aria-hidden="true"><span id="rivoraOsProgress"></span></div>
+      <div class="rivora-os-status" id="rivoraOsStatus">Rendering environment · Loading scene</div>
+      <div class="rivora-os-theme" id="rivoraOsThemeName">BOOT THEME</div>
+      <button class="rivora-os-skip" id="rivoraOsSkip" type="button">ENTER CINEMA →</button>
+    </div>
+  </section>
+  <div class="rivora-os-dock" id="rivoraOsDock" hidden>
+    <button type="button" id="rivoraOsReplay">↻ Replay Experience</button>
+    <button type="button" id="rivoraOsManage">✦ My Themes</button>
+  </div>
+  <aside class="rivora-os-panel" id="rivoraOsPanel" hidden aria-label="My favourite boot themes">
+    <h3>My Favourite Themes</h3>
+    <p id="rivoraOsFavCount">0 / 7 saved. Favourite themes become your personal random pool on the next startup.</p>
+    <p class="rivora-os-current" id="rivoraOsCurrent"></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px">
+      <button type="button" id="rivoraOsAddFav">☆ Favourite Current Theme</button>
+      <button type="button" id="rivoraOsPickFav">Pick Another Theme</button>
+    </div>
+    <div class="rivora-os-panel-list" id="rivoraOsFavList"></div>
+    <p id="rivoraOsPanelStatus" role="status" style="margin-top:12px"></p>
+  </aside>
+
   <header>
     <a class="logo" href="#" aria-label="RIVORA home">RIVORA.</a>
     <nav aria-label="Main navigation">
@@ -98,6 +167,33 @@
         <p>One World. Endless Cinema. Discover a new dimension of entertainment with stories from around the world.</p>
         <button class="primary-button" type="button" id="exploreButton">Explore Movies →</button>
       </div>
+    </section>
+
+    <section class="surprise-section" aria-labelledby="surpriseHeading">
+      <div class="surprise-shell">
+        <div>
+          <div class="surprise-kicker">RIVORA DISCOVERY ENGINE</div>
+          <h2 id="surpriseHeading">Not sure what to watch?</h2>
+          <p>Let RIVORA choose your next cinematic discovery. One tap, one random pick from our published movie library.</p>
+        </div>
+        <button class="surprise-button" id="surpriseButton" type="button">
+          <span class="surprise-dice" aria-hidden="true">🎲</span><span>Surprise Me</span>
+        </button>
+      </div>
+      <div class="surprise-result" id="surpriseResult" aria-live="polite" aria-atomic="true">
+        <img class="surprise-poster" id="surprisePoster" alt="Selected movie poster" loading="lazy">
+        <div>
+          <div class="surprise-kicker">YOUR RANDOM PICK</div>
+          <h3 id="surpriseTitle">A movie is waiting...</h3>
+          <p class="surprise-meta" id="surpriseMeta"></p>
+          <p class="surprise-overview" id="surpriseOverview"></p>
+          <div class="surprise-actions">
+            <button class="surprise-details" id="surpriseDetails" type="button">View Details</button>
+            <button class="surprise-again" id="surpriseAgain" type="button">↻ Try Again</button>
+          </div>
+        </div>
+      </div>
+      <p class="surprise-status" id="surpriseStatus" role="status"></p>
     </section>
 
     <section class="section" id="movies">
@@ -200,6 +296,9 @@
     const movieModal = document.getElementById("movieModal");
     const listModal = document.getElementById("listModal");
     const watchlistKey = "rivoraWatchlist";
+    let publishedDatabaseMovies = [];
+    let lastSurpriseMovieId = null;
+    let selectedSurpriseMovie = null;
     let activeCategory = "All";
     let currentMovie = "";
     let lastFocusedElement = null;
@@ -371,6 +470,50 @@
     });
     document.getElementById("myListNav").addEventListener("click", showWatchlist);
     document.getElementById("watchlistButton").addEventListener("click", addToWatchlist);
+    function getSurprisePosterUrl(movie) {
+      const posterPath = movie?.poster_path || "";
+      if (!posterPath) return "";
+      if (/^https:\/\//i.test(posterPath)) return posterPath;
+      if (posterPath.startsWith("/")) return "https://image.tmdb.org/t/p/w500" + posterPath;
+      return "https://vvzjecoegcpzmlhqjwpu.supabase.co/storage/v1/object/public/rivora-movie-assets/" +
+        posterPath.split("/").map(encodeURIComponent).join("/");
+    }
+
+    function showSurpriseMovie() {
+      const status = document.getElementById("surpriseStatus");
+      const result = document.getElementById("surpriseResult");
+      if (!publishedDatabaseMovies.length) {
+        status.textContent = "Published movies are not available yet. Please try again in a moment.";
+        result.classList.remove("visible");
+        return;
+      }
+      let choices = publishedDatabaseMovies;
+      if (choices.length > 1 && lastSurpriseMovieId !== null) {
+        choices = choices.filter(movie => String(movie.id) !== String(lastSurpriseMovieId));
+      }
+      const movie = choices[Math.floor(Math.random() * choices.length)];
+      if (!movie) return;
+      selectedSurpriseMovie = movie;
+      lastSurpriseMovieId = movie.id;
+      const title = movie.title || "Untitled Movie";
+      const genres = Array.isArray(movie.genres) ? movie.genres.join(" • ") : (movie.genres || "Cinema");
+      const year = movie.release_year || "Year unavailable";
+      document.getElementById("surpriseTitle").textContent = title;
+      document.getElementById("surpriseMeta").textContent = genres + " • " + year + (movie.rating ? " • ★ " + movie.rating : "");
+      document.getElementById("surpriseOverview").textContent = movie.overview || "No description available for this movie.";
+      const poster = document.getElementById("surprisePoster");
+      const posterUrl = getSurprisePosterUrl(movie);
+      poster.src = posterUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450' viewBox='0 0 300 450'%3E%3Crect width='300' height='450' fill='%23171f39'/%3E%3Ctext x='150' y='225' fill='%2342d9ff' font-size='22' text-anchor='middle' font-family='Arial'%3ERIVORA%3C/text%3E%3C/svg%3E";
+      poster.alt = title + " poster";
+      result.classList.add("visible");
+      status.textContent = "A published movie has been selected for you.";
+    }
+
+    document.getElementById("surpriseButton").addEventListener("click", showSurpriseMovie);
+    document.getElementById("surpriseAgain").addEventListener("click", showSurpriseMovie);
+    document.getElementById("surpriseDetails").addEventListener("click", () => {
+      if (selectedSurpriseMovie) showDetails(selectedSurpriseMovie.title || "Untitled Movie");
+    });
     document.getElementById("closeMovieModal").addEventListener("click", () => closeModal(movieModal));
     document.getElementById("closeListModal").addEventListener("click", () => closeModal(listModal));
 
@@ -421,6 +564,15 @@
     }
 
     const movies = await response.json();
+    publishedDatabaseMovies = Array.isArray(movies)
+      ? movies.filter(movie => movie && movie.status === "published" && movie.id && movie.title)
+      : [];
+    const surpriseStatus = document.getElementById("surpriseStatus");
+    if (surpriseStatus) {
+      surpriseStatus.textContent = publishedDatabaseMovies.length
+        ? publishedDatabaseMovies.length + " published movies ready for a random pick."
+        : "No published movies are available for Surprise Me yet.";
+    }
 
     movies.forEach(movie => {
       const title = movie.title || "Untitled Movie";
@@ -539,5 +691,132 @@
   }
 })();
         </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script>
+(function rivoraOperatingSystem(){
+  "use strict";
+  const SUPABASE_URL="https://vvzjecoegcpzmlhqjwpu.supabase.co";
+  const SUPABASE_KEY="sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
+  const THEME_API=SUPABASE_URL+"/functions/v1/RIVORA_Admin_Edge_Function_v2-ts";
+  const STORE={favourites:"rivoraOS:favourites:v1",last:"rivoraOS:lastTheme:v1",seen:"rivoraOS:lastSeen:v1",rotation:"rivoraOS:rotation:v1"};
+  const boot=document.getElementById("rivoraOsBoot");
+  if(!boot)return;
+  const $=id=>document.getElementById(id);
+  const palettes=[
+    {name:"CYBERPUNK",colors:[0x00e5ff,0xb34cff,0xff3f9b],story:"Neon rain falls over a city that never sleeps. Its skyline is waking up just for you."},
+    {name:"DEEP SPACE",colors:[0x8b7cff,0x36cfff,0xf7a7ff],story:"Beyond the last mapped star, a quiet universe opens its gates. Your journey begins among distant worlds."},
+    {name:"ANCIENT CIVILIZATION",colors:[0xffc36b,0xd77b38,0x7ed4c3],story:"Forgotten halls stir beneath the sands. Echoes of an ancient world guide you toward a new story."},
+    {name:"ENCHANTED FOREST",colors:[0x7dffb0,0x45c7d9,0xc0ff75],story:"A living forest glows beneath a sky of emerald light. Every path leads to another wonder."},
+    {name:"MYTHIC REALMS",colors:[0xffc76a,0x9c7bff,0xff7ca8],story:"Legends awaken in a realm shaped by imagination. A new chapter is waiting beyond the horizon."},
+    {name:"OCEANIC WORLD",colors:[0x24d8ff,0x1685c7,0x9fffea],story:"Sunlight travels through an endless blue. The hidden world below the waves is coming into view."},
+    {name:"FUTURE METROPOLIS",colors:[0x6be7ff,0x6889ff,0xffffff],story:"A city of tomorrow powers up, tower by tower. Its lights reveal the next destination."},
+    {name:"VOLCANIC FRONTIER",colors:[0xff8b45,0xffd166,0xff4e67],story:"A world of fire and stone glows at the edge of dawn. From its energy, a new adventure rises."},
+    {name:"CELESTIAL GARDEN",colors:[0xe2a5ff,0x83eaff,0xffd5a5],story:"Floating gardens drift through a pastel sky. Time slows as your personal cinema takes shape."},
+    {name:"CRYSTAL DIMENSION",colors:[0x8df7ff,0xa78bfa,0xf5a6ff],story:"A dimension of refracted light forms around you. Each crystal holds a different possibility."}
+  ];
+  const forms=["Orbit","Eclipse","Mirage","Pulse","Horizon","Odyssey","Prism","Genesis","Nexus","Aurora"];
+  const storyBeats=[
+    "A silent gateway turns slowly in the distance, revealing a path no map has recorded.",
+    "Light gathers along the skyline as a hidden signal invites you to cross the threshold.",
+    "An unfamiliar constellation appears overhead, connecting this world to a story yet untold.",
+    "Ancient patterns begin to move, and the landscape responds to the arrival of a new explorer.",
+    "A distant beacon brightens through the atmosphere, marking the beginning of your passage.",
+    "The horizon shifts into view as a sequence of impossible shapes unfolds around you.",
+    "A field of luminous fragments forms a bridge between imagination and the unknown.",
+    "The world settles into a new rhythm, opening a fresh chapter in the RIVORA universe.",
+    "A pulse travels through the environment, bringing its hidden architecture into focus.",
+    "The final veil fades from the scene, leaving a doorway to your next cinematic discovery."
+  ];
+  const themes=[];
+  palettes.forEach((p,pi)=>forms.forEach((f,fi)=>themes.push({id:"os-"+(pi*10+fi+1),name:p.name+" · "+f,world:p.name,story:p.story+" "+storyBeats[fi],colors:p.colors,shape:fi%10,seed:pi*97+fi*31+11})));
+  let byId=new Map(themes.map(t=>[t.id,t]));
+  const safeRead=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key)||"null");return v===null?fallback:v}catch(_){return fallback}};
+  const safeWrite=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true}catch(_){return false}};
+  const validFavs=()=>{const v=safeRead(STORE.favourites,[]);return Array.isArray(v)?[...new Set(v.filter(id=>byId.has(id)))].slice(0,7):[]};
+  let current=null,lastTheme=null,renderer=null,scene=null,camera=null,mainObject=null,particles=null,frame=0,startedAt=0,animationId=0;
+  const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function pickTheme(preferred){
+    const favs=validFavs();
+    const pool=favs.length?favs.map(id=>byId.get(id)).filter(Boolean):themes;
+    let choices=pool;
+    const previous=preferred||safeRead(STORE.last,null);
+    if(pool.length>1&&previous)choices=pool.filter(t=>t.id!==previous);
+    return choices[Math.floor(Math.random()*choices.length)]||pool[0]||themes[0];
+  }
+  function stopScene(){if(animationId)cancelAnimationFrame(animationId);animationId=0;if(renderer){renderer.dispose();renderer=null}scene=null;camera=null;mainObject=null;particles=null}
+  function startScene(theme){
+    stopScene();
+    const canvas=$("rivoraOsCanvas");
+    if(!window.THREE){canvas.style.background="radial-gradient(ellipse at 50% 45%,#172b58,#080b18 68%)";return}
+    try{
+      const T=window.THREE;scene=new T.Scene();scene.fog=new T.FogExp2(0x070b19,.035);
+      camera=new T.PerspectiveCamera(55,window.innerWidth/window.innerHeight,.1,100);camera.position.set(0,0,10);
+      renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:window.devicePixelRatio<2,powerPreference:"low-power"});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setSize(window.innerWidth,window.innerHeight);renderer.setClearColor(0x050713,0);
+      scene.add(new T.AmbientLight(0xffffff,.75));
+      const light=new T.PointLight(theme.colors[0],2.8,30);light.position.set((Math.random()-.5)*7,(Math.random()-.5)*6,4);scene.add(light);
+      const geometrySet=[new T.IcosahedronGeometry(2.0,1),new T.TorusKnotGeometry(1.35,.32,120,16),new T.OctahedronGeometry(2.0,1),new T.TorusGeometry(1.7,.35,18,90),new T.DodecahedronGeometry(2,1),new T.TetrahedronGeometry(2,1),new T.SphereGeometry(1.7,32,24),new T.ConeGeometry(1.7,3.2,8),new T.TorusKnotGeometry(1.4,.18,160,12,2,5),new T.CylinderGeometry(1.2,1.8,2.7,9,1,true)];
+      const material=new T.MeshStandardMaterial({color:theme.colors[0],metalness:.62,roughness:.23,wireframe:theme.shape%3===1,emissive:theme.colors[1],emissiveIntensity:.18});
+      mainObject=new T.Mesh(geometrySet[theme.shape],material);mainObject.scale.setScalar(.84+Math.random()*.3);scene.add(mainObject);
+      const ring=new T.Mesh(new T.TorusGeometry(3.0,.018,8,140),new T.MeshBasicMaterial({color:theme.colors[1],transparent:true,opacity:.8}));ring.rotation.x=.6+Math.random()*1.1;ring.rotation.y=Math.random()*.9;scene.add(ring);
+      const ring2=new T.Mesh(new T.TorusGeometry(3.5,.012,6,120),new T.MeshBasicMaterial({color:theme.colors[2],transparent:true,opacity:.6}));ring2.rotation.x=1.8;scene.add(ring2);
+      const count=window.innerWidth<600?550:1000;const pos=new Float32Array(count*3);let seed=theme.seed+Math.floor(Math.random()*1000000);const rand=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+      for(let i=0;i<count;i++){pos[i*3]=(rand()-.5)*24;pos[i*3+1]=(rand()-.5)*15;pos[i*3+2]=(rand()-.5)*16}
+      const pg=new T.BufferGeometry();pg.setAttribute("position",new T.BufferAttribute(pos,3));particles=new T.Points(pg,new T.PointsMaterial({color:theme.colors[2],size:.025,transparent:true,opacity:.8}));scene.add(particles);
+      startedAt=performance.now();
+      const animate=now=>{if(!renderer||!scene)return;const elapsed=(now-startedAt)*.00025;if(mainObject){mainObject.rotation.x=elapsed*.8;mainObject.rotation.y=elapsed*1.1}ring.rotation.z=-elapsed*.55;ring2.rotation.z=elapsed*.32;particles.rotation.y=elapsed*.08;renderer.render(scene,camera);animationId=requestAnimationFrame(animate)};
+      if(!reduced)animationId=requestAnimationFrame(animate);else renderer.render(scene,camera);
+    }catch(err){console.warn("RIVORA OS 3D scene fallback:",err);stopScene();canvas.style.background="radial-gradient(ellipse at 50% 45%,#172b58,#080b18 68%)"}
+  }
+  function setTheme(theme,remember=true){current=theme;$("rivoraOsStory").textContent=theme.story;$("rivoraOsThemeName").textContent="WORLD // "+theme.name;$("rivoraOsCurrent").textContent="Current world: "+theme.name;$("rivoraOsStatus").textContent="3D scene ready · Calibrating cinematic experience";startScene(theme);if(remember){safeWrite(STORE.last,theme.id);safeWrite(STORE.seen,Date.now())}renderPanel()}
+  function enterSite(){boot.classList.add("is-leaving");$("rivoraOsDock").hidden=false;window.setTimeout(()=>{boot.style.display="none";stopScene()},850)}
+  function launch(theme){boot.style.display="grid";boot.classList.remove("is-leaving");$("rivoraOsProgress").style.animation="none";void $("rivoraOsProgress").offsetWidth;$("rivoraOsProgress").style.animation="";setTheme(theme);window.setTimeout(()=>{if(boot.style.display!=="none"&&!boot.classList.contains("is-leaving"))enterSite()},3900);}
+  function renderPanel(){const favs=validFavs();$("rivoraOsFavCount").textContent=favs.length===7?"Your Favourite Collection is Full (7/7). Remove one theme before adding another.":favs.length+" / 7 saved. If you have favourites, startup themes are selected only from this collection.";$("rivoraOsAddFav").disabled=!current||favs.includes(current.id)||favs.length>=7;$("rivoraOsAddFav").textContent=current&&favs.includes(current.id)?"✓ Already Favourite":"☆ Favourite Current Theme";const list=$("rivoraOsFavList");list.replaceChildren();if(!favs.length){const p=document.createElement("p");p.textContent="No favourites yet. Save the current world to build your collection.";list.append(p)}else favs.forEach(id=>{const theme=byId.get(id);if(!theme)return;const row=document.createElement("div");row.className="rivora-os-fav-row";const label=document.createElement("span");label.textContent=theme.name;const remove=document.createElement("button");remove.type="button";remove.textContent="Remove";remove.addEventListener("click",()=>{safeWrite(STORE.favourites,validFavs().filter(x=>x!==id));renderPanel();$("rivoraOsPanelStatus").textContent="Favourite removed."});row.append(label,remove);list.append(row)})}
+  $("rivoraOsSkip").addEventListener("click",enterSite);
+  $("rivoraOsReplay").addEventListener("click",()=>{const id=safeRead(STORE.last,null);launch(byId.get(id)||current||pickTheme())});
+  $("rivoraOsManage").addEventListener("click",()=>{$("rivoraOsPanel").hidden=!$("rivoraOsPanel").hidden;renderPanel()});
+  $("rivoraOsAddFav").addEventListener("click",()=>{const favs=validFavs();if(!current)return;if(favs.includes(current.id))return;if(favs.length>=7){$("rivoraOsPanelStatus").textContent="Your Favourite Collection is Full (7/7). Remove one first.";return}favs.push(current.id);safeWrite(STORE.favourites,favs);$("rivoraOsPanelStatus").textContent="Added to your Favourite Collection.";renderPanel()});
+  $("rivoraOsPickFav").addEventListener("click",()=>{const theme=pickTheme(current?.id);$("rivoraOsPanel").hidden=true;launch(theme)});
+  window.addEventListener("resize",()=>{if(renderer&&camera){camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)}});
+  async function loadPublishedThemes(){
+    try{
+      const response=await fetch(THEME_API,{
+        method:"POST",
+        headers:{"Content-Type":"application/json",apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY},
+        body:JSON.stringify({action:"list_public_themes"}),
+        signal:AbortSignal.timeout(3500)
+      });
+      if(!response.ok)throw new Error("Theme feed unavailable: "+response.status);
+      const payload=await response.json();
+      if(!payload||payload.success!==true||!Array.isArray(payload.themes)||!payload.themes.length)throw new Error("No published themes returned");
+      const remote=payload.themes.map(row=>({
+        id:String(row.theme_id||""),name:String(row.theme_name||"RIVORA WORLD"),world:String(row.world||"UNKNOWN"),
+        story:String(row.story||"A new cinematic world is preparing for you."),
+        colors:Array.isArray(row.colors)?row.colors.map(Number).filter(Number.isFinite).slice(0,3):[],
+        shape:Number.isInteger(Number(row.shape))?Math.max(0,Math.min(9,Number(row.shape))):0,
+        seed:Number.isFinite(Number(row.seed))?Number(row.seed):1
+      })).filter(t=>t.id&&t.colors.length===3);
+      if(!remote.length)throw new Error("Published theme records were invalid");
+      themes.splice(0,themes.length,...remote);
+      byId=new Map(themes.map(t=>[t.id,t]));
+      return true;
+    }catch(error){
+      console.warn("RIVORA OS using local fallback themes:",error);
+      byId=new Map(themes.map(t=>[t.id,t]));
+      return false;
+    }
+  }
+  async function initializeOS(){
+    const source=await loadPublishedThemes();
+    const initial=pickTheme();setTheme(initial);
+    const bootStart=Date.now();
+    window.setTimeout(()=>{if(boot.style.display!=="none"&&!boot.classList.contains("is-leaving")){const elapsed=Date.now()-bootStart;if(elapsed<2600)window.setTimeout(enterSite,2600-elapsed);else enterSite()}},3900);
+    window.RIVORA_OS={version:"1.1-v3-theme-registry",themeCount:themes.length,themeSource:source?"supabase-registry":"local-fallback",renderer:"Three.js WebGL with CSS fallback",getCurrentTheme:()=>current?.name||null,getFavouriteCount:()=>validFavs().length};
+  }
+  initializeOS();
+})();
+</script>
+
 </body>
 </html>
