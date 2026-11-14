@@ -389,5 +389,155 @@
 
     applyMovieFilters();
   </script>
+  <script>
+(async function connectRivoraDatabase() {
+  const SUPABASE_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
+  const BUCKET = "rivora-movie-assets";
+
+  const grid = document.getElementById("movieGrid");
+  const search = document.getElementById("searchInput");
+  const empty = document.getElementById("emptyMessage");
+
+  const status = document.createElement("p");
+  status.style.cssText = "color:#a5aec7;margin-bottom:15px;font-size:13px;";
+  status.textContent = "Connecting to RIVORA Database...";
+  grid.before(status);
+
+  try {
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/movies?select=id,title,release_year,overview,poster_path,genres,rating,status&status=eq.published&order=created_at.desc",
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Database response: " + response.status);
+    }
+
+    const movies = await response.json();
+
+    movies.forEach(movie => {
+      const title = movie.title || "Untitled Movie";
+
+      const genres = Array.isArray(movie.genres)
+        ? movie.genres.join(" • ")
+        : (movie.genres || "Cinema");
+
+      let category = "All";
+      if (/sci.fi|science fiction/i.test(genres)) {
+        category = "Sci-Fi";
+      }
+
+      const card = document.createElement("article");
+      card.className = "movie-card";
+      card.dataset.title = title;
+      card.dataset.category = category;
+      card.dataset.databaseMovie = "true";
+
+      const poster = document.createElement("div");
+      poster.className = "poster";
+
+      const posterPath = movie.poster_path || "";
+
+      if (posterPath) {
+        let posterURL = "";
+
+        if (/^https:\/\//i.test(posterPath)) {
+          posterURL = posterPath;
+        } else if (posterPath.startsWith("/")) {
+          posterURL = "https://image.tmdb.org/t/p/w500" + posterPath;
+        } else {
+          posterURL = SUPABASE_URL +
+            "/storage/v1/object/public/" +
+            BUCKET + "/" +
+            posterPath.split("/").map(encodeURIComponent).join("/");
+        }
+
+        poster.style.backgroundImage =
+          "linear-gradient(transparent,rgba(0,0,0,.55)),url('" +
+          posterURL.replace(/'/g, "%27") + "')";
+
+        poster.style.backgroundSize = "cover";
+        poster.style.backgroundPosition = "center";
+      }
+
+      poster.textContent = title;
+
+      const info = document.createElement("div");
+      info.className = "movie-info";
+
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+
+      const details = document.createElement("p");
+      details.textContent =
+        genres + " • " + (movie.release_year || "Year unavailable") +
+        (movie.rating ? " • ★ " + movie.rating : "");
+
+      const button = document.createElement("button");
+      button.className = "secondary-button";
+      button.type = "button";
+      button.textContent = "View Details";
+
+      movieData[title] = {
+        category: genres + " • " + (movie.release_year || ""),
+        description: movie.overview || "No description available."
+      };
+
+      button.addEventListener("click", () => showDetails(title));
+
+      info.append(heading, details, button);
+      card.append(poster, info);
+      grid.insertBefore(card, empty);
+    });
+
+    const dynamicCards = Array.from(
+      document.querySelectorAll("[data-database-movie='true']")
+    );
+
+    function filterDatabaseMovies() {
+      const query = search.value.trim().toLowerCase();
+
+      dynamicCards.forEach(card => {
+        const title = (card.dataset.title || "").toLowerCase();
+        const text = card.textContent.toLowerCase();
+
+        card.hidden =
+          !(title.includes(query) || text.includes(query)) ||
+          !(activeCategory === "All" ||
+            card.dataset.category === activeCategory);
+      });
+
+      const staticVisible = cards.some(card => !card.hidden);
+      const databaseVisible = dynamicCards.some(card => !card.hidden);
+
+      empty.style.display =
+        staticVisible || databaseVisible ? "none" : "block";
+    }
+
+    search.addEventListener("input", filterDatabaseMovies);
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", filterDatabaseMovies);
+    });
+
+    filterDatabaseMovies();
+
+    status.textContent =
+      movies.length + " published movies loaded from RIVORA Database.";
+
+  } catch (error) {
+    console.error("RIVORA Database Error:", error);
+    status.textContent =
+      "Database connection failed. Please check the browser console.";
+  }
+})();
+        </script>
 </body>
 </html>
