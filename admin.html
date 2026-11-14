@@ -34,6 +34,56 @@ footer{padding:25px;text-align:center;color:var(--muted);font-size:12px;border-t
 .field-row input{min-width:0}
 @media(max-width:520px){.link-grid,.field-row{grid-template-columns:1fr}}
 textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:white;font:14px Arial,sans-serif;outline:none}textarea:focus,select:focus{border-color:var(--cyan)}.upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.upload-grid>div{min-width:0}.upload-grid input[type=file]{padding:10px;font-size:12px}.upload-panel{border-top:1px solid var(--border);margin-top:18px;padding-top:8px}@media(max-width:520px){.upload-grid{grid-template-columns:1fr}}
+
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.dashboard-card{padding:17px;background:linear-gradient(145deg,#171f39,#10172b);border:1px solid var(--border);border-radius:12px;min-width:0}
+.dashboard-card small{display:block;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.dashboard-card strong{display:block;margin-top:10px;font-size:clamp(23px,5vw,32px);color:var(--cyan);overflow-wrap:anywhere}
+.dashboard-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dashboard-head .spacer{flex:1}
+.dashboard-refresh{background:transparent;border:1px solid var(--cyan);color:var(--cyan);padding:9px 12px}
+@media(max-width:600px){.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-card{padding:14px}}
+@media(max-width:360px){.dashboard-grid{grid-template-columns:1fr}}
+
+.library-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.library-toolbar input,.library-toolbar select{min-width:0;width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:var(--text)}
+.library-list{display:grid;gap:11px;margin-top:15px}
+.library-item{padding:15px;border:1px solid var(--border);border-radius:11px;background:var(--panel2);min-width:0}
+.library-item-head{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.library-item h3{font-size:16px;overflow-wrap:anywhere}.library-item p{color:var(--muted);font-size:12px;line-height:1.6;margin-top:6px;overflow-wrap:anywhere}
+.library-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.library-actions button{padding:9px 12px;font-size:12px}.library-detail{margin-top:12px;padding:14px;border:1px solid var(--border);border-radius:9px;background:#0b1020}
+.library-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.library-detail-cell{min-width:0;padding:9px;background:var(--panel2);border-radius:8px;overflow-wrap:anywhere}.library-detail-cell small{display:block;color:var(--cyan);font-size:10px;margin-bottom:5px}.library-detail-cell p{white-space:pre-wrap}
+.library-images{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}.library-images figure{min-width:0}.library-images img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:7px;background:#080b18}.library-images figcaption{font-size:10px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+.library-pagination{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:15px;flex-wrap:wrap}.library-pagination button{padding:10px 13px}.library-danger{border:1px solid var(--danger);background:transparent;color:var(--danger)}
+.publish-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin:14px 0}
+.publish-list{display:grid;gap:10px;margin-top:14px}
+.publish-item{padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);min-width:0}
+.publish-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.publish-item h3{font-size:15px;overflow-wrap:anywhere}
+.publish-item p{font-size:12px;color:var(--muted);line-height:1.6;margin-top:5px}
+.publish-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.publish-actions button{padding:9px 12px;font-size:12px}
+.publish-state{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--cyan);border:1px solid var(--border);padding:5px 8px;border-radius:20px}
+@media(max-width:520px){.publish-toolbar{grid-template-columns:1fr}.publish-actions button{flex:1}}
+@media(max-width:520px){.library-toolbar,.library-detail-grid{grid-template-columns:1fr 1fr}.library-images{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+.media-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+.media-toolbar input,.media-toolbar select{min-width:0;width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:var(--text)}
+.media-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}
+.media-card{min-width:0;overflow:hidden;border:1px solid var(--border);border-radius:11px;background:var(--panel2)}
+.media-card img{display:block;width:100%;height:190px;object-fit:contain;background:#080b18}
+.media-card-body{padding:12px;min-width:0}
+.media-card h3{font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.media-card p{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.media-card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.media-card-actions button{padding:8px 10px;font-size:11px}
+.media-summary{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.media-summary span{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);font-size:12px;color:var(--muted)}
+@media(max-width:650px){.media-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.media-toolbar{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){.media-grid{grid-template-columns:1fr}.media-toolbar{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -55,6 +105,68 @@ textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-ra
   <button class="primary" id="loginBtn" type="button">SECURE LOGIN →</button>
   <p class="status" id="loginStatus" aria-live="polite">Your session will remain in this page's memory only.</p>
   <p class="notice">Never share your PIN. This page does not save the PIN or session token in localStorage.</p>
+</section>
+
+<section class="panel hidden" id="dashboardPanel">
+  <div class="dashboard-head"><h2>00 / Advanced Dashboard</h2><span class="spacer"></span><button class="dashboard-refresh" id="dashboardRefreshBtn" type="button">↻ REFRESH</button></div>
+  <p class="notice">Live database overview. Statistics are loaded securely after admin authentication.</p>
+  <div class="dashboard-grid" aria-live="polite">
+    <div class="dashboard-card"><small>Total Movies</small><strong id="statTotalMovies">—</strong></div>
+    <div class="dashboard-card"><small>Published Movies</small><strong id="statPublishedMovies">—</strong></div>
+    <div class="dashboard-card"><small>Draft Movies</small><strong id="statDraftMovies">—</strong></div>
+    <div class="dashboard-card"><small>Total Series</small><strong id="statTotalSeries">—</strong></div>
+    <div class="dashboard-card"><small>Total Episodes</small><strong id="statTotalEpisodes">—</strong></div>
+    <div class="dashboard-card"><small>Storage Used</small><strong id="statStorageUsed">—</strong></div>
+  </div>
+  <p class="status" id="dashboardStatus" aria-live="polite">Waiting for secure session…</p>
+</section>
+
+
+<section class="panel hidden" id="movieLibraryPanel">
+  <div class="topline"><h2>01 / Movie Library Manager</h2><span class="spacer"></span><span class="pill">DATABASE</span></div>
+  <p class="notice">Browse all movie records securely. Search, filter, sort and inspect saved details. Removing a published movie from the public site moves it back to Draft; no movie record is deleted.</p>
+  <div class="library-toolbar">
+    <input id="librarySearch" type="search" maxlength="100" placeholder="Search movie title" aria-label="Search movie title">
+    <select id="libraryStatus" aria-label="Filter by status"><option value="all">All statuses</option><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select>
+    <input id="libraryGenre" type="text" maxlength="80" placeholder="Genre (exact)" aria-label="Filter by genre">
+    <input id="libraryYear" type="number" min="1880" max="2100" placeholder="Release year" aria-label="Filter by release year">
+    <select id="librarySort" aria-label="Sort movies"><option value="created_at:desc">Latest added</option><option value="created_at:asc">Oldest added</option><option value="release_year:desc">Release year: newest</option><option value="release_year:asc">Release year: oldest</option><option value="title:asc">Title: A–Z</option><option value="title:desc">Title: Z–A</option></select>
+    <button class="secondary" id="libraryApplyBtn" type="button">APPLY FILTERS</button>
+  </div>
+  <div class="topline"><p class="status" id="libraryStatusText" aria-live="polite">Library will load after login.</p><span class="spacer"></span><button class="secondary" id="libraryRefreshBtn" type="button">↻ REFRESH</button></div>
+  <div class="library-list" id="libraryList" aria-live="polite"></div>
+  <div class="library-pagination"><button class="secondary" id="libraryPrevBtn" type="button" disabled>← PREVIOUS</button><span class="notice" id="libraryPageText">Page 0 of 0</span><button class="secondary" id="libraryNextBtn" type="button" disabled>NEXT →</button></div>
+</section>
+
+<section class="panel hidden" id="publishingPanel">
+  <div class="topline"><h2>02 / Publishing Control</h2><span class="spacer"></span><span class="pill">STATUS CONTROL</span></div>
+  <p class="notice">Control each movie's publication state. Draft movies can be published, published movies can be archived, and archived movies can be restored to Draft. No movie records are deleted.</p>
+  <div class="publish-toolbar">
+    <select id="publishingFilter" aria-label="Filter publication state">
+      <option value="all">All publication states</option>
+      <option value="draft">Draft queue</option>
+      <option value="published">Published movies</option>
+      <option value="archived">Archived movies</option>
+    </select>
+    <button class="secondary" id="publishingRefreshBtn" type="button">↻ REFRESH</button>
+  </div>
+  <p class="status" id="publishingStatus" aria-live="polite">Publishing controls will load after login.</p>
+  <div class="publish-list" id="publishingList" aria-live="polite"></div>
+  <div class="library-pagination"><button class="secondary" id="publishingPrevBtn" type="button" disabled>← PREVIOUS</button><span class="notice" id="publishingPageText">Page 0 of 0</span><button class="secondary" id="publishingNextBtn" type="button" disabled>NEXT →</button></div>
+</section>
+
+<section class="panel hidden" id="mediaAssetPanel">
+  <div class="topline"><h2>03 / Media Asset Manager</h2><span class="spacer"></span><span class="pill">ASSET LIBRARY</span></div>
+  <p class="notice">Browse image assets linked to movie records: posters, backdrops, thumbnails and screenshots. Preview images, copy their public URL or open them separately. Assets are never deleted from this panel, helping prevent broken movie pages.</p>
+  <div class="media-toolbar">
+    <input id="mediaSearch" type="search" maxlength="100" placeholder="Search movie title" aria-label="Search movie title">
+    <select id="mediaStatusFilter" aria-label="Filter by movie status"><option value="all">All movie statuses</option><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select>
+    <select id="mediaTypeFilter" aria-label="Filter by asset type"><option value="all">All asset types</option><option value="poster">Poster</option><option value="backdrop">Backdrop</option><option value="thumbnail">Thumbnail</option><option value="screenshot">Screenshot</option><option value="other">Other images</option></select>
+  </div>
+  <div class="topline"><p class="status" id="mediaAssetStatus" aria-live="polite">Media assets will load after login.</p><span class="spacer"></span><button class="secondary" id="mediaAssetRefreshBtn" type="button">↻ REFRESH</button></div>
+  <div class="media-summary" id="mediaAssetSummary"></div>
+  <div class="media-grid" id="mediaAssetGrid" aria-live="polite"></div>
+  <div class="library-pagination"><button class="secondary" id="mediaAssetPrevBtn" type="button" disabled>← PREVIOUS</button><span class="notice" id="mediaAssetPageText">Page 0 of 0</span><button class="secondary" id="mediaAssetNextBtn" type="button" disabled>NEXT →</button></div>
 </section>
 
 <section class="panel hidden" id="searchPanel">
@@ -189,7 +301,11 @@ async function postJson(url, body, token = null, needsPublicKey = false) {
 function clearSessionUI(message = "You are logged out.") {
   adminSessionToken = null;
   $("loginPanel").classList.remove("hidden");
+  $("dashboardPanel").classList.add("hidden");
   $("searchPanel").classList.add("hidden");
+  $("movieLibraryPanel").classList.add("hidden");
+  $("publishingPanel").classList.add("hidden");
+  $("mediaAssetPanel").classList.add("hidden");
   $("seriesPanel").classList.add("hidden");
   $("movieUploadPanel").classList.add("hidden");
   $("previewSection").classList.add("hidden");
@@ -197,6 +313,405 @@ function clearSessionUI(message = "You are logged out.") {
   $("adminPin").value = "";
   setStatus("loginStatus", message, "success");
 }
+
+function formatStorage(bytes) {
+  if (bytes === null || bytes === undefined || !Number.isFinite(Number(bytes))) return "Unavailable";
+  const value = Number(bytes);
+  if (value < 1024) return `${value} B`;
+  const units = ["KB", "MB", "GB", "TB"];
+  let size = value / 1024;
+  let unit = 0;
+  while (size >= 1024 && unit < units.length - 1) { size /= 1024; unit++; }
+  return `${size.toFixed(1)} ${units[unit]}`;
+}
+
+async function loadDashboard() {
+  if (!adminSessionToken) return;
+  const btn = $("dashboardRefreshBtn");
+  if (btn) btn.disabled = true;
+  setStatus("dashboardStatus", "Fetching live database statistics…");
+  try {
+    const stats = await postJson(
+      ADMIN_URL,
+      { action: "dashboard_stats" },
+      adminSessionToken,
+      true
+    );
+    if (stats.success !== true || !stats.stats) throw new Error(stats.error || "Dashboard statistics unavailable.");
+    $("statTotalMovies").textContent = Number(stats.stats.total_movies ?? 0).toLocaleString();
+    $("statPublishedMovies").textContent = Number(stats.stats.published_movies ?? 0).toLocaleString();
+    $("statDraftMovies").textContent = Number(stats.stats.draft_movies ?? 0).toLocaleString();
+    $("statTotalSeries").textContent = Number(stats.stats.total_series ?? 0).toLocaleString();
+    $("statTotalEpisodes").textContent = Number(stats.stats.total_episodes ?? 0).toLocaleString();
+    $("statStorageUsed").textContent = formatStorage(stats.stats.storage_bytes);
+    const storageNote = stats.stats.storage_complete === false ? " Storage figure may be incomplete." : "";
+    setStatus("dashboardStatus", `Last updated: ${new Date().toLocaleTimeString()} · ${Number(stats.stats.storage_files ?? 0).toLocaleString()} stored image files.${storageNote}`, "success");
+  } catch (error) {
+    setStatus("dashboardStatus", error.message || "Could not load dashboard.", "error");
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+$("dashboardRefreshBtn").addEventListener("click", loadDashboard);
+
+// MOVIE LIBRARY MANAGER — all data requests use the authenticated Edge Function.
+const LIBRARY_PAGE_SIZE = 10;
+let libraryOffset = 0;
+let libraryTotal = 0;
+let libraryRows = [];
+let libraryImages = [];
+let libraryLinks = [];
+const libraryExpanded = new Set();
+
+function libraryElement(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined && text !== null) node.textContent = String(text);
+  return node;
+}
+
+function libraryImageUrl(path) {
+  if (typeof path !== "string" || !path.trim()) return "";
+  const value = path.trim();
+  if (/^https:\/\//i.test(value)) return value;
+  if (/^http:\/\//i.test(value) || value.startsWith("//") || value.includes("..")) return "";
+  const clean = value.replace(/^\/+/, "");
+  return "https://vvzjecoegcpzmlhqjwpu.supabase.co/storage/v1/object/public/rivora-movie-assets/" + clean.split("/").map(encodeURIComponent).join("/");
+}
+
+function libraryField(parent, label, value) {
+  const cell = libraryElement("div", "library-detail-cell");
+  cell.append(libraryElement("small", "", label));
+  const content = Array.isArray(value) ? value.join(", ") : (value === null || value === undefined || value === "" ? "—" : String(value));
+  cell.append(libraryElement("p", "", content));
+  parent.append(cell);
+}
+
+function renderMovieLibrary() {
+  const list = $("libraryList");
+  list.replaceChildren();
+  if (!libraryRows.length) {
+    list.append(libraryElement("p", "notice", "No movies found for these filters."));
+  }
+  for (const movie of libraryRows) {
+    const card = libraryElement("article", "library-item");
+    const head = libraryElement("div", "library-item-head");
+    const info = libraryElement("div");
+    info.style.flex = "1";
+    info.append(libraryElement("h3", "", movie.title || "Untitled Movie"));
+    const genres = Array.isArray(movie.genres) ? movie.genres.join(" · ") : (movie.genres || "No genre");
+    info.append(libraryElement("p", "", `${movie.release_year || "Year unknown"} · ${genres} · Status: ${movie.status || "unknown"}`));
+    info.append(libraryElement("p", "", `Movie ID: ${movie.id || "—"}`));
+    head.append(info);
+    const actions = libraryElement("div", "library-actions");
+    const detailBtn = libraryElement("button", "secondary", libraryExpanded.has(movie.id) ? "HIDE DETAILS" : "VIEW DETAILS");
+    detailBtn.type = "button";
+    detailBtn.addEventListener("click", () => {
+      if (libraryExpanded.has(movie.id)) libraryExpanded.delete(movie.id); else libraryExpanded.add(movie.id);
+      renderMovieLibrary();
+    });
+    actions.append(detailBtn);
+    if (movie.status === "published") {
+      const unpublishBtn = libraryElement("button", "library-danger", "REMOVE FROM PUBLIC");
+      unpublishBtn.type = "button";
+      unpublishBtn.addEventListener("click", async () => {
+        if (!adminSessionToken || !confirm(`Move “${movie.title || "this movie"}” back to Draft? It will disappear from the public website. The record and images will not be deleted.`)) return;
+        unpublishBtn.disabled = true;
+        try {
+          const result = await postJson(ADMIN_URL, { action: "unpublish_movie", movie_id: movie.id }, adminSessionToken, true);
+          if (result.success !== true || result.status !== "draft") throw new Error(result.error || "Movie status was not changed.");
+          setStatus("libraryStatusText", "Movie moved to Draft. No data was deleted.", "success");
+          await loadMovieLibrary(libraryOffset);
+          loadDashboard();
+        } catch (error) {
+          setStatus("libraryStatusText", error.message || "Could not move movie to Draft.", "error");
+          unpublishBtn.disabled = false;
+        }
+      });
+      actions.append(unpublishBtn);
+    }
+    head.append(actions);
+    card.append(head);
+
+    if (libraryExpanded.has(movie.id)) {
+      const detail = libraryElement("div", "library-detail");
+      const fields = libraryElement("div", "library-detail-grid");
+      Object.entries(movie).forEach(([key, value]) => {
+        const label = key.replace(/_/g, " ").replace(/\b\w/g, letter => letter.toUpperCase());
+        libraryField(fields, label, value);
+      });
+      detail.append(fields);
+      const media = libraryElement("div", "library-images");
+      const imageRows = libraryImages.filter(image => image.movie_id === movie.id);
+      const poster = libraryImageUrl(movie.poster_path);
+      const backdrop = libraryImageUrl(movie.backdrop_path);
+      const candidates = [];
+      if (poster) candidates.push({url: poster, label: "Poster"});
+      if (backdrop) candidates.push({url: backdrop, label: "Backdrop"});
+      for (const image of imageRows) {
+        const url = libraryImageUrl(image.image_path);
+        if (url) candidates.push({url, label: image.image_type || "Image"});
+      }
+      for (const item of candidates) {
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        img.src = item.url;
+        img.alt = `${movie.title || "Movie"} ${item.label}`;
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        figure.append(img, libraryElement("figcaption", "", item.label));
+        media.append(figure);
+      }
+      if (candidates.length) detail.append(media);
+      else detail.append(libraryElement("p", "notice", "No displayable image URLs are saved for this movie."));
+      const links = libraryLinks.filter(link => link.movie_id === movie.id);
+      if (links.length) {
+        const linkHeading = libraryElement("p", "notice", "Saved link records (URLs hidden in this overview):");
+        detail.append(linkHeading);
+        links.forEach(link => detail.append(libraryElement("p", "", `${link.quality || "Link"} · ${link.created_at || ""}`)));
+      }
+      card.append(detail);
+    }
+    list.append(card);
+  }
+  const page = Math.floor(libraryOffset / LIBRARY_PAGE_SIZE) + 1;
+  const pages = Math.max(1, Math.ceil(libraryTotal / LIBRARY_PAGE_SIZE));
+  $("libraryPageText").textContent = `Page ${libraryTotal ? page : 0} of ${libraryTotal ? pages : 0} · ${libraryTotal.toLocaleString()} movies`;
+  $("libraryPrevBtn").disabled = libraryOffset <= 0;
+  $("libraryNextBtn").disabled = libraryOffset + LIBRARY_PAGE_SIZE >= libraryTotal;
+}
+
+async function loadMovieLibrary(offset = 0) {
+  if (!adminSessionToken) return;
+  const refresh = $("libraryRefreshBtn");
+  const apply = $("libraryApplyBtn");
+  refresh.disabled = true;
+  apply.disabled = true;
+  setStatus("libraryStatusText", "Loading movie records securely…");
+  const [sortBy, sortOrder] = $("librarySort").value.split(":");
+  const yearValue = $("libraryYear").value.trim();
+  try {
+    const result = await postJson(ADMIN_URL, {
+      action: "list_movies",
+      limit: LIBRARY_PAGE_SIZE,
+      offset,
+      status: $("libraryStatus").value,
+      search: $("librarySearch").value.trim(),
+      genre: $("libraryGenre").value.trim(),
+      release_year: yearValue,
+      sort_by: sortBy,
+      sort_order: sortOrder
+    }, adminSessionToken, true);
+    if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "Movie library response was incomplete.");
+    libraryRows = result.movies;
+    libraryImages = Array.isArray(result.images) ? result.images : [];
+    libraryLinks = Array.isArray(result.download_links) ? result.download_links : [];
+    libraryTotal = Number(result.total) || 0;
+    libraryOffset = Number(result.offset) || 0;
+    renderMovieLibrary();
+    setStatus("libraryStatusText", `${libraryTotal.toLocaleString()} matching movie record(s) loaded.`, "success");
+  } catch (error) {
+    libraryRows = [];
+    libraryTotal = 0;
+    renderMovieLibrary();
+    setStatus("libraryStatusText", error.message || "Movie library could not be loaded.", "error");
+  } finally {
+    refresh.disabled = false;
+    apply.disabled = false;
+  }
+}
+
+$("libraryApplyBtn").addEventListener("click", () => loadMovieLibrary(0));
+$("libraryRefreshBtn").addEventListener("click", () => loadMovieLibrary(libraryOffset));
+$("libraryPrevBtn").addEventListener("click", () => loadMovieLibrary(Math.max(0, libraryOffset - LIBRARY_PAGE_SIZE)));
+$("libraryNextBtn").addEventListener("click", () => loadMovieLibrary(libraryOffset + LIBRARY_PAGE_SIZE));
+["librarySearch", "libraryGenre", "libraryYear"].forEach(id => $(id).addEventListener("keydown", event => {
+  if (event.key === "Enter") loadMovieLibrary(0);
+}));
+["libraryStatus", "librarySort"].forEach(id => $(id).addEventListener("change", () => loadMovieLibrary(0)));
+
+// PUBLISHING CONTROL — state changes are validated again by the Edge Function.
+let publishingOffset = 0;
+const PUBLISHING_PAGE_SIZE = 50;
+async function loadPublishingQueue() {
+  if (!adminSessionToken) return;
+  const list = $("publishingList");
+  list.replaceChildren();
+  setStatus("publishingStatus", "Loading publication states…");
+  const refresh = $("publishingRefreshBtn");
+  refresh.disabled = true;
+  try {
+    const result = await postJson(ADMIN_URL, {
+      action: "list_movies", status: $("publishingFilter").value,
+      limit: PUBLISHING_PAGE_SIZE, offset: publishingOffset, sort_by: "created_at", sort_order: "desc"
+    }, adminSessionToken, true);
+    if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "Could not load publication queue.");
+    const total = Number(result.total ?? 0);
+    const pageCount = Math.ceil(total / PUBLISHING_PAGE_SIZE);
+    const currentPage = total ? Math.floor(publishingOffset / PUBLISHING_PAGE_SIZE) + 1 : 0;
+    $("publishingPageText").textContent = `Page ${currentPage} of ${pageCount}`;
+    $("publishingPrevBtn").disabled = publishingOffset <= 0;
+    $("publishingNextBtn").disabled = publishingOffset + PUBLISHING_PAGE_SIZE >= total;
+    if (!result.movies.length) {
+      list.append(libraryElement("p", "notice", "No movies found for this publication state."));
+      setStatus("publishingStatus", "0 movies found.", "success");
+      return;
+    }
+    for (const movie of result.movies) {
+      const card = libraryElement("article", "publish-item");
+      const head = libraryElement("div", "publish-item-head");
+      const info = document.createElement("div");
+      info.append(libraryElement("h3", "", movie.title || "Untitled movie"));
+      info.append(libraryElement("p", "", `${movie.release_year || "Year unknown"} · ${Array.isArray(movie.genres) ? movie.genres.join(", ") : "Genre unavailable"}`));
+      head.append(info, libraryElement("span", "publish-state", movie.status || "unknown"));
+      card.append(head);
+      const actions = libraryElement("div", "publish-actions");
+      const addAction = (label, nextStatus, confirmText) => {
+        const btn = libraryElement("button", nextStatus === "archived" ? "library-danger" : "secondary", label);
+        btn.type = "button";
+        btn.addEventListener("click", async () => {
+          if (!window.confirm(confirmText)) return;
+          btn.disabled = true;
+          try {
+            const changed = await postJson(ADMIN_URL, { action: "set_movie_status", movie_id: movie.id, status: nextStatus }, adminSessionToken, true);
+            if (changed.success !== true || changed.status !== nextStatus) throw new Error(changed.error || "Publication state was not changed.");
+            setStatus("publishingStatus", `${movie.title} moved to ${nextStatus}.`, "success");
+            await loadPublishingQueue();
+            await loadMovieLibrary(0);
+            await loadDashboard();
+          } catch (error) {
+            setStatus("publishingStatus", error.message || "Could not update publication state.", "error");
+            btn.disabled = false;
+          }
+        });
+        actions.append(btn);
+      };
+      if (movie.status === "draft") addAction("PUBLISH MOVIE", "published", `Publish “${movie.title}” on the public website?`);
+      if (movie.status === "published") addAction("ARCHIVE MOVIE", "archived", `Archive “${movie.title}”? It will no longer appear on the public website.`);
+      if (movie.status === "archived") addAction("RESTORE TO DRAFT", "draft", `Restore “${movie.title}” to Draft?`);
+      if (movie.status === "published") {
+        const draftBtn = libraryElement("button", "library-danger", "UNPUBLISH TO DRAFT");
+        draftBtn.type = "button";
+        draftBtn.addEventListener("click", async () => {
+          if (!window.confirm(`Move “${movie.title}” back to Draft?`)) return;
+          draftBtn.disabled = true;
+          try {
+            const changed = await postJson(ADMIN_URL, { action: "unpublish_movie", movie_id: movie.id }, adminSessionToken, true);
+            if (changed.success !== true || changed.status !== "draft") throw new Error(changed.error || "Could not unpublish movie.");
+            await loadPublishingQueue(); await loadMovieLibrary(0); await loadDashboard();
+            setStatus("publishingStatus", `${movie.title} moved to Draft.`, "success");
+          } catch (error) { setStatus("publishingStatus", error.message || "Could not unpublish movie.", "error"); draftBtn.disabled = false; }
+        });
+        actions.append(draftBtn);
+      }
+      card.append(actions);
+      list.append(card);
+    }
+    setStatus("publishingStatus", `Showing ${publishingOffset + 1}–${publishingOffset + result.movies.length} of ${total} movies.`, "success");
+  } catch (error) {
+    setStatus("publishingStatus", error.message || "Could not load publication controls.", "error");
+  } finally { refresh.disabled = false; }
+}
+$("publishingRefreshBtn").addEventListener("click", loadPublishingQueue);
+$("publishingFilter").addEventListener("change", () => { publishingOffset = 0; loadPublishingQueue(); });
+$("publishingPrevBtn").addEventListener("click", () => { publishingOffset = Math.max(0, publishingOffset - PUBLISHING_PAGE_SIZE); loadPublishingQueue(); });
+$("publishingNextBtn").addEventListener("click", () => { publishingOffset += PUBLISHING_PAGE_SIZE; loadPublishingQueue(); });
+
+// MEDIA ASSET MANAGER — reads movie-linked image metadata; no destructive storage actions.
+const MEDIA_PAGE_SIZE = 50;
+let mediaAssetOffset = 0;
+let mediaAssetTotalMovies = 0;
+let mediaAssetItems = [];
+
+function buildMediaAssetItems(movies, imageRows) {
+  const items = [];
+  for (const movie of movies) {
+    const add = (path, type, id = null) => {
+      const url = libraryImageUrl(path);
+      if (!url) return;
+      items.push({ id: id || `${movie.id}:${type}:${path}`, movieId: movie.id, title: movie.title || "Untitled movie", year: movie.release_year || "Year unknown", status: movie.status || "unknown", type, path, url });
+    };
+    add(movie.poster_path, "poster");
+    add(movie.backdrop_path, "backdrop");
+    for (const row of imageRows.filter(item => item.movie_id === movie.id)) {
+      const kind = ["thumbnail", "screenshot"].includes(String(row.image_type || "").toLowerCase()) ? String(row.image_type).toLowerCase() : "other";
+      add(row.image_path, kind, row.id);
+    }
+  }
+  return items;
+}
+
+function renderMediaAssets() {
+  const grid = $("mediaAssetGrid");
+  grid.replaceChildren();
+  const typeFilter = $("mediaTypeFilter").value;
+  const visible = mediaAssetItems.filter(item => typeFilter === "all" || item.type === typeFilter);
+  const counts = { poster: 0, backdrop: 0, thumbnail: 0, screenshot: 0, other: 0 };
+  mediaAssetItems.forEach(item => { counts[item.type] = (counts[item.type] || 0) + 1; });
+  const summary = $("mediaAssetSummary");
+  summary.replaceChildren();
+  ["poster", "backdrop", "thumbnail", "screenshot", "other"].forEach(type => {
+    const chip = libraryElement("span", "", `${type[0].toUpperCase()+type.slice(1)}: ${counts[type] || 0}`);
+    summary.append(chip);
+  });
+  if (!visible.length) {
+    grid.append(libraryElement("p", "notice", "No matching image assets were found on this page. Try another asset type or movie search."));
+    return;
+  }
+  for (const asset of visible) {
+    const card = libraryElement("article", "media-card");
+    const img = document.createElement("img");
+    img.src = asset.url; img.alt = `${asset.title} ${asset.type}`; img.loading = "lazy"; img.referrerPolicy = "no-referrer";
+    img.addEventListener("error", () => { img.removeAttribute("src"); img.alt = "Image preview unavailable"; });
+    const body = libraryElement("div", "media-card-body");
+    body.append(libraryElement("h3", "", asset.title));
+    body.append(libraryElement("p", "", `${asset.type.toUpperCase()} · ${asset.year} · ${asset.status.toUpperCase()}`));
+    const actions = libraryElement("div", "media-card-actions");
+    const copy = libraryElement("button", "secondary", "COPY URL"); copy.type = "button";
+    copy.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(asset.url); setStatus("mediaAssetStatus", `Public URL copied for ${asset.title}.`, "success"); }
+      catch { setStatus("mediaAssetStatus", "Clipboard access was blocked by this browser. Open the image to copy its URL manually.", "error"); }
+    });
+    const open = libraryElement("button", "small-btn", "OPEN IMAGE"); open.type = "button";
+    open.addEventListener("click", () => window.open(asset.url, "_blank", "noopener,noreferrer"));
+    actions.append(copy, open); body.append(actions); card.append(img, body); grid.append(card);
+  }
+}
+
+async function loadMediaAssets(offset = 0) {
+  if (!adminSessionToken) return;
+  const refresh = $("mediaAssetRefreshBtn"); refresh.disabled = true;
+  setStatus("mediaAssetStatus", "Loading linked image assets securely…");
+  const search = $("mediaSearch").value.trim();
+  const status = $("mediaStatusFilter").value;
+  try {
+    const result = await postJson(ADMIN_URL, {
+      action: "list_movies", status, search, limit: MEDIA_PAGE_SIZE, offset, sort_by: "created_at", sort_order: "desc"
+    }, adminSessionToken, true);
+    if (result.success !== true || !Array.isArray(result.movies) || !Array.isArray(result.images)) throw new Error(result.error || "Media asset response was incomplete.");
+    mediaAssetItems = buildMediaAssetItems(result.movies, result.images);
+    mediaAssetTotalMovies = Number(result.total) || 0;
+    mediaAssetOffset = Number(result.offset) || 0;
+    renderMediaAssets();
+    const pages = Math.ceil(mediaAssetTotalMovies / MEDIA_PAGE_SIZE);
+    const page = mediaAssetTotalMovies ? Math.floor(mediaAssetOffset / MEDIA_PAGE_SIZE) + 1 : 0;
+    $("mediaAssetPageText").textContent = `Movie page ${page} of ${pages} · ${mediaAssetTotalMovies.toLocaleString()} movies`;
+    $("mediaAssetPrevBtn").disabled = mediaAssetOffset <= 0;
+    $("mediaAssetNextBtn").disabled = mediaAssetOffset + MEDIA_PAGE_SIZE >= mediaAssetTotalMovies;
+    setStatus("mediaAssetStatus", `${mediaAssetItems.length} image asset(s) found across ${result.movies.length} movie records on this page.`, "success");
+  } catch (error) {
+    mediaAssetItems = []; renderMediaAssets();
+    setStatus("mediaAssetStatus", error.message || "Media assets could not be loaded.", "error");
+  } finally { refresh.disabled = false; }
+}
+
+$("mediaAssetRefreshBtn").addEventListener("click", () => loadMediaAssets(mediaAssetOffset));
+$("mediaAssetPrevBtn").addEventListener("click", () => loadMediaAssets(Math.max(0, mediaAssetOffset - MEDIA_PAGE_SIZE)));
+$("mediaAssetNextBtn").addEventListener("click", () => loadMediaAssets(mediaAssetOffset + MEDIA_PAGE_SIZE));
+$("mediaTypeFilter").addEventListener("change", renderMediaAssets);
+$("mediaStatusFilter").addEventListener("change", () => loadMediaAssets(0));
+$("mediaSearch").addEventListener("keydown", event => { if (event.key === "Enter") loadMediaAssets(0); });
 
 $("loginBtn").addEventListener("click", async () => {
   const pin = $("adminPin").value.trim();
@@ -225,7 +740,15 @@ $("loginBtn").addEventListener("click", async () => {
     adminSessionToken = result.token;
     $("adminPin").value = "";
     $("loginPanel").classList.add("hidden");
+    $("dashboardPanel").classList.remove("hidden");
+    loadDashboard();
     $("searchPanel").classList.remove("hidden");
+    $("movieLibraryPanel").classList.remove("hidden");
+    loadMovieLibrary(0);
+    $("publishingPanel").classList.remove("hidden");
+    loadPublishingQueue();
+    $("mediaAssetPanel").classList.remove("hidden");
+    loadMediaAssets(0);
     $("seriesPanel").classList.remove("hidden");
     $("movieUploadPanel").classList.remove("hidden");
     $("logoutBtn").classList.remove("hidden");
@@ -706,6 +1229,156 @@ window.addEventListener("pageshow", () => {
     $("loginPanel").classList.remove("hidden");
   }
 });
+</script>
+<script>
+(async function connectRivoraDatabase() {
+  const SUPABASE_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
+  const BUCKET = "rivora-movie-assets";
+
+  const grid = document.getElementById("movieGrid");
+  const search = document.getElementById("searchInput");
+  const empty = document.getElementById("emptyMessage");
+
+  const status = document.createElement("p");
+  status.style.cssText = "color:#a5aec7;margin-bottom:15px;font-size:13px;";
+  status.textContent = "Connecting to RIVORA Database...";
+  grid.before(status);
+
+  try {
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/movies?select=id,title,release_year,overview,poster_path,genres,rating,status&status=eq.published&order=created_at.desc",
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Database response: " + response.status);
+    }
+
+    const movies = await response.json();
+
+    movies.forEach(movie => {
+      const title = movie.title || "Untitled Movie";
+
+      const genres = Array.isArray(movie.genres)
+        ? movie.genres.join(" • ")
+        : (movie.genres || "Cinema");
+
+      let category = "All";
+      if (/sci.fi|science fiction/i.test(genres)) {
+        category = "Sci-Fi";
+      }
+
+      const card = document.createElement("article");
+      card.className = "movie-card";
+      card.dataset.title = title;
+      card.dataset.category = category;
+      card.dataset.databaseMovie = "true";
+
+      const poster = document.createElement("div");
+      poster.className = "poster";
+
+      const posterPath = movie.poster_path || "";
+
+      if (posterPath) {
+        let posterURL = "";
+
+        if (/^https:\/\//i.test(posterPath)) {
+          posterURL = posterPath;
+        } else if (posterPath.startsWith("/")) {
+          posterURL = "https://image.tmdb.org/t/p/w500" + posterPath;
+        } else {
+          posterURL = SUPABASE_URL +
+            "/storage/v1/object/public/" +
+            BUCKET + "/" +
+            posterPath.split("/").map(encodeURIComponent).join("/");
+        }
+
+        poster.style.backgroundImage =
+          "linear-gradient(transparent,rgba(0,0,0,.55)),url('" +
+          posterURL.replace(/'/g, "%27") + "')";
+
+        poster.style.backgroundSize = "cover";
+        poster.style.backgroundPosition = "center";
+      }
+
+      poster.textContent = title;
+
+      const info = document.createElement("div");
+      info.className = "movie-info";
+
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+
+      const details = document.createElement("p");
+      details.textContent =
+        genres + " • " + (movie.release_year || "Year unavailable") +
+        (movie.rating ? " • ★ " + movie.rating : "");
+
+      const button = document.createElement("button");
+      button.className = "secondary-button";
+      button.type = "button";
+      button.textContent = "View Details";
+
+      movieData[title] = {
+        category: genres + " • " + (movie.release_year || ""),
+        description: movie.overview || "No description available."
+      };
+
+      button.addEventListener("click", () => showDetails(title));
+
+      info.append(heading, details, button);
+      card.append(poster, info);
+      grid.insertBefore(card, empty);
+    });
+
+    const dynamicCards = Array.from(
+      document.querySelectorAll("[data-database-movie='true']")
+    );
+
+    function filterDatabaseMovies() {
+      const query = search.value.trim().toLowerCase();
+
+      dynamicCards.forEach(card => {
+        const title = (card.dataset.title || "").toLowerCase();
+        const text = card.textContent.toLowerCase();
+
+        card.hidden =
+          !(title.includes(query) || text.includes(query)) ||
+          !(activeCategory === "All" ||
+            card.dataset.category === activeCategory);
+      });
+
+      const staticVisible = cards.some(card => !card.hidden);
+      const databaseVisible = dynamicCards.some(card => !card.hidden);
+
+      empty.style.display =
+        staticVisible || databaseVisible ? "none" : "block";
+    }
+
+    search.addEventListener("input", filterDatabaseMovies);
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", filterDatabaseMovies);
+    });
+
+    filterDatabaseMovies();
+
+    status.textContent =
+      movies.length + " published movies loaded from RIVORA Database.";
+
+  } catch (error) {
+    console.error("RIVORA Database Error:", error);
+    status.textContent =
+      "Database connection failed. Please check the browser console.";
+  }
+})();
 </script>
 </body>
 </html>
