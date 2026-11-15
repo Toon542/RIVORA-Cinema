@@ -1000,6 +1000,11 @@ $("loginBtn").addEventListener("click", async () => {
     $("seriesPanel").classList.remove("hidden");
     $("movieUploadPanel").classList.remove("hidden");
     $("logoutBtn").classList.remove("hidden");
+    // Reveal navigation only after the server confirms the asynchronous login.
+    $("nexusSidebar")?.classList.remove("hidden");
+    if (typeof window.rivoraNexusShowView === "function") {
+      window.rivoraNexusShowView("dashboard");
+    }
     setStatus("searchStatus",
       `Secure session active${result.expires_at ? ". Expires: " + new Date(result.expires_at).toLocaleString() : "."}`,
       "success"
@@ -1766,15 +1771,14 @@ window.addEventListener("pageshow", () => {
  window.rivoraNexusShowView=showView;
  const add=document.getElementById('dashboardAddMovieBtn');
  add?.addEventListener('click',()=>{showView('movie');document.getElementById('movieName')?.focus({preventScroll:true});});
- const login=document.getElementById('loginBtn');
- login?.addEventListener('click',()=>{setTimeout(()=>{
-  // The session token is module-local; use the login panel state as success signal.
-  if(!document.getElementById('loginPanel')?.classList.contains('hidden')) return;
-  sidebar?.classList.remove('hidden');
-  showView('dashboard');
-},250);});
  const logout=document.getElementById('logoutBtn');
- logout?.addEventListener('click',()=>{setTimeout(()=>{sidebar?.classList.add('hidden');allPanels.forEach(id=>document.getElementById(id)?.classList.remove('nav-view-hidden'));if(heading)heading.classList.remove('nav-view-hidden');},250);});
+ logout?.addEventListener('click',()=>{
+   setTimeout(()=>{
+     sidebar?.classList.add('hidden');
+     allPanels.forEach(id=>document.getElementById(id)?.classList.add('nav-view-hidden'));
+     if(heading) heading.classList.remove('nav-view-hidden');
+   },0);
+ });
  // Initial unauthenticated state: keep the secure login visible, hide all admin views.
  allPanels.forEach(id=>document.getElementById(id)?.classList.add('nav-view-hidden'));
  if(heading) heading.classList.remove('nav-view-hidden');
