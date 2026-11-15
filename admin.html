@@ -127,7 +127,7 @@ textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-ra
   <p class="notice">Browse all movie records securely. Search, filter, sort and inspect saved details. Removing a published movie from the public site moves it back to Draft; no movie record is deleted.</p>
   <div class="library-toolbar">
     <input id="librarySearch" type="search" maxlength="100" placeholder="Search movie title" aria-label="Search movie title">
-    <select id="libraryStatus" aria-label="Filter by status"><option value="all">All statuses</option><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select>
+    <select id="libraryStatus" aria-label="Filter by status"><option value="all">All statuses</option><option value="draft">Draft Store</option><option value="published">Published</option><option value="archived">Archived</option></select>
     <input id="libraryGenre" type="text" maxlength="80" placeholder="Genre (exact)" aria-label="Filter by genre">
     <input id="libraryYear" type="number" min="1880" max="2100" placeholder="Release year" aria-label="Filter by release year">
     <select id="librarySort" aria-label="Sort movies"><option value="created_at:desc">Latest added</option><option value="created_at:asc">Oldest added</option><option value="release_year:desc">Release year: newest</option><option value="release_year:asc">Release year: oldest</option><option value="title:asc">Title: A–Z</option><option value="title:desc">Title: Z–A</option></select>
@@ -222,12 +222,12 @@ textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-ra
     <div><label for="uploadTmdb">TMDB ID (optional)</label><input id="uploadTmdb" type="number" min="1" placeholder="Movie ID"></div>
   </div>
   <label for="uploadTrailer">Official Trailer URL (HTTPS)</label><input id="uploadTrailer" type="url" placeholder="https://...">
-  <label for="uploadStatus">Publication Status</label><select id="uploadStatus"><option value="draft">Draft (recommended)</option><option value="published">Published</option></select>
+  <p class="notice" id="movieFormMode">New movie · Choose how to save it after reviewing all details.</p>
   <div class="upload-panel">
     <h3>Movie Images</h3>
     <div class="upload-grid">
-      <div><label for="posterFile">Poster (JPEG / PNG / WebP / AVIF)</label><input id="posterFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></div>
-      <div><label for="backdropFile">Backdrop</label><input id="backdropFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></div>
+      <div><label for="posterFile">Poster (JPEG / PNG / WebP / AVIF)</label><input id="posterFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><label for="posterUrl">Or TMDB / public poster URL</label><input id="posterUrl" type="url" placeholder="https://image.tmdb.org/..."></div>
+      <div><label for="backdropFile">Backdrop</label><input id="backdropFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif"><label for="backdropUrl">Or TMDB / public backdrop URL</label><input id="backdropUrl" type="url" placeholder="https://image.tmdb.org/..."></div>
       <div><label for="thumbnailFiles">Thumbnails — Upload files</label><input id="thumbnailFiles" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif"></div>
       <div><label for="screenshotFiles">Screenshots — Upload files</label><input id="screenshotFiles" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif"></div>
     </div>
@@ -246,8 +246,12 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
 1080p|https://your-authorized-host.example/file"></textarea>
     <p class="notice">Supported qualities: 480p, 720p, 1080p, 2K, 4K. Do not add links to content you are not authorized to distribute.</p>
   </div>
-  <button class="primary" id="saveMovieBtn" type="button">UPLOAD IMAGES & SAVE MOVIE →</button>
-  <p class="status" id="movieUploadStatus" aria-live="polite">Fill the movie details and select images.</p>
+  <div class="field-row" style="margin-top:18px">
+    <button class="secondary" id="saveToDraftsBtn" type="button">SAVE TO DRAFTS</button>
+    <button class="primary" id="publishToPublicBtn" type="button" style="margin-top:0">PUBLISH TO PUBLIC</button>
+  </div>
+  <button class="small-btn hidden" id="cancelMovieEditBtn" type="button" style="width:100%;margin-top:10px">CANCEL EDITING</button>
+  <p class="status" id="movieUploadStatus" aria-live="polite">Fill the movie details, then save it to Drafts or publish it.</p>
 </section>
 </main>
 <footer>RIVORA ADMIN INTELLIGENCE · ONE WORLD. ENDLESS CINEMA.</footer>
@@ -258,7 +262,6 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
 // Public project configuration only. Never put service_role or sb_secret keys here.
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
 const ADMIN_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/RIVORA_Admin_Edge_Function_v2-ts";
-const METADATA_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/rivora-metadata-extractor";
 
 let adminSessionToken = null;
 const $ = id => document.getElementById(id);
@@ -273,8 +276,16 @@ async function postJson(url, body, token = null, needsPublicKey = false) {
   let response;
   try {
     const headers = {"Content-Type":"application/json"};
-    if (needsPublicKey) headers.apikey = SUPABASE_PUBLISHABLE_KEY;
-    if (token) headers.Authorization = `Bearer ${token}`;
+    if (needsPublicKey) {
+      headers.apikey = SUPABASE_PUBLISHABLE_KEY;
+      // Supabase gateway authentication and RIVORA admin-session auth are
+      // separate credentials. Do not overwrite the gateway bearer token.
+      headers.Authorization = `Bearer ${SUPABASE_PUBLISHABLE_KEY}`;
+      if (token) headers["x-rivora-admin-session"] = token;
+    } else if (token) {
+      // The Admin Edge Function validates this separate RIVORA session token.
+      headers["x-rivora-admin-session"] = token;
+    }
     response = await fetch(url, {
       method:"POST",
       headers,
@@ -282,7 +293,8 @@ async function postJson(url, body, token = null, needsPublicKey = false) {
       cache:"no-store"
     });
   } catch (error) {
-    throw new Error("Network error: server tak connection nahi ho paya. Internet aur Edge Function URL check karo.");
+    const detail = error && typeof error.message === "string" ? error.message : "Unknown network error";
+    throw new Error(`Network/CORS error while contacting ${new URL(url).host}: ${detail}. Check Edge Function deployment and browser connection.`);
   }
 
   let data;
@@ -417,6 +429,12 @@ function renderMovieLibrary() {
       renderMovieLibrary();
     });
     actions.append(detailBtn);
+    if (movie.status === "draft") {
+      const editBtn = libraryElement("button", "secondary", "EDIT DRAFT");
+      editBtn.type = "button";
+      editBtn.addEventListener("click", () => loadDraftIntoForm(movie));
+      actions.append(editBtn);
+    }
     if (movie.status === "published") {
       const unpublishBtn = libraryElement("button", "library-danger", "REMOVE FROM PUBLIC");
       unpublishBtn.type = "button";
@@ -816,12 +834,12 @@ function renderMetadata(data) {
   const metadata = data?.metadata || data?.data?.metadata || {};
   const keys = [
     ["Matched title", "matched_title"], ["Release year", "release_year"],
-    ["Match confidence", "match_confidence"], ["Overview", "overview"],
-    ["Release date", "release_date"], ["Genres", "genres"],
-    ["Director", "director"], ["Cast", "cast"],
-    ["Runtime (minutes)", "runtime_minutes"], ["Wikidata ID", "wikidata_id"],
-    ["Wikipedia title", "wikipedia_title"], ["Commons image filename", "commons_image_filename"],
-    ["Thumbnail reference", "thumbnail_reference"], ["Source URLs", "source_urls"]
+    ["Source", "source"], ["TMDB ID", "tmdb_id"],
+    ["Overview", "overview"], ["Release date", "release_date"],
+    ["Genres", "genres"], ["Director", "director"], ["Cast", "cast"],
+    ["Runtime (minutes)", "runtime_minutes"], ["TMDB rating", "rating"],
+    ["Poster URL", "poster_url"], ["Backdrop URL", "backdrop_url"],
+    ["Trailer URL", "trailer_url"], ["Source URLs", "source_urls"]
   ];
   const grid = $("previewGrid");
   grid.replaceChildren();
@@ -853,7 +871,8 @@ $("searchBtn").addEventListener("click", async () => {
   }
 
   const name = $("movieName").value.trim();
-  const year = Number($("releaseYear").value);
+  const yearInput = $("releaseYear").value.trim();
+  const year = yearInput ? Number(yearInput) : null;
   const currentYear = new Date().getFullYear();
   $("previewSection").classList.add("hidden");
 
@@ -861,8 +880,8 @@ $("searchBtn").addEventListener("click", async () => {
     setStatus("searchStatus", "Please enter a movie name.", "error");
     return;
   }
-  if (!Number.isInteger(year) || year < 1880 || year > currentYear + 5) {
-    setStatus("searchStatus", `Enter a valid release year (1880–${currentYear + 5}).`, "error");
+  if (year !== null && (!Number.isInteger(year) || year < 1880 || year > currentYear + 5)) {
+    setStatus("searchStatus", `Enter a valid release year (1880–${currentYear + 5}) or leave it blank.`, "error");
     return;
   }
 
@@ -870,20 +889,23 @@ $("searchBtn").addEventListener("click", async () => {
   btn.disabled = true;
   setStatus("searchStatus", "Searching movie metadata...");
   try {
-    const result = await postJson(METADATA_URL, {movie_name:name, release_year:year}, adminSessionToken, false);
+    const result = await postJson(ADMIN_URL, {action:"search_movie_metadata", movie_name:name, release_year:year || null}, adminSessionToken, true);
     if (result.success !== true || !result.metadata) {
       throw new Error(result.error || result.message || "Metadata was not returned by the service.");
     }
     renderMetadata(result);
     const m = result.metadata || {};
     $("uploadTitle").value = m.matched_title || name;
-    $("uploadYear").value = m.release_year || year;
+    $("uploadYear").value = m.release_year || year || "";
     $("uploadOverview").value = m.overview || "";
     $("uploadRuntime").value = m.runtime_minutes || "";
     $("uploadGenres").value = Array.isArray(m.genres) ? m.genres.join(", ") : (m.genres || "");
     $("uploadCast").value = Array.isArray(m.cast) ? m.cast.join(", ") : (m.cast || "");
     $("uploadRating").value = m.rating ?? "";
+    $("uploadTmdb").value = m.tmdb_id || "";
     $("uploadTrailer").value = m.trailer_url || "";
+    $("posterUrl").value = m.poster_url || "";
+    $("backdropUrl").value = m.backdrop_url || "";
     setStatus("searchStatus", "Metadata received and copied to the upload form. Review it; nothing has been saved yet.", "success");
   } catch (error) {
     const message = error.message || "Metadata search failed.";
@@ -897,6 +919,16 @@ $("searchBtn").addEventListener("click", async () => {
   }
 });
 
+function validatePublicImageUrl(value, label) {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+  if (raw.length > 2048) throw new Error(`${label}: URL is too long.`);
+  let parsed;
+  try { parsed = new URL(raw); } catch { throw new Error(`${label}: invalid URL.`); }
+  if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) throw new Error(`${label}: only public HTTPS image URLs are accepted.`);
+  return parsed.href;
+}
+
 // Secure image upload and movie save. Admin tokens remain in memory only.
 const SUPABASE_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co";
 const STORAGE_BUCKET = "rivora-movie-assets";
@@ -909,13 +941,31 @@ async function uploadImageFile(file) {
   const signed = await postJson(ADMIN_URL, {
     action: "create_upload_url", content_type: file.type, file_size: file.size
   }, adminSessionToken, true);
-  if (signed.success !== true || !signed.path || !signed.token) throw new Error("Secure upload URL was not returned.");
-  const uploadUrl = `${SUPABASE_URL}/storage/v1/object/upload/sign/${STORAGE_BUCKET}/${signed.path.split("/").map(encodeURIComponent).join("/")}?token=${encodeURIComponent(signed.token)}`;
-  const response = await fetch(uploadUrl, {
-    method: "PUT",
-    headers: { "apikey": SUPABASE_PUBLISHABLE_KEY, "Content-Type": file.type, "x-upsert": "false" },
-    body: file
-  });
+  if (signed.success !== true || !signed.path || !signed.token || !signed.signed_url) {
+    throw new Error("Secure upload URL was incomplete. Redeploy the updated Admin Edge Function and try again.");
+  }
+  let uploadUrl;
+  try {
+    const parsedUploadUrl = new URL(signed.signed_url, SUPABASE_URL);
+    if (parsedUploadUrl.origin !== new URL(SUPABASE_URL).origin ||
+        !parsedUploadUrl.pathname.includes("/storage/v1/object/upload/sign/")) {
+      throw new Error("Unexpected signed upload URL destination");
+    }
+    uploadUrl = parsedUploadUrl.href;
+  } catch (error) {
+    throw new Error(`Invalid secure upload URL: ${error.message || "URL parse failed"}`);
+  }
+  let response;
+  try {
+    response = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: { "apikey": SUPABASE_PUBLISHABLE_KEY, "Content-Type": file.type, "x-upsert": "false" },
+      body: file
+    });
+  } catch (error) {
+    const detail = error && typeof error.message === "string" ? error.message : "Unknown network error";
+    throw new Error(`Storage upload network/CORS error for ${file.name}: ${detail}. Check the rivora-movie-assets bucket and signed upload URL.`);
+  }
   if (!response.ok) {
     const message = await response.text().catch(() => "");
     throw new Error(`Image upload failed for ${file.name} (HTTP ${response.status}). ${message.slice(0,180)}`);
@@ -925,7 +975,54 @@ async function uploadImageFile(file) {
 
 function splitList(value) { return value.split(",").map(v => v.trim()).filter(Boolean); }
 
-$("saveMovieBtn").addEventListener("click", async () => {
+let editingDraftId = null;
+
+function setMovieFormMode(movie = null) {
+  editingDraftId = movie?.id || null;
+  $("movieFormMode").textContent = movie
+    ? `Editing Draft · ${movie.title || "Untitled movie"} · Changes will update this same movie record.`
+    : "New movie · Choose how to save it after reviewing all details.";
+  $("cancelMovieEditBtn").classList.toggle("hidden", !movie);
+  $("saveToDraftsBtn").textContent = movie ? "UPDATE DRAFT" : "SAVE TO DRAFTS";
+  $("publishToPublicBtn").textContent = movie ? "UPDATE & PUBLISH" : "PUBLISH TO PUBLIC";
+}
+
+function loadDraftIntoForm(movie) {
+  if (!movie || movie.status !== "draft") {
+    setStatus("libraryStatusText", "Only Draft movies can be edited here.", "error");
+    return;
+  }
+  const imageRows = libraryImages.filter(row => row.movie_id === movie.id);
+  const links = libraryLinks.filter(row => row.movie_id === movie.id);
+  $("uploadTitle").value = movie.title || "";
+  $("uploadYear").value = movie.release_year || "";
+  $("uploadRuntime").value = movie.runtime || "";
+  $("uploadOverview").value = movie.overview || "";
+  $("uploadGenres").value = Array.isArray(movie.genres) ? movie.genres.join(", ") : (movie.genres || "");
+  $("uploadCast").value = Array.isArray(movie.cast_members) ? movie.cast_members.join(", ") : (movie.cast_members || "");
+  $("uploadRating").value = movie.rating ?? "";
+  $("uploadTmdb").value = movie.tmdb_id ?? "";
+  $("uploadTrailer").value = movie.trailer_url || "";
+  $("posterUrl").value = libraryImageUrl(movie.poster_path);
+  $("backdropUrl").value = libraryImageUrl(movie.backdrop_path);
+  $("thumbnailUrls").value = imageRows.filter(row => row.image_type === "thumbnail").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
+  $("screenshotUrls").value = imageRows.filter(row => row.image_type === "screenshot").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
+  $("downloadLinks").value = links.map(link => `${link.quality}|${link.download_url}`).join("\n");
+  ["posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  setMovieFormMode(movie);
+  setStatus("movieUploadStatus", `Draft loaded: ${movie.title}. Review or edit the details, then Update Draft or Update & Publish.`, "success");
+  $("movieUploadPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function resetMovieForm() {
+  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  setMovieFormMode(null);
+  setStatus("movieUploadStatus", "Form reset. You can add a new movie.");
+}
+
+$("cancelMovieEditBtn").addEventListener("click", resetMovieForm);
+
+async function submitMovieWithStatus(targetStatus) {
   if (!adminSessionToken) { clearSessionUI("Session expired. Please log in again."); return; }
   const title = $("uploadTitle").value.trim();
   const year = Number($("uploadYear").value);
@@ -952,14 +1049,18 @@ $("saveMovieBtn").addEventListener("click", async () => {
   }
   if (downloadLinks.length > 20) { setStatus("movieUploadStatus", "Maximum 20 download links allowed.", "error"); return; }
 
-  const btn = $("saveMovieBtn"); btn.disabled = true;
+  if (targetStatus === "published" && !window.confirm(`Publish “${title}” to the public RIVORA website now?`)) return;
+  const buttons = [$("saveToDraftsBtn"), $("publishToPublicBtn")];
+  buttons.forEach(button => button.disabled = true);
   const images = []; let posterPath = null; let backdropPath = null;
   try {
     setStatus("movieUploadStatus", "Uploading poster and backdrop securely...");
     const posterFile = $("posterFile").files[0];
     const backdropFile = $("backdropFile").files[0];
     if (posterFile) posterPath = await uploadImageFile(posterFile);
+    else posterPath = validatePublicImageUrl($("posterUrl").value, "Poster");
     if (backdropFile) backdropPath = await uploadImageFile(backdropFile);
+    else backdropPath = validatePublicImageUrl($("backdropUrl").value, "Backdrop");
 
     const thumbnailFiles = Array.from($("thumbnailFiles").files);
     const screenshotFiles = Array.from($("screenshotFiles").files);
@@ -991,31 +1092,39 @@ $("saveMovieBtn").addEventListener("click", async () => {
     for (const url of screenshotUrls) images.push({ image_path: url, image_type: "screenshot", display_order: order++ });
 
     const payload = {
-      action: "save_movie", title, release_year: year,
+      action: editingDraftId ? "update_movie" : "save_movie",
+      ...(editingDraftId ? { movie_id: editingDraftId } : {}),
+      title, release_year: year,
       overview: $("uploadOverview").value.trim(),
       runtime: $("uploadRuntime").value.trim() || null,
       genres: splitList($("uploadGenres").value),
       cast_members: splitList($("uploadCast").value),
       rating, tmdb_id: $("uploadTmdb").value.trim() || null,
       trailer_url: $("uploadTrailer").value.trim() || null,
-      status: $("uploadStatus").value,
+      status: targetStatus,
       poster_path: posterPath, backdrop_path: backdropPath, images, download_links: downloadLinks
     };
-    setStatus("movieUploadStatus", "Saving movie details and image/link records...");
+    setStatus("movieUploadStatus", targetStatus === "published" ? "Saving details and publishing to the public website..." : "Saving complete movie details to Draft Store...");
     const saved = await postJson(ADMIN_URL, payload, adminSessionToken, true);
     if (saved.success !== true) {
       const partial = saved.movie_id ? ` Movie ID: ${saved.movie_id}.` : "";
-      const detail = typeof saved.details === "string"
-  ? ` | Details: ${saved.details}`
-  : "";
-
-throw new Error((saved.error || "Movie save failed.") + detail + partial);
+      const detail = typeof saved.details === "string" ? ` | Details: ${saved.details}` : "";
+      throw new Error((saved.error || "Movie save failed.") + detail + partial);
     }
-    setStatus("movieUploadStatus", `Movie saved successfully. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.length}.`, "success");
+    const verb = saved.status === "published" ? "published to the public website" : "saved to Draft Store";
+    setStatus("movieUploadStatus", `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.length}.`, "success");
+    resetMovieForm();
+    await loadMovieLibrary(0);
+    await loadPublishingQueue();
+    await loadDashboard();
+    await loadMediaAssets(0);
   } catch (error) {
     setStatus("movieUploadStatus", error.message || "Upload/save failed.", "error");
-  } finally { btn.disabled = false; }
-});
+  } finally { buttons.forEach(button => button.disabled = false); }
+}
+
+$("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
+$("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("published"));
 
 // Hybrid Series Manager v1.2 — local preview only; no database writes are enabled.
 const SERIES_QUALITIES = ["480p", "720p", "1080p", "2K", "4K"];
