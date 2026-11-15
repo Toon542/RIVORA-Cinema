@@ -217,30 +217,11 @@
           <button type="button" id="searchButton">Go</button>
         </div>
       </div>
-      <div class="filters" aria-label="Movie categories">
-        <button class="filter active" type="button" data-category="All" aria-pressed="true">All</button>
-        <button class="filter" type="button" data-category="Bollywood" aria-pressed="false">Bollywood</button>
-        <button class="filter" type="button" data-category="Hollywood" aria-pressed="false">Hollywood</button>
-        <button class="filter" type="button" data-category="Sci-Fi" aria-pressed="false">Sci-Fi</button>
+      <div class="filters" id="genreFilters" aria-label="Movie genre filters">
+        <button class="filter active" type="button" data-category="All" aria-pressed="true">ALL</button>
       </div>
       <div class="movie-grid" id="movieGrid">
-        <article class="movie-card" data-title="The Last Kingdom" data-category="Bollywood">
-          <div class="poster">THE<br>LAST KINGDOM</div>
-          <div class="movie-info"><h3>The Last Kingdom</h3><p>Bollywood • Action • 2026</p><button class="secondary-button details-button" type="button" data-title="The Last Kingdom">View Details</button></div>
-        </article>
-        <article class="movie-card" data-title="Solar Drift" data-category="Hollywood">
-          <div class="poster p2">SOLAR<br>DRIFT</div>
-          <div class="movie-info"><h3>Solar Drift</h3><p>Hollywood • Adventure • 2026</p><button class="secondary-button details-button" type="button" data-title="Solar Drift">View Details</button></div>
-        </article>
-        <article class="movie-card" data-title="Beyond Earth" data-category="Sci-Fi">
-          <div class="poster p3">BEYOND<br>EARTH</div>
-          <div class="movie-info"><h3>Beyond Earth</h3><p>Sci-Fi • Mystery • 2026</p><button class="secondary-button details-button" type="button" data-title="Beyond Earth">View Details</button></div>
-        </article>
-        <article class="movie-card" data-title="Dark Horizon" data-category="Bollywood">
-          <div class="poster p4">DARK<br>HORIZON</div>
-          <div class="movie-info"><h3>Dark Horizon</h3><p>Bollywood • Thriller • 2026</p><button class="secondary-button details-button" type="button" data-title="Dark Horizon">View Details</button></div>
-        </article>
-        <div class="empty" id="emptyMessage" role="status">No matching movies found.</div>
+        <div class="empty" id="emptyMessage" role="status">No published movies are available yet.</div>
       </div>
     </section>
 
@@ -314,7 +295,8 @@
 
     const searchInput = document.getElementById("searchInput");
     const cards = Array.from(document.querySelectorAll(".movie-card"));
-    const filterButtons = Array.from(document.querySelectorAll(".filter"));
+    let filterButtons = Array.from(document.querySelectorAll(".filter"));
+    const genreFilters = document.getElementById("genreFilters");
     const emptyMessage = document.getElementById("emptyMessage");
     const movieModal = document.getElementById("movieModal");
     const listModal = document.getElementById("listModal");
@@ -323,6 +305,28 @@
     let lastSurpriseMovieId = null;
     let selectedSurpriseMovie = null;
     let activeCategory = "All";
+    window.rivoraGetActiveGenre = () => activeCategory;
+    window.rivoraSetGenreOptions = names => {
+      genreFilters.replaceChildren();
+      const all = document.createElement("button");
+      all.className = "filter" + (activeCategory === "All" ? " active" : "");
+      all.type = "button"; all.dataset.category = "All";
+      all.setAttribute("aria-pressed", activeCategory === "All" ? "true" : "false");
+      all.textContent = "ALL"; genreFilters.append(all);
+      names.forEach(name => {
+        const button = document.createElement("button");
+        button.className = "filter" + (activeCategory === name ? " active" : "");
+        button.type = "button"; button.dataset.category = name;
+        button.setAttribute("aria-pressed", activeCategory === name ? "true" : "false");
+        button.textContent = name; genreFilters.append(button);
+      });
+      filterButtons = Array.from(genreFilters.querySelectorAll(".filter"));
+      if (activeCategory !== "All" && !names.includes(activeCategory)) {
+        activeCategory = "All";
+        filterButtons[0].classList.add("active");
+        filterButtons[0].setAttribute("aria-pressed", "true");
+      }
+    };
     let currentMovie = "";
     let lastFocusedElement = null;
 
@@ -558,17 +562,18 @@
       if (event.key === "Enter") applyMovieFilters();
     });
 
-    filterButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        filterButtons.forEach(item => {
-          item.classList.remove("active");
-          item.setAttribute("aria-pressed", "false");
-        });
-        button.classList.add("active");
-        button.setAttribute("aria-pressed", "true");
-        activeCategory = button.dataset.category || "All";
-        applyMovieFilters();
+    genreFilters.addEventListener("click", event => {
+      const button = event.target.closest(".filter");
+      if (!button || !genreFilters.contains(button)) return;
+      filterButtons.forEach(item => {
+        item.classList.remove("active");
+        item.setAttribute("aria-pressed", "false");
       });
+      button.classList.add("active");
+      button.setAttribute("aria-pressed", "true");
+      activeCategory = button.dataset.category || "All";
+      applyMovieFilters();
+      if (typeof window.rivoraFilterDatabaseMovies === "function") window.rivoraFilterDatabaseMovies();
     });
 
     document.querySelectorAll(".details-button").forEach(button => {
@@ -657,6 +662,28 @@
   status.textContent = "Connecting to RIVORA Database...";
   grid.before(status);
 
+  const genreAliases = new Map([
+    ["sci-fi", "Sci-Fi"], ["sci fi", "Sci-Fi"], ["science fiction", "Sci-Fi"],
+    ["rom-com", "Romance"], ["rom com", "Romance"]
+  ]);
+  function normalizeGenreName(value) {
+    const raw = String(value || "").trim().replace(/\s+/g, " ");
+    if (!raw) return "";
+    const key = raw.toLocaleLowerCase();
+    if (genreAliases.has(key)) return genreAliases.get(key);
+    return raw.split(/([\s-]+)/).map(part => /^[\s-]+$/.test(part) ? part :
+      part.charAt(0).toLocaleUpperCase() + part.slice(1).toLocaleLowerCase()).join("");
+  }
+  function movieGenreList(movie) {
+    const source = Array.isArray(movie.genres) ? movie.genres :
+      (typeof movie.genres === "string" ? movie.genres.split(",") : []);
+    return [...new Set(source.map(normalizeGenreName).filter(Boolean))];
+  }
+  function renderGenreFilters(movies) {
+    const genreNames = [...new Set(movies.flatMap(movieGenreList))].sort((a,b) => a.localeCompare(b));
+    if (typeof window.rivoraSetGenreOptions === "function") window.rivoraSetGenreOptions(genreNames);
+  }
+
   try {
     const response = await fetch(
       SUPABASE_URL +
@@ -677,6 +704,9 @@
     publishedDatabaseMovies = Array.isArray(movies)
       ? movies.filter(movie => movie && movie.status === "published" && movie.id && movie.title)
       : [];
+
+    // Filters are rebuilt from Published movies only; ALL is permanent.
+    renderGenreFilters(publishedDatabaseMovies);
 
     // Public read-only related data. RLS must restrict both tables to published movies.
     const movieIds = publishedDatabaseMovies.map(movie => movie.id);
@@ -721,19 +751,13 @@
     publishedDatabaseMovies.forEach(movie => {
       const title = movie.title || "Untitled Movie";
 
-      const genres = Array.isArray(movie.genres)
-        ? movie.genres.join(" • ")
-        : (movie.genres || "Cinema");
-
-      let category = "All";
-      if (/sci.fi|science fiction/i.test(genres)) {
-        category = "Sci-Fi";
-      }
+      const genreNames = movieGenreList(movie);
+      const genres = genreNames.length ? genreNames.join(" • ") : "Genre unavailable";
 
       const card = document.createElement("article");
       card.className = "movie-card";
       card.dataset.title = title;
-      card.dataset.category = category;
+      card.dataset.genres = JSON.stringify(genreNames);
       card.dataset.databaseMovie = "true";
 
       const poster = document.createElement("div");
@@ -806,10 +830,11 @@
         const title = (card.dataset.title || "").toLowerCase();
         const text = card.textContent.toLowerCase();
 
-        card.hidden =
-          !(title.includes(query) || text.includes(query)) ||
-          !(activeCategory === "All" ||
-            card.dataset.category === activeCategory);
+        let movieGenres = [];
+        try { movieGenres = JSON.parse(card.dataset.genres || "[]"); } catch (_) {}
+        const selectedGenre = typeof window.rivoraGetActiveGenre === "function" ? window.rivoraGetActiveGenre() : "All";
+        const matchesGenre = selectedGenre === "All" || movieGenres.includes(selectedGenre);
+        card.hidden = !(title.includes(query) || text.includes(query)) || !matchesGenre;
       });
 
       const staticVisible = cards.some(card => !card.hidden);
@@ -820,11 +845,7 @@
     }
 
     search.addEventListener("input", filterDatabaseMovies);
-
-    filterButtons.forEach(button => {
-      button.addEventListener("click", filterDatabaseMovies);
-    });
-
+    window.rivoraFilterDatabaseMovies = filterDatabaseMovies;
     filterDatabaseMovies();
 
     status.textContent =
