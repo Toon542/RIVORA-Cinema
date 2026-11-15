@@ -947,7 +947,13 @@ async function loadAIMovieIntelligence() {
     $("aiBotUpdatedAt").textContent=`Last updated: ${new Date().toLocaleString()} · Source: TMDB`; setStatus("aiBotStatus","All three intelligence rows refreshed successfully.","success");
   } catch(error){setStatus("aiBotStatus",error.message||"Could not refresh movie intelligence.","error");} finally{btn.disabled=false;}
 }
-$("aiBotTabBtn").addEventListener("click",()=>$("aiMovieBotPanel").scrollIntoView({behavior:"smooth",block:"start"}));
+$("aiBotTabBtn").addEventListener("click",()=>{
+  if (typeof window.rivoraNexusShowView === "function") window.rivoraNexusShowView("ai");
+  else {
+    $("aiMovieBotPanel").classList.remove("hidden","nav-view-hidden");
+    $("aiMovieBotPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+});
 $("aiBotRefreshBtn").addEventListener("click",loadAIMovieIntelligence);
 
 $("loginBtn").addEventListener("click", async () => {
@@ -1737,7 +1743,7 @@ window.addEventListener("pageshow", () => {
  const sidebar=document.getElementById('nexusSidebar');
  const heading=document.getElementById('nexusHeading');
  const views={
-  dashboard:['dashboardPanel'],
+  dashboard:['dashboardPanel','aiBotNav'],
   ai:['aiMovieBotPanel'],
   movie:['searchPanel','previewSection','movieUploadPanel'],
   series:['seriesPanel'],
@@ -1761,7 +1767,12 @@ window.addEventListener("pageshow", () => {
  const add=document.getElementById('dashboardAddMovieBtn');
  add?.addEventListener('click',()=>{showView('movie');document.getElementById('movieName')?.focus({preventScroll:true});});
  const login=document.getElementById('loginBtn');
- login?.addEventListener('click',()=>{setTimeout(()=>{if(window.adminSessionToken!==null && !document.getElementById('loginPanel')?.classList.contains('hidden'))return;sidebar?.classList.remove('hidden');showView('dashboard');},250);});
+ login?.addEventListener('click',()=>{setTimeout(()=>{
+  // The session token is module-local; use the login panel state as success signal.
+  if(!document.getElementById('loginPanel')?.classList.contains('hidden')) return;
+  sidebar?.classList.remove('hidden');
+  showView('dashboard');
+},250);});
  const logout=document.getElementById('logoutBtn');
  logout?.addEventListener('click',()=>{setTimeout(()=>{sidebar?.classList.add('hidden');allPanels.forEach(id=>document.getElementById(id)?.classList.remove('nav-view-hidden'));if(heading)heading.classList.remove('nav-view-hidden');},250);});
  // Initial unauthenticated state: keep the secure login visible, hide all admin views.
