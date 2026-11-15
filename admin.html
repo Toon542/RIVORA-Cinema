@@ -124,7 +124,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 @media(prefers-reduced-motion:no-preference){.panel{animation:nexusFade .28s ease both}@keyframes nexusFade{from{opacity:.7;transform:translateY(5px)}to{opacity:1;transform:none}}}
 
 
-/* RIVORA URL SHORTNER V1 — admin-only management interface */
+/* RIVORA URL SHORTNER V1 + GENRE ENGINE V1 — admin-only management interface */
 .url-short-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.url-short-grid>div{min-width:0}.url-short-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.url-short-actions button{padding:9px 12px;font-size:11px}.url-short-card{padding:15px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,#0a2033,#071322);min-width:0}.url-short-card h3{font-size:14px;overflow-wrap:anywhere}.url-short-card p{font-size:11px;line-height:1.6;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}.url-short-link{color:var(--cyan)}.url-short-state{display:inline-block;margin-top:8px;padding:4px 8px;border:1px solid var(--border);border-radius:20px;font-size:10px}.url-short-state.active{color:var(--ok);border-color:#247b70}.url-short-state.disabled{color:var(--danger);border-color:#71344a}
 @media(max-width:600px){.url-short-grid{grid-template-columns:1fr}}
 
@@ -152,7 +152,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 
 <main>
 <section class="heading" id="nexusHeading">
-  <small>ADMIN CONTROL CENTER / CYBER-OPS V1.4</small>
+  <small>ADMIN CONTROL CENTER / CYBER-OPS V1.5 · GENRE ENGINE</small>
   <h1>Movie Intelligence</h1>
   <p>Discover movie information, review the returned metadata and approve it manually before any future save operation.</p>
 </section>
@@ -298,7 +298,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   </div>
   <label for="uploadOverview">Overview</label><textarea id="uploadOverview" rows="4" maxlength="10000" placeholder="Movie synopsis..."></textarea>
   <div class="field-row">
-    <div><label for="uploadGenres">Genres (comma separated)</label><input id="uploadGenres" placeholder="Action, Adventure, Fantasy"></div>
+    <div><label for="uploadGenres">Genres (comma separated)</label><input id="uploadGenres" list="rivoraGenreSuggestions" placeholder="Action, Adventure, Fantasy"><datalist id="rivoraGenreSuggestions"><option value="Action"><option value="Adventure"><option value="Animation"><option value="Comedy"><option value="Crime"><option value="Documentary"><option value="Drama"><option value="Fantasy"><option value="Horror"><option value="Mystery"><option value="Romance"><option value="Sci-Fi"><option value="Science Fiction"><option value="Thriller"><option value="War"><option value="Western"></datalist><p class="notice">Genre Engine: names are normalized, duplicates are removed, and public filters are generated from Published movies only.</p></div>
     <div><label for="uploadCast">Cast (comma separated)</label><input id="uploadCast" placeholder="Actor 1, Actor 2"></div>
   </div>
   <div class="field-row">
@@ -1385,6 +1385,22 @@ async function uploadImageFile(file) {
 }
 
 function splitList(value) { return value.split(",").map(v => v.trim()).filter(Boolean); }
+function normalizeGenreList(value) {
+  const aliases = new Map([["sci-fi", "Sci-Fi"], ["sci fi", "Sci-Fi"], ["science fiction", "Sci-Fi"], ["rom-com", "Romance"], ["rom com", "Romance"]]);
+  const seen = new Set();
+  return splitList(value).map(raw => {
+    const clean = raw.replace(/\s+/g, " ").trim();
+    const key = clean.toLocaleLowerCase();
+    if (!clean) return "";
+    if (aliases.has(key)) return aliases.get(key);
+    return clean.split(/([\s-]+)/).map(part => /^[\s-]+$/.test(part) ? part :
+      part.charAt(0).toLocaleUpperCase() + part.slice(1).toLocaleLowerCase()).join("");
+  }).filter(name => {
+    const key = name.toLocaleLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key); return true;
+  }).slice(0, 40);
+}
 
 let editingDraftId = null;
 
@@ -1512,7 +1528,7 @@ async function submitMovieWithStatus(targetStatus) {
       title, release_year: year,
       overview: $("uploadOverview").value.trim(),
       runtime: $("uploadRuntime").value.trim() || null,
-      genres: splitList($("uploadGenres").value),
+      genres: normalizeGenreList($("uploadGenres").value),
       cast_members: splitList($("uploadCast").value),
       rating, tmdb_id: $("uploadTmdb").value.trim() || null,
       trailer_url: $("uploadTrailer").value.trim() || null,
