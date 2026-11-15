@@ -123,6 +123,11 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 @media(max-width:420px){.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.dashboard-card{padding:12px}.dashboard-card strong{font-size:23px}.dashboard-quick-actions{align-items:stretch}.dashboard-add-movie{width:100%}.field-row{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:no-preference){.panel{animation:nexusFade .28s ease both}@keyframes nexusFade{from{opacity:.7;transform:translateY(5px)}to{opacity:1;transform:none}}}
 
+
+/* RIVORA URL SHORTNER V1 — admin-only management interface */
+.url-short-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.url-short-grid>div{min-width:0}.url-short-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.url-short-actions button{padding:9px 12px;font-size:11px}.url-short-card{padding:15px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,#0a2033,#071322);min-width:0}.url-short-card h3{font-size:14px;overflow-wrap:anywhere}.url-short-card p{font-size:11px;line-height:1.6;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}.url-short-link{color:var(--cyan)}.url-short-state{display:inline-block;margin-top:8px;padding:4px 8px;border:1px solid var(--border);border-radius:20px;font-size:10px}.url-short-state.active{color:var(--ok);border-color:#247b70}.url-short-state.disabled{color:var(--danger);border-color:#71344a}
+@media(max-width:600px){.url-short-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -141,6 +146,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   <button class="nexus-nav" data-view="library" type="button"><span>▧</span> Movie Library</button>
   <button class="nexus-nav" data-view="publishing" type="button"><span>◈</span> Publishing Control</button>
   <button class="nexus-nav" data-view="media" type="button"><span>▩</span> Media Assets</button>
+  <button class="nexus-nav" data-view="shortner" type="button"><span>↗</span> URL Shortner</button>
   <div class="nexus-side-status"><span class="nexus-pulse"></span><div><b>RIVORA CORE</b><small>ADMIN SESSION ACTIVE</small></div></div>
 </aside>
 
@@ -331,6 +337,21 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
   <button class="small-btn hidden" id="cancelMovieEditBtn" type="button" style="width:100%;margin-top:10px">CANCEL EDITING</button>
   <p class="status" id="movieUploadStatus" aria-live="polite">Fill the movie details, then save it to Drafts or publish it.</p>
 </section>
+
+<section class="panel hidden" id="urlShortnerPanel">
+  <div class="topline"><h2>08 / RIVORA URL SHORTNER</h2><span class="spacer"></span><span class="pill">ADMIN CONTROL</span></div>
+  <p class="notice">Create and manage short links. Only an authenticated RIVORA admin session can change records. Public visitors can only use active redirects.</p>
+  <div class="url-short-grid">
+    <div><label for="shortTargetUrl">Destination HTTPS URL</label><input id="shortTargetUrl" type="url" inputmode="url" placeholder="https://example.com/page"></div>
+    <div><label for="shortAlias">Custom Alias (4–20 characters)</label><input id="shortAlias" type="text" minlength="4" maxlength="20" pattern="[a-z0-9][a-z0-9-]{3,19}" placeholder="my-link"></div>
+  </div>
+  <input id="shortEditId" type="hidden">
+  <div class="url-short-actions"><button class="primary" id="shortSaveBtn" type="button">＋ CREATE SHORT URL</button><button class="small-btn" id="shortCancelBtn" type="button" hidden>CANCEL EDIT</button><button class="secondary" id="shortRefreshBtn" type="button">↻ REFRESH HISTORY</button></div>
+  <p class="status" id="shortStatus" aria-live="polite">Waiting for secure admin session…</p>
+  <div class="dashboard-grid"><div class="dashboard-card"><small>Total Short URLs</small><strong id="shortTotalCount">—</strong></div><div class="dashboard-card"><small>Total Redirect Clicks</small><strong id="shortTotalClicks">—</strong></div></div>
+  <div class="library-list" id="shortUrlList" aria-live="polite"></div>
+</section>
+
 </main>
 <footer>RIVORA ADMIN INTELLIGENCE · ONE WORLD. ENDLESS CINEMA.</footer>
 
@@ -404,6 +425,7 @@ function clearSessionUI(message = "You are logged out.") {
   $("movieLibraryPanel").classList.add("hidden");
   $("publishingPanel").classList.add("hidden");
   $("mediaAssetPanel").classList.add("hidden");
+  $("urlShortnerPanel").classList.add("hidden");
   $("seriesPanel").classList.add("hidden");
   $("movieUploadPanel").classList.add("hidden");
   $("previewSection").classList.add("hidden");
@@ -964,6 +986,144 @@ $("aiBotTabBtn").addEventListener("click",()=>{
 });
 $("aiBotRefreshBtn").addEventListener("click",loadAIMovieIntelligence);
 
+// RIVORA URL SHORTNER — management calls use the existing in-memory admin session.
+const SHORTNER_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/rivora-url-shortner";
+const SHORTNER_BASE = SHORTNER_URL + "/";
+let shortUrlRows = [];
+async function shortnerRequest(body) {
+  if (!adminSessionToken) throw new Error("Admin session missing. Please log in again.");
+  const response = await fetch(SHORTNER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_PUBLISHABLE_KEY,
+      "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+      "x-rivora-admin-session": adminSessionToken
+    },
+    body: JSON.stringify(body),
+    cache: "no-store"
+  });
+  const raw = await response.text();
+  let data;
+  try { data = raw ? JSON.parse(raw) : {}; }
+  catch { throw new Error(`Shortener returned invalid response (HTTP ${response.status}).`); }
+  if (!response.ok) throw new Error(data.error || `Shortener request failed (HTTP ${response.status}).`);
+  return data;
+}
+function shortNode(tag, cls, value) {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (value !== undefined && value !== null) node.textContent = String(value);
+  return node;
+}
+function resetShortForm() {
+  $("shortEditId").value = "";
+  $("shortTargetUrl").value = "";
+  $("shortAlias").value = "";
+  $("shortSaveBtn").textContent = "＋ CREATE SHORT URL";
+  $("shortCancelBtn").hidden = true;
+}
+function renderShortUrls() {
+  const list = $("shortUrlList");
+  list.replaceChildren();
+  $("shortTotalCount").textContent = shortUrlRows.length.toLocaleString();
+  $("shortTotalClicks").textContent = shortUrlRows.reduce((sum, row) => sum + Number(row.click_count || 0), 0).toLocaleString();
+  if (!shortUrlRows.length) {
+    list.append(shortNode("p", "notice", "No short URLs yet. Create your first short link above."));
+    return;
+  }
+  for (const row of shortUrlRows) {
+    const card = shortNode("article", "url-short-card");
+    card.append(shortNode("h3", "", row.slug));
+    const shortLink = SHORTNER_BASE + encodeURIComponent(row.slug);
+    const link = shortNode("p", "url-short-link", shortLink);
+    card.append(link);
+    card.append(shortNode("p", "", `Destination: ${row.target_url}`));
+    card.append(shortNode("p", "", `Clicks: ${Number(row.click_count || 0).toLocaleString()} · Created: ${row.created_at ? new Date(row.created_at).toLocaleString() : "Unknown"}`));
+    if (row.last_clicked_at) card.append(shortNode("p", "", `Last clicked: ${new Date(row.last_clicked_at).toLocaleString()}`));
+    card.append(shortNode("span", `url-short-state ${row.is_active ? "active" : "disabled"}`, row.is_active ? "ACTIVE" : "DISABLED"));
+    const actions = shortNode("div", "url-short-actions");
+    const addButton = (label, cls, handler) => {
+      const button = shortNode("button", cls, label);
+      button.type = "button";
+      button.addEventListener("click", handler);
+      actions.append(button);
+    };
+    addButton("COPY LINK", "secondary", async () => {
+      try { await navigator.clipboard.writeText(shortLink); setStatus("shortStatus", `Copied ${shortLink}`, "success"); }
+      catch { setStatus("shortStatus", "Clipboard access blocked. Select and copy the link manually.", "error"); }
+    });
+    addButton("EDIT", "small-btn", () => {
+      $("shortEditId").value = row.id;
+      $("shortTargetUrl").value = row.target_url;
+      $("shortAlias").value = row.slug;
+      $("shortSaveBtn").textContent = "SAVE URL CHANGES";
+      $("shortCancelBtn").hidden = false;
+      $("shortTargetUrl").scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    addButton(row.is_active ? "DISABLE" : "ENABLE", "small-btn", async () => {
+      if (!window.confirm(`${row.is_active ? "Disable" : "Enable"} short link “${row.slug}”?`)) return;
+      try {
+        await shortnerRequest({ action: "set_active", id: row.id, is_active: !row.is_active });
+        setStatus("shortStatus", `Link ${row.slug} updated.`, "success");
+        await loadShortUrls();
+      } catch (error) { setStatus("shortStatus", error.message, "error"); }
+    });
+    addButton("DELETE", "library-danger", async () => {
+      if (!window.confirm(`Permanently delete short link “${row.slug}”? This cannot be undone.`)) return;
+      try {
+        await shortnerRequest({ action: "delete", id: row.id });
+        setStatus("shortStatus", `Link ${row.slug} deleted.`, "success");
+        await loadShortUrls();
+      } catch (error) { setStatus("shortStatus", error.message, "error"); }
+    });
+    card.append(actions);
+    list.append(card);
+  }
+}
+async function loadShortUrls() {
+  if (!adminSessionToken) return;
+  const refresh = $("shortRefreshBtn");
+  refresh.disabled = true;
+  setStatus("shortStatus", "Loading URL history securely…");
+  try {
+    const result = await shortnerRequest({ action: "list" });
+    if (result.success !== true || !Array.isArray(result.urls)) throw new Error(result.error || "URL history response was incomplete.");
+    shortUrlRows = result.urls;
+    renderShortUrls();
+    setStatus("shortStatus", `${shortUrlRows.length} short URL(s) loaded.`, "success");
+  } catch (error) {
+    setStatus("shortStatus", error.message || "Could not load short URL history.", "error");
+  } finally { refresh.disabled = false; }
+}
+$("shortSaveBtn").addEventListener("click", async () => {
+  const id = $("shortEditId").value;
+  const slug = $("shortAlias").value.trim().toLowerCase();
+  const target_url = $("shortTargetUrl").value.trim();
+  if (!/^[a-z0-9][a-z0-9-]{3,19}$/.test(slug)) {
+    setStatus("shortStatus", "Alias must be 4–20 characters: lowercase letters, numbers and hyphens only.", "error"); return;
+  }
+  try {
+    const parsed = new URL(target_url);
+    if (parsed.protocol !== "https:" || parsed.username || parsed.password) throw new Error("Enter a valid HTTPS destination URL without embedded credentials.");
+  } catch (error) {
+    setStatus("shortStatus", error.message || "Enter a valid HTTPS destination URL.", "error"); return;
+  }
+  const button = $("shortSaveBtn"); button.disabled = true;
+  try {
+    const result = await shortnerRequest(id
+      ? { action: "update", id, slug, target_url }
+      : { action: "create", slug, target_url });
+    if (result.success !== true) throw new Error(result.error || "Could not save short URL.");
+    resetShortForm();
+    setStatus("shortStatus", id ? "Short URL updated successfully." : "Short URL created successfully.", "success");
+    await loadShortUrls();
+  } catch (error) { setStatus("shortStatus", error.message || "Could not save short URL.", "error"); }
+  finally { button.disabled = false; }
+});
+$("shortCancelBtn").addEventListener("click", resetShortForm);
+$("shortRefreshBtn").addEventListener("click", loadShortUrls);
+
 $("loginBtn").addEventListener("click", async () => {
   const pin = $("adminPin").value.trim();
   if (!/^\d{6}$/.test(pin)) {
@@ -1005,6 +1165,7 @@ $("loginBtn").addEventListener("click", async () => {
     loadPublishingQueue();
     $("mediaAssetPanel").classList.remove("hidden");
     loadMediaAssets(0);
+    $("urlShortnerPanel").classList.remove("hidden");
     $("seriesPanel").classList.remove("hidden");
     $("movieUploadPanel").classList.remove("hidden");
     $("logoutBtn").classList.remove("hidden");
@@ -1767,7 +1928,8 @@ window.addEventListener("pageshow", () => {
   drafts:['draftBoxPanel'],
   library:['movieLibraryPanel'],
   publishing:['publishingPanel'],
-  media:['mediaAssetPanel']
+  media:['mediaAssetPanel'],
+  shortner:['urlShortnerPanel']
  };
  const allPanels=Object.values(views).flat();
  function showView(name){
@@ -1777,6 +1939,7 @@ window.addEventListener("pageshow", () => {
   sidebar?.querySelectorAll('.nexus-nav').forEach(btn=>btn.classList.toggle('active',btn.dataset.view===name));
   document.body.dataset.activeView=name;
   if(name==='ai' && typeof loadAIMovieIntelligence==='function' && !document.getElementById('aiTrendingList')?.children.length) loadAIMovieIntelligence();
+  if(name==='shortner' && typeof loadShortUrls==='function') loadShortUrls();
   window.scrollTo({top:0,behavior:'smooth'});
  }
  sidebar?.querySelectorAll('.nexus-nav').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
