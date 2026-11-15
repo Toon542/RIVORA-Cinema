@@ -96,6 +96,23 @@
     .secondary-button:hover{background:rgba(146,85,255,.16)}
     .empty{display:none;grid-column:1/-1;padding:40px 10px;color:var(--muted);text-align:center}
     .about-copy{color:var(--muted);line-height:1.8}
+    #movieDetailsPage{padding:28px 6% 55px;max-width:1400px;margin:0 auto}
+    #movieDetailsPage[hidden]{display:none!important}
+    .detail-back{padding:10px 16px;margin-bottom:22px;border:1px solid var(--border);border-radius:9px;background:var(--panel);color:var(--text)}
+    .detail-hero{position:relative;display:grid;grid-template-columns:minmax(180px,290px) minmax(0,1fr);gap:30px;align-items:center;min-height:330px;padding:30px;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:linear-gradient(90deg,rgba(8,11,24,.98),rgba(8,11,24,.82)),var(--panel);background-size:cover;background-position:center}
+    .detail-poster{width:100%;max-height:430px;aspect-ratio:2/3;object-fit:cover;border-radius:13px;border:1px solid var(--border);box-shadow:0 15px 45px rgba(0,0,0,.4);background:var(--panel)}
+    .detail-copy h1{font-size:clamp(30px,5vw,52px);line-height:1.08;margin-bottom:15px}
+    .detail-meta{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 18px}
+    .detail-chip{padding:7px 11px;border:1px solid #394568;border-radius:20px;color:#dce5ff;background:rgba(17,23,43,.8);font-size:12px}
+    .detail-overview{color:#d3daed;line-height:1.8;max-width:850px}
+    .detail-block{margin-top:30px;padding:22px;border:1px solid var(--border);border-radius:15px;background:var(--panel)}
+    .detail-block h2{font-size:19px;color:var(--cyan);margin-bottom:15px}
+    .detail-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:13px}
+    .detail-gallery img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:1px solid var(--border);cursor:zoom-in;background:#080b18}
+    .detail-cast{display:flex;flex-wrap:wrap;gap:9px}
+    .detail-cast span{padding:9px 12px;border-radius:9px;background:var(--panel-light);border:1px solid var(--border);font-size:13px}
+    .detail-trailer{display:inline-flex;padding:12px 18px;border-radius:9px;background:linear-gradient(90deg,#168bff,#923cff);color:white;text-decoration:none;font-weight:700}
+    @media(max-width:650px){#movieDetailsPage{padding:20px 5% 40px}.detail-hero{grid-template-columns:110px minmax(0,1fr);gap:16px;padding:17px;min-height:0}.detail-poster{max-height:190px}.detail-copy h1{font-size:25px}.detail-meta{gap:6px}.detail-chip{font-size:10px;padding:6px 8px}.detail-overview{font-size:13px;line-height:1.65}.detail-block{padding:16px}.detail-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}}
     footer{margin-top:30px;padding:35px 6%;color:var(--muted);text-align:center;line-height:2;font-size:13px;border-top:1px solid #252e49}
     footer strong{color:var(--cyan);font-size:20px}
     .modal{display:none;position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.85);backdrop-filter:blur(10px)}
@@ -173,6 +190,26 @@
   </header>
 
   <main>
+    <section id="movieDetailsPage" hidden aria-live="polite">
+      <button class="detail-back" id="detailBackButton" type="button">← Back to Movies</button>
+      <div class="detail-hero" id="detailHero">
+        <img class="detail-poster" id="detailPoster" alt="Movie poster">
+        <div class="detail-copy">
+          <div class="eyebrow">RIVORA MOVIE PROFILE</div>
+          <h1 id="detailTitle">Movie Title</h1>
+          <div class="detail-meta" id="detailMeta"></div>
+          <p class="detail-overview" id="detailOverview"></p>
+          <div class="surprise-actions" style="margin-top:20px">
+            <button class="watchlist-button" id="detailWatchlistButton" type="button">+ Add to My List</button>
+            <a class="detail-trailer" id="detailTrailer" href="#" target="_blank" rel="noopener noreferrer" hidden>Watch Trailer ↗</a>
+          </div>
+          <p class="status-message" id="detailStatus" aria-live="polite"></p>
+        </div>
+      </div>
+      <section class="detail-block"><h2>SCREENSHOTS & GALLERY</h2><div class="detail-gallery" id="detailGallery"><p class="gallery-empty">No screenshots available.</p></div></section>
+      <section class="detail-block"><h2>CAST</h2><div class="detail-cast" id="detailCast"><p class="gallery-empty">Cast details unavailable.</p></div></section>
+      <section class="detail-block"><h2>AVAILABLE OFFICIAL LINKS</h2><div class="download-list" id="detailLinks"><p class="download-empty">No links available.</p></div></section>
+    </section>
     <section class="hero">
       <div class="hero-content">
         <div class="eyebrow">BOLLYWOOD • HOLLYWOOD • BEYOND</div>
@@ -373,7 +410,7 @@
       try {
         const saved = JSON.parse(localStorage.getItem(watchlistKey) || "[]");
         if (!Array.isArray(saved)) return [];
-        return [...new Set(saved.filter(item => typeof item === "string" && Object.prototype.hasOwnProperty.call(movieData, item)))];
+        return [...new Set(saved.filter(item => typeof item === "string" && (Object.prototype.hasOwnProperty.call(movieData, item) || publishedDatabaseMovies.some(movie => movie.title === item))))];
       } catch (error) {
         console.warn("RIVORA watchlist could not be read:", error);
         return [];
@@ -400,22 +437,63 @@
     function showDetails(title) {
       const movie = movieData[title];
       if (!movie) return;
+      if (movie.movieId) {
+        window.location.href = window.location.pathname + "?movie=" + encodeURIComponent(movie.movieId);
+        return;
+      }
       currentMovie = title;
       document.getElementById("modalTitle").textContent = title;
       document.getElementById("modalCategory").textContent = movie.category;
       document.getElementById("modalDescription").textContent = movie.description;
       document.getElementById("movieStatus").textContent = "";
-
       const poster = document.getElementById("modalPoster");
       poster.removeAttribute("src");
       poster.style.display = movie.posterUrl ? "block" : "none";
       if (movie.posterUrl) poster.src = movie.posterUrl;
-
       renderMovieGallery(movie);
       renderDownloadLinks(movie);
       updateWatchlistButton();
       openModal(movieModal, document.getElementById("closeMovieModal"));
     }
+
+    function renderFullMoviePage(movie) {
+      if (!movie) return;
+      currentMovie = movie.title;
+      document.querySelectorAll("main > section:not(#movieDetailsPage)").forEach(section => section.hidden = true);
+      document.getElementById("movieDetailsPage").hidden = false;
+      document.title = (movie.title || "Movie") + " | RIVORA";
+      document.getElementById("detailTitle").textContent = movie.title || "Untitled Movie";
+      document.getElementById("detailOverview").textContent = movie.description || "No overview is available for this movie.";
+      const poster = document.getElementById("detailPoster");
+      if (movie.posterUrl) { poster.src = movie.posterUrl; poster.hidden = false; }
+      else { poster.removeAttribute("src"); poster.hidden = true; }
+      const hero = document.getElementById("detailHero");
+      hero.style.backgroundImage = movie.backdropUrl
+        ? "linear-gradient(90deg,rgba(8,11,24,.97),rgba(8,11,24,.76)),url('" + movie.backdropUrl.replace(/'/g,"%27") + "')"
+        : "linear-gradient(110deg,#080b18,#172448)";
+      const meta = document.getElementById("detailMeta"); meta.replaceChildren();
+      [movie.genres, movie.year, movie.rating ? "★ " + movie.rating : "", movie.runtime ? movie.runtime + " min" : ""]
+        .filter(Boolean).forEach(value => { const chip=document.createElement("span"); chip.className="detail-chip"; chip.textContent=value; meta.append(chip); });
+      const gallery=document.getElementById("detailGallery"); gallery.replaceChildren();
+      const images=Array.isArray(movie.images)?movie.images:[];
+      if (movie.backdropUrl && !images.some(item=>item.url===movie.backdropUrl)) images.unshift({url:movie.backdropUrl,image_type:"backdrop"});
+      images.forEach(item=>{ if(!item?.url)return; const img=document.createElement("img"); img.src=item.url; img.alt=(movie.title||"Movie")+" "+(item.image_type||"screenshot"); img.loading="lazy"; img.addEventListener("click",()=>{const lightbox=document.getElementById("imageLightbox");document.getElementById("lightboxImage").src=item.url;lightbox.classList.add("open")}); gallery.append(img); });
+      if(!gallery.children.length){const p=document.createElement("p");p.className="gallery-empty";p.textContent="No screenshots have been uploaded for this movie yet.";gallery.append(p)}
+      const cast=document.getElementById("detailCast"); cast.replaceChildren();
+      (Array.isArray(movie.castMembers)?movie.castMembers:[]).forEach(person=>{const name=typeof person==="string"?person:(person?.name||person?.character||"");if(name){const chip=document.createElement("span");chip.textContent=name;cast.append(chip)}});
+      if(!cast.children.length){const p=document.createElement("p");p.className="gallery-empty";p.textContent="Cast details unavailable.";cast.append(p)}
+      const linksMovie={downloadLinks:movie.downloadLinks||[]};
+      const links=document.getElementById("detailLinks"); links.replaceChildren();
+      (linksMovie.downloadLinks).forEach(item=>{if(!item||typeof item.download_url!=="string"||!/^https:\/\//i.test(item.download_url))return;const a=document.createElement("a");a.className="download-link";a.href=item.download_url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=String(item.quality||"OPEN LINK").toUpperCase()+" LINK";links.append(a)});
+      if(!links.children.length){const p=document.createElement("p");p.className="download-empty";p.textContent="No official links are available.";links.append(p)}
+      const trailer=document.getElementById("detailTrailer");
+      if(movie.trailerUrl && /^https:\/\//i.test(movie.trailerUrl)){trailer.href=movie.trailerUrl;trailer.hidden=false}else trailer.hidden=true;
+      const watch=document.getElementById("detailWatchlistButton");
+      const refreshWatch=()=>{const saved=getWatchlist().includes(currentMovie);watch.textContent=saved?"✓ Added to My List":"+ Add to My List";watch.disabled=saved};
+      refreshWatch(); watch.onclick=()=>{const list=getWatchlist();if(!list.includes(currentMovie)){list.push(currentMovie);if(saveWatchlist(list)){refreshWatch();document.getElementById("detailStatus").textContent="Added to your list on this browser."}}};
+    }
+
+    document.getElementById("detailBackButton").addEventListener("click",()=>{window.location.href=window.location.pathname});
 
     function renderMovieGallery(movie) {
       const gallery = document.getElementById("movieGallery");
@@ -801,23 +879,54 @@
         posterUrl: posterURL,
         backdropPath: movie.backdrop_path || "",
         runtime: movie.runtime ?? null,
-        castMembers: Array.isArray(movie.cast_members) ? movie.cast_members : [],
+        castMembers: Array.isArray(movie.cast_members) ? movie.cast_members :
+          (typeof movie.cast_members === "string" ? movie.cast_members.split(",").map(name => name.trim()).filter(Boolean) : []),
         trailerUrl: movie.trailer_url || "",
         tmdbId: movie.tmdb_id ?? null,
+        year: movie.release_year || "",
+        genres: genres,
+        rating: movie.rating ?? null,
+        backdropUrl: resolveMovieAsset(movie.backdrop_path || ""),
+        trailerUrl: movie.trailer_url || "",
         images: publicMovieImages
-          .filter(item => item && item.movie_id === movie.id &&
-            ["thumbnail", "screenshot"].includes(String(item.image_type).toLowerCase()))
+          .filter(item => item && item.movie_id === movie.id && item.image_path &&
+            !["poster", "cover", "movie_poster"].includes(String(item.image_type || "").toLowerCase()))
           .map(item => ({ ...item, url: resolveMovieAsset(item.image_path) }))
           .filter(item => item.url),
         downloadLinks: publicDownloadLinks.filter(item => item && item.movie_id === movie.id)
       };
 
       button.addEventListener("click", () => showDetails(title));
+      card.style.cursor = "pointer";
+      card.tabIndex = 0;
+      card.setAttribute("role", "link");
+      card.setAttribute("aria-label", "Open details for " + title);
+      card.addEventListener("click", event => {
+        if (event.target.closest("button")) return;
+        showDetails(title);
+      });
+      card.addEventListener("keydown", event => {
+        if (event.target === card && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault(); showDetails(title);
+        }
+      });
 
       info.append(heading, details, button);
       card.append(poster, info);
       grid.insertBefore(card, empty);
     });
+
+    const requestedMovieId = new URLSearchParams(window.location.search).get("movie");
+    if (requestedMovieId) {
+      const selectedMovie = publishedDatabaseMovies.find(movie => String(movie.id) === requestedMovieId);
+      if (selectedMovie) renderFullMoviePage(movieData[selectedMovie.title]);
+      else {
+        document.getElementById("movieDetailsPage").hidden = false;
+        document.querySelectorAll("main > section:not(#movieDetailsPage)").forEach(section => section.hidden = true);
+        document.getElementById("detailTitle").textContent = "Movie Not Found";
+        document.getElementById("detailOverview").textContent = "This movie may have been unpublished or removed.";
+      }
+    }
 
     const dynamicCards = Array.from(
       document.querySelectorAll("[data-database-movie='true']")
