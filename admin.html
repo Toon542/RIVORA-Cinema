@@ -91,6 +91,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
 @media(max-width:600px){.draft-box-grid{grid-template-columns:1fr}.draft-card{padding:10px}.draft-card img{width:58px;height:80px;flex-basis:58px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
+
+.ai-bot-nav{padding:12px;margin-bottom:18px}.ai-bot-nav .primary{margin:0}.ai-bot-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px;border:1px solid rgba(83,245,255,.2);border-radius:10px;background:#041321}.ai-feed-row{margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}.ai-feed-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}.ai-feed-heading small{color:var(--cyan);letter-spacing:1.5px;font-size:10px}.ai-feed-heading h3{font-size:19px;margin:5px 0}.ai-feed-heading p,.ai-sublist h4{color:var(--muted);font-size:12px}.ai-sublist{margin-top:16px}.ai-sublist h4{margin-bottom:10px;color:var(--cyan)}.ai-movie-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.ai-movie-card{display:flex;gap:11px;padding:11px;border:1px solid rgba(83,245,255,.2);border-radius:10px;background:linear-gradient(140deg,#0a2033,#061321);min-width:0}.ai-movie-poster{width:78px;height:116px;flex:0 0 78px;object-fit:cover;border-radius:6px;background:#020812}.ai-movie-copy{min-width:0;flex:1}.ai-movie-copy h4{font-size:13px;line-height:1.45;overflow-wrap:anywhere}.ai-movie-meta{font-size:10px;color:var(--muted);line-height:1.6;margin-top:5px}.ai-movie-overview{font-size:11px;color:#c1cee0;line-height:1.5;margin-top:7px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.ai-movie-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.ai-movie-actions button{padding:7px 9px;font-size:10px}.ai-detail-box{margin-top:8px;padding:9px;border-radius:7px;background:#03101c;border:1px solid var(--border);font-size:11px;line-height:1.6;color:#d5e5f1;overflow-wrap:anywhere}.ai-empty{grid-column:1/-1;padding:14px;border:1px dashed #286078;border-radius:9px;color:var(--muted);font-size:12px}@media(max-width:600px){.ai-movie-grid{grid-template-columns:1fr}.ai-movie-poster{width:70px;height:105px;flex-basis:70px}.ai-bot-toolbar{align-items:stretch}.ai-bot-toolbar button{width:100%}}
 </style>
 </head>
 <body>
@@ -126,6 +128,21 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
     <div class="dashboard-card"><small>Storage Used</small><strong id="statStorageUsed">—</strong></div>
   </div>
   <p class="status" id="dashboardStatus" aria-live="polite">Waiting for secure session…</p>
+</section>
+
+<nav class="panel hidden ai-bot-nav" id="aiBotNav" aria-label="Admin tools navigation">
+  <button class="primary" id="aiBotTabBtn" type="button">✦ OPEN AI MOVIE INTELLIGENCE</button>
+</nav>
+
+<section class="panel hidden" id="aiMovieBotPanel">
+  <div class="topline"><h2>00.5 / AI Movie Intelligence Bot</h2><span class="spacer"></span><span class="pill">TMDB LIVE DATA</span></div>
+  <p class="notice">Fetches current movie discovery data from TMDB. Nothing is saved or published automatically. Bollywood and Hollywood lists use Hindi/India and English/US metadata as practical filters; they are not perfect industry labels.</p>
+  <div class="ai-bot-toolbar"><div><strong>INTELLIGENCE FEED</strong><p class="notice" id="aiBotUpdatedAt">Waiting for first refresh…</p></div><button class="secondary" id="aiBotRefreshBtn" type="button">↻ REFRESH ALL LISTS</button></div>
+  <p class="status" id="aiBotStatus" aria-live="polite">Login to load live movie intelligence.</p>
+  <section class="ai-feed-row"><div class="ai-feed-heading"><div><small>01 / LIVE DISCOVERY</small><h3>Trending Movies</h3><p>Current 10 trending movies</p></div><span class="pill">TOP 10</span></div><div class="ai-movie-grid" id="aiTrendingList"></div></section>
+  <section class="ai-feed-row"><div class="ai-feed-heading"><div><small>02 / RECENT RELEASES</small><h3>Latest Released Movies</h3><p>Latest 5 Bollywood + latest 5 Hollywood releases</p></div><span class="pill">10 MOVIES</span></div><div class="ai-sublist"><h4>🇮🇳 Bollywood · Latest 5</h4><div class="ai-movie-grid" id="aiLatestBollywoodList"></div></div><div class="ai-sublist"><h4>🌎 Hollywood · Latest 5</h4><div class="ai-movie-grid" id="aiLatestHollywoodList"></div></div></section>
+  <section class="ai-feed-row"><div class="ai-feed-heading"><div><small>03 / FUTURE RELEASES</small><h3>Upcoming Movies</h3><p>Next 5 Bollywood + next 5 Hollywood releases</p></div><span class="pill">10 MOVIES</span></div><div class="ai-sublist"><h4>🇮🇳 Bollywood · Upcoming 5</h4><div class="ai-movie-grid" id="aiUpcomingBollywoodList"></div></div><div class="ai-sublist"><h4>🌎 Hollywood · Upcoming 5</h4><div class="ai-movie-grid" id="aiUpcomingHollywoodList"></div></div></section>
+  <p class="notice">Movie information and images are supplied by TMDB. This product uses the TMDB API but is not endorsed or certified by TMDB. Data availability and regional release dates may vary.</p>
 </section>
 
 <section class="panel hidden" id="draftBoxPanel">
@@ -332,6 +349,8 @@ function clearSessionUI(message = "You are logged out.") {
   adminSessionToken = null;
   $("loginPanel").classList.remove("hidden");
   $("dashboardPanel").classList.add("hidden");
+  $("aiBotNav").classList.add("hidden");
+  $("aiMovieBotPanel").classList.add("hidden");
   $("draftBoxPanel").classList.add("hidden");
   $("searchPanel").classList.add("hidden");
   $("movieLibraryPanel").classList.add("hidden");
@@ -803,6 +822,51 @@ $("mediaTypeFilter").addEventListener("change", renderMediaAssets);
 $("mediaStatusFilter").addEventListener("change", () => loadMediaAssets(0));
 $("mediaSearch").addEventListener("keydown", event => { if (event.key === "Enter") loadMediaAssets(0); });
 
+
+// RIVORA AI MOVIE INTELLIGENCE — read-only discovery; imports go through the existing Draft save workflow.
+const aiMovieCache = new Map();
+function aiNode(tag, cls, value) { const n=document.createElement(tag); if(cls)n.className=cls; if(value!==undefined&&value!==null)n.textContent=String(value); return n; }
+function aiImageUrl(path, size="w500") { return typeof path === "string" && path.startsWith("/") ? `https://image.tmdb.org/t/p/${size}${path}` : ""; }
+function aiMovieCard(movie, listName) {
+  const card=aiNode("article","ai-movie-card");
+  const poster=aiNode("img","ai-movie-poster"); poster.alt=`${movie.title || "Movie"} poster`; poster.loading="lazy"; poster.src=aiImageUrl(movie.poster_path) || ""; poster.onerror=()=>{poster.style.visibility="hidden";}; card.append(poster);
+  const copy=aiNode("div","ai-movie-copy"); copy.append(aiNode("h4","",movie.title || movie.original_title || "Untitled"));
+  const release=movie.release_date || "Release date unavailable"; const rating=Number.isFinite(Number(movie.vote_average)) ? `★ ${Number(movie.vote_average).toFixed(1)}/10` : "Rating unavailable";
+  copy.append(aiNode("p","ai-movie-meta",`${release} · ${rating} · ${movie.original_language || "Language N/A"}`));
+  if(movie.genre_names?.length) copy.append(aiNode("p","ai-movie-meta",`Genres: ${movie.genre_names.join(", ")}`));
+  copy.append(aiNode("p","ai-movie-overview",movie.overview || "Overview not available from TMDB."));
+  const actions=aiNode("div","ai-movie-actions");
+  const detailsBtn=aiNode("button","small-btn","VIEW DETAILS"); detailsBtn.type="button"; detailsBtn.addEventListener("click",()=>loadAIMovieDetails(movie.id,card,detailsBtn));
+  const importBtn=aiNode("button","secondary","IMPORT TO DRAFT"); importBtn.type="button"; importBtn.addEventListener("click",()=>importAIMovieToDraft(movie));
+  const tmdbBtn=aiNode("button","small-btn","TMDB SOURCE"); tmdbBtn.type="button"; tmdbBtn.addEventListener("click",()=>window.open(`https://www.themoviedb.org/movie/${encodeURIComponent(movie.id)}`,"_blank","noopener,noreferrer"));
+  actions.append(detailsBtn,importBtn,tmdbBtn); copy.append(actions); card.append(copy); return card;
+}
+function renderAIMovieList(id, rows, label) { const target=$(id); target.replaceChildren(); if(!Array.isArray(rows)||!rows.length){target.append(aiNode("p","ai-empty",`${label}: no matching movies returned. Try refreshing later.`));return;} rows.forEach(movie=>{aiMovieCache.set(Number(movie.id),movie);target.append(aiMovieCard(movie,label));}); }
+async function loadAIMovieDetails(movieId,card,button) {
+  if(!adminSessionToken)return; button.disabled=true; button.textContent="LOADING…";
+  try { const result=await postJson(ADMIN_URL,{action:"movie_intelligence_details",movie_id:Number(movieId)},adminSessionToken,true); if(result.success!==true||!result.details)throw new Error(result.error||"Movie details unavailable.");
+    let box=card.querySelector(".ai-detail-box"); if(!box){box=aiNode("div","ai-detail-box");card.querySelector(".ai-movie-copy").append(box);} const d=result.details;
+    const parts=[`Director: ${d.director||"Not available"}`,`Runtime: ${d.runtime_minutes?`${d.runtime_minutes} min`:"Not available"}`,`Cast: ${(d.cast||[]).join(", ")||"Not available"}`,`Original title: ${d.original_title||"Not available"}`,`Trailer: ${d.trailer_url||"Not available"}`,`TMDB ID: ${d.tmdb_id}`]; box.textContent=parts.join(" · "); button.textContent="DETAILS LOADED";
+  } catch(error){setStatus("aiBotStatus",error.message||"Could not load movie details.","error");button.textContent="RETRY DETAILS";} finally{button.disabled=false;}
+}
+async function importAIMovieToDraft(movie) {
+  if(!adminSessionToken)return; const year=Number(String(movie.release_date||"").slice(0,4));
+  if(!movie.title||!Number.isInteger(year)||year<1880||year>new Date().getFullYear()+5){setStatus("aiBotStatus","This movie has no valid release year yet, so it cannot be imported.","error");return;}
+  if(!window.confirm(`Import “${movie.title}” into RIVORA Draft Box? It will NOT be published.`))return;
+  let extra={}; try { const detailResult=await postJson(ADMIN_URL,{action:"movie_intelligence_details",movie_id:Number(movie.id)},adminSessionToken,true); if(detailResult.success===true)extra=detailResult.details||{}; } catch(error) { setStatus("aiBotStatus",`Importing basic TMDB details; extended details unavailable: ${error.message||"unknown error"}`); }
+  resetMovieForm(); $("uploadTitle").value=movie.title||movie.original_title||""; $("uploadYear").value=String(year); $("uploadRuntime").value=extra.runtime_minutes||""; $("uploadOverview").value=movie.overview||""; $("uploadGenres").value=(movie.genre_names||[]).join(", "); $("uploadCast").value=(extra.cast||[]).join(", "); $("uploadRating").value=movie.vote_average??""; $("uploadTmdb").value=movie.id; $("uploadTrailer").value=extra.trailer_url||""; $("posterUrl").value=aiImageUrl(movie.poster_path); $("backdropUrl").value=aiImageUrl(movie.backdrop_path,"w1280");
+  setStatus("aiBotStatus",`Importing ${movie.title} into Draft Box…`); await submitMovieWithStatus("draft"); $("movieUploadPanel").scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function loadAIMovieIntelligence() {
+  if(!adminSessionToken)return; const btn=$("aiBotRefreshBtn");btn.disabled=true; setStatus("aiBotStatus","Connecting to TMDB and building the three movie lists…");
+  try { const result=await postJson(ADMIN_URL,{action:"movie_intelligence_feed"},adminSessionToken,true); if(result.success!==true||!result.lists)throw new Error(result.error||"Movie intelligence feed unavailable.");
+    renderAIMovieList("aiTrendingList",result.lists.trending,"Trending"); renderAIMovieList("aiLatestBollywoodList",result.lists.latest_bollywood,"Latest Bollywood"); renderAIMovieList("aiLatestHollywoodList",result.lists.latest_hollywood,"Latest Hollywood"); renderAIMovieList("aiUpcomingBollywoodList",result.lists.upcoming_bollywood,"Upcoming Bollywood"); renderAIMovieList("aiUpcomingHollywoodList",result.lists.upcoming_hollywood,"Upcoming Hollywood");
+    $("aiBotUpdatedAt").textContent=`Last updated: ${new Date().toLocaleString()} · Source: TMDB`; setStatus("aiBotStatus","All three intelligence rows refreshed successfully.","success");
+  } catch(error){setStatus("aiBotStatus",error.message||"Could not refresh movie intelligence.","error");} finally{btn.disabled=false;}
+}
+$("aiBotTabBtn").addEventListener("click",()=>$("aiMovieBotPanel").scrollIntoView({behavior:"smooth",block:"start"}));
+$("aiBotRefreshBtn").addEventListener("click",loadAIMovieIntelligence);
+
 $("loginBtn").addEventListener("click", async () => {
   const pin = $("adminPin").value.trim();
   if (!/^\d{6}$/.test(pin)) {
@@ -831,6 +895,9 @@ $("loginBtn").addEventListener("click", async () => {
     $("adminPin").value = "";
     $("loginPanel").classList.add("hidden");
     $("dashboardPanel").classList.remove("hidden");
+    $("aiBotNav").classList.remove("hidden");
+    $("aiMovieBotPanel").classList.remove("hidden");
+    loadAIMovieIntelligence();
     loadDashboard();
     $("draftBoxPanel").classList.remove("hidden");
     loadDraftBox();
