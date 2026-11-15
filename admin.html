@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b18">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RIVX">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/rivx-192.png">
+<link rel="apple-touch-icon" href="./icons/rivx-192.png">
 <title>RIVORA | Admin Intelligence</title>
 <style>
 :root{--bg:#080b18;--panel:#11172b;--panel2:#171f39;--cyan:#42d9ff;--purple:#9255ff;--text:#f5f6ff;--muted:#a5aec7;--border:#28324f;--danger:#ff7185;--ok:#70e6b1}
@@ -17,6 +24,7 @@ button{cursor:pointer;border:0;border-radius:9px;padding:13px 20px;color:white;f
 .status{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.6}.status.error{color:var(--danger)}.status.success{color:var(--ok)}.notice{color:var(--muted);font-size:12px;line-height:1.7;margin-top:17px}.hidden{display:none!important}
 .preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.preview-item{padding:14px;background:var(--panel2);border-radius:9px;overflow-wrap:anywhere;min-width:0}.preview-item small{color:var(--cyan);display:block;margin-bottom:8px}.preview-item p{font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
 .candidate{padding:16px;margin-top:12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px}.candidate p{color:var(--muted);font-size:13px;margin-top:7px;line-height:1.5}.topline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.topline .spacer{flex:1}.pill{font-size:11px;color:var(--ok);border:1px solid #28634e;padding:5px 9px;border-radius:30px}
+.rivx-header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.rivx-header-actions button{margin:0}@media(max-width:520px){header{padding:16px 4%}.rivx-header-actions{width:100%}.rivx-header-actions button{flex:1}}
 footer{padding:25px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--border)}
 @media(max-width:520px){.preview-grid{grid-template-columns:1fr}.panel{padding:18px}}
 .series-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
@@ -132,8 +140,11 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 </head>
 <body>
 <header>
-  <div><div class="logo">RIVORA<span>.</span></div><p>CYBERPUNK × UNDERGROUND TERMINAL</p></div>
-  <button class="logout hidden" id="logoutBtn" type="button">LOG OUT</button>
+  <div><div class="logo">RIVORA<span>.</span></div><p>RIVX · SECURE CONTROL SYSTEM</p></div>
+  <div class="rivx-header-actions">
+    <button class="secondary hidden" id="installRivxBtn" type="button">INSTALL RIVX</button>
+    <button class="logout hidden" id="logoutBtn" type="button">LOG OUT</button>
+  </div>
 </header>
 
 <aside class="nexus-sidebar hidden" id="nexusSidebar" aria-label="RIVORA admin navigation">
@@ -1976,5 +1987,39 @@ window.addEventListener("pageshow", () => {
 })();
 </script>
 
+<script>
+// RIVX PWA installation. This does not alter Admin PIN/session handling.
+(() => {
+  let installPrompt = null;
+  const installButton = document.getElementById("installRivxBtn");
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (installButton && !isStandalone) {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      installPrompt = event;
+      installButton.classList.remove("hidden");
+    });
+    installButton.addEventListener("click", async () => {
+      if (!installPrompt) return;
+      installButton.disabled = true;
+      try {
+        await installPrompt.prompt();
+        await installPrompt.userChoice;
+      } finally {
+        installPrompt = null;
+        installButton.classList.add("hidden");
+        installButton.disabled = false;
+      }
+    });
+    window.addEventListener("appinstalled", () => installButton.classList.add("hidden"));
+  }
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+        .catch((error) => console.warn("RIVX service worker registration failed:", error));
+    });
+  }
+})();
+</script>
 </body>
 </html>
