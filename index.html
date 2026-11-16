@@ -1021,6 +1021,43 @@
       svg.addEventListener("pointerup", endDrag); svg.addEventListener("pointercancel", endDrag); svg.addEventListener("lostpointercapture", endDrag);
     })();
 
+    // Public download links are always sourced from the live movie_download_links table.
+    // Keep only valid HTTPS URLs and render each database link once.
+    function getPublicDownloadLinks(movie) {
+      const source = Array.isArray(movie?.downloadLinks) ? movie.downloadLinks : [];
+      const seen = new Set();
+      const qualityOrder = {
+        "480p": 1,
+        "720p": 2,
+        "720p hevc": 3,
+        "1080p": 4,
+        "1080p hevc": 5,
+        "1080p (10bit)": 6,
+        "1080p 10bit": 6,
+        "1080p hq": 7,
+        "2k": 8,
+        "4k": 9,
+        "8k": 10
+      };
+      return source.filter(item => {
+        if (!item || typeof item.download_url !== "string") return false;
+        try {
+          const parsed = new URL(item.download_url);
+          if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) return false;
+          const identity = item.id ? "id:" + item.id : "url:" + parsed.href;
+          if (seen.has(identity)) return false;
+          seen.add(identity);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }).sort((a, b) => {
+        const qa = String(a.quality || "").trim().toLowerCase();
+        const qb = String(b.quality || "").trim().toLowerCase();
+        return (qualityOrder[qa] || 99) - (qualityOrder[qb] || 99);
+      });
+    }
+
     function renderFullMoviePage(movie) {
       if (!movie) return;
       currentMovie = movie.title;
@@ -1049,9 +1086,8 @@
       (Array.isArray(movie.castMembers)?movie.castMembers:[]).forEach(person=>{const name=typeof person==="string"?person:(person?.name||person?.character||"");if(name){const chip=document.createElement("span");chip.textContent=name;cast.append(chip)}});
       if(!cast.children.length){const p=document.createElement("p");p.className="gallery-empty";p.textContent="Cast details unavailable.";cast.append(p)}
       loadMovieKnowledgeGraph(movie);
-      const linksMovie={downloadLinks:movie.downloadLinks||[]};
       const links=document.getElementById("detailLinks"); links.replaceChildren();
-      (linksMovie.downloadLinks).forEach(item=>{if(!item||typeof item.download_url!=="string"||!/^https:\/\//i.test(item.download_url))return;const a=document.createElement("a");a.className="download-link";a.href=item.download_url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=String(item.quality||"OPEN LINK").toUpperCase()+" LINK";links.append(a)});
+      getPublicDownloadLinks(movie).forEach(item=>{const a=document.createElement("a");a.className="download-link";a.href=item.download_url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=String(item.quality||"OPEN LINK").toUpperCase()+" LINK";links.append(a)});
       if(!links.children.length){const p=document.createElement("p");p.className="download-empty";p.textContent="No official links are available.";links.append(p)}
       const trailer=document.getElementById("detailTrailer");
       if(movie.trailerUrl && /^https:\/\//i.test(movie.trailerUrl)){trailer.href=movie.trailerUrl;trailer.hidden=false}else trailer.hidden=true;
@@ -1100,9 +1136,7 @@
     function renderDownloadLinks(movie) {
       const container = document.getElementById("downloadList");
       container.replaceChildren();
-      const links = Array.isArray(movie.downloadLinks) ? movie.downloadLinks.slice() : [];
-      const order = { "480": 1, "720": 2, "1080": 3, "2k": 4, "4k": 5 };
-      links.sort((a, b) => (order[String(a.quality).toLowerCase()] || 99) - (order[String(b.quality).toLowerCase()] || 99));
+      const links = getPublicDownloadLinks(movie);
       if (!links.length) {
         const empty = document.createElement("p");
         empty.className = "download-empty";
@@ -1533,7 +1567,7 @@
         Authorization: "Bearer " + SUPABASE_KEY
       };
       const [linksResult, imagesResult] = await Promise.allSettled([
-        fetch(SUPABASE_URL + "/rest/v1/movie_download_links?select=id,movie_id,quality,download_url&movie_id=in." + encodeURIComponent(idList), { headers: relatedHeaders }),
+        fetch(SUPABASE_URL + "/rest/v1/movie_download_links?select=id,movie_id,quality,download_url&movie_id=in." + encodeURIComponent(idList), { headers: relatedHeaders, cache: "no-store" }),
         fetch(SUPABASE_URL + "/rest/v1/movie_images?select=id,movie_id,image_path,image_type,display_order&movie_id=in." + encodeURIComponent(idList) + "&order=display_order.asc", { headers: relatedHeaders })
       ]);
       if (linksResult.status === "fulfilled" && linksResult.value.ok) {
