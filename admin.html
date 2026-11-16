@@ -1568,9 +1568,9 @@ async function submitMovieWithStatus(targetStatus) {
       images.push({ image_path: await uploadImageFile(file), image_type: "thumbnail", display_order: 1 });
     }
     for (const url of thumbnailUrls) images.push({ image_path: url, image_type: "thumbnail", display_order: 1 });
-    let screenshotOrder = 2;
+    let screenshotOrder = 3;
     for (const file of screenshotFiles) {
-      setStatus("movieUploadStatus", `Screenshot ${screenshotOrder - 1}/5 अपलोड हो रहा है…`);
+      setStatus("movieUploadStatus", `Screenshot ${screenshotOrder - 2}/5 अपलोड हो रहा है…`);
       images.push({ image_path: await uploadImageFile(file), image_type: "screenshot", display_order: screenshotOrder++ });
     }
     for (const url of screenshotUrls) images.push({ image_path: url, image_type: "screenshot", display_order: screenshotOrder++ });
@@ -1611,17 +1611,17 @@ async function submitMovieWithStatus(targetStatus) {
 $("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
 $("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("published"));
 
-// AUTO CINEMATIC ASSET STUDIO — Admin V17 front-end integration.
+// AUTO CINEMATIC ASSET STUDIO — Admin V18 front-end integration.
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const ASSET_STUDIO_SLOTS = [
   {key:"poster", label:"Poster", source:"movies.poster_path"},
   {key:"backdrop_primary", label:"Primary Backdrop", source:"movies.backdrop_path"},
   {key:"thumbnail", label:"Thumbnail", type:"thumbnail", order:1},
-  {key:"screenshot_1", label:"Screenshot 1", type:"screenshot", order:2},
-  {key:"screenshot_2", label:"Screenshot 2", type:"screenshot", order:3},
-  {key:"screenshot_3", label:"Screenshot 3", type:"screenshot", order:4},
-  {key:"screenshot_4", label:"Screenshot 4", type:"screenshot", order:5},
-  {key:"screenshot_5", label:"Screenshot 5", type:"screenshot", order:6}
+  {key:"screenshot_1", label:"Screenshot 1", type:"screenshot", order:3},
+  {key:"screenshot_2", label:"Screenshot 2", type:"screenshot", order:4},
+  {key:"screenshot_3", label:"Screenshot 3", type:"screenshot", order:5},
+  {key:"screenshot_4", label:"Screenshot 4", type:"screenshot", order:6},
+  {key:"screenshot_5", label:"Screenshot 5", type:"screenshot", order:7}
 ];
 let assetStudioMovies = [];
 let assetStudioSelectedMovie = null;
