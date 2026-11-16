@@ -448,12 +448,18 @@ async function postJson(url, body, token = null, needsPublicKey = false) {
   if (!response.ok) {
     if (response.status === 403 && data && typeof data.reason === "string") return data;
     const reason = data?.error || data?.message || data?.reason || `Request failed (HTTP ${response.status}).`;
-
-const detail = body?.action === "save_movie" && typeof data?.details === "string"
-  ? ` | Details: ${data.details}`
-  : "";
-
-throw new Error(String(reason) + detail);
+    const details = [];
+    if (body?.action === "save_movie" && typeof data?.details === "string") details.push(data.details);
+    if (Array.isArray(data?.outcomes)) {
+      for (const item of data.outcomes) {
+        if (item && item.status === "failed") {
+          const key = typeof item.asset_key === "string" ? item.asset_key : "unknown_asset";
+          const message = typeof item.message === "string" ? item.message : "No failure detail returned";
+          details.push(`${key}: ${message}`);
+        }
+      }
+    }
+    throw new Error(`${String(reason)}${details.length ? "\n" + details.join("\n") : ""}`);
   }
   return data;
 }
@@ -1605,7 +1611,7 @@ async function submitMovieWithStatus(targetStatus) {
 $("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
 $("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("published"));
 
-// AUTO CINEMATIC ASSET STUDIO — Admin V15 front-end integration.
+// AUTO CINEMATIC ASSET STUDIO — Admin V17 front-end integration.
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const ASSET_STUDIO_SLOTS = [
   {key:"poster", label:"Poster", source:"movies.poster_path"},
@@ -1692,11 +1698,19 @@ $("assetStudioGenerateBtn").addEventListener("click", async () => {
   setStatus("assetStudioStatus", "खाली / खराब स्लॉट की जाँच और जनरेशन अनुरोध भेजा जा रहा है…");
   try {
     const result = await postJson(ADMIN_URL, {action:"asset_studio_generate_missing", movie_id:assetStudioSelectedMovie.id}, adminSessionToken, true);
-    if (result.success !== true) throw new Error(result.error || "जनरेशन अनुरोध पूरा नहीं हुआ।");
-    setStatus("assetStudioStatus", result.message || "जनरेशन प्रक्रिया पूरी हुई।", result.failed > 0 ? "error" : "success");
+    if (result.success !== true) {
+      const failedDetails = Array.isArray(result.outcomes)
+        ? result.outcomes.filter(item => item?.status === "failed").map(item => `${item.asset_key || "asset"}: ${item.message || "Generation failed"}`)
+        : [];
+      throw new Error([result.error || result.message || "जनरेशन अनुरोध पूरा नहीं हुआ।", ...failedDetails].join("\n"));
+    }
+    const successMessage = result.message || "जनरेशन प्रक्रिया पूरी हुई।";
     await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", successMessage, Number(result.failed) > 0 ? "error" : "success");
   } catch (error) {
-    setStatus("assetStudioStatus", error.message || "जनरेशन अनुरोध विफल हुआ।", "error");
+    const failureMessage = error.message || "जनरेशन अनुरोध विफल हुआ।";
+    await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", failureMessage, "error");
   } finally { button.disabled = !assetStudioSelectedMovie; }
 });
 
@@ -1713,11 +1727,19 @@ $("assetStudioSlots").addEventListener("click", async event => {
       movie_id:assetStudioSelectedMovie.id,
       asset_key:assetKey
     }, adminSessionToken, true);
-    if (result.error) throw new Error(result.error);
-    setStatus("assetStudioStatus", result.message || `${slot.label} की प्रक्रिया पूरी हुई।`, result.failed > 0 ? "error" : "success");
+    if (result.success !== true) {
+      const failedDetails = Array.isArray(result.outcomes)
+        ? result.outcomes.filter(item => item?.status === "failed").map(item => `${item.asset_key || assetKey}: ${item.message || "Generation failed"}`)
+        : [];
+      throw new Error([result.error || result.message || "चुना हुआ स्लॉट अपडेट नहीं हुआ।", ...failedDetails].join("\n"));
+    }
+    const successMessage = result.message || `${slot.label} की प्रक्रिया पूरी हुई।`;
     await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", successMessage, Number(result.failed) > 0 ? "error" : "success");
   } catch (error) {
-    setStatus("assetStudioStatus", error.message || "चुना हुआ स्लॉट अपडेट नहीं हुआ।", "error");
+    const failureMessage = error.message || "चुना हुआ स्लॉट अपडेट नहीं हुआ।";
+    await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", failureMessage, "error");
   } finally { button.disabled = false; }
 });
 
