@@ -373,7 +373,7 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
     <label for="downloadLinks">One link per line: quality|HTTPS URL</label>
     <textarea id="downloadLinks" rows="4" placeholder="720p|https://your-authorized-host.example/file
 1080p|https://your-authorized-host.example/file"></textarea>
-    <p class="notice">Supported qualities: 480p, 720p, 1080p, 2K, 4K. Do not add links to content you are not authorized to distribute.</p>
+    <p class="notice">Supported qualities: 480p, 720p, 720pHEVC, 1080p, 1080pHEVC, 1080P(10bit), 1080p HQ, 4k, 8k. Maximum 2 URLs per quality. Legacy 2K and 4K records remain supported. Do not add links to content you are not authorized to distribute.</p>
   </div>
   <div class="field-row" style="margin-top:18px">
     <button class="secondary" id="saveToDraftsBtn" type="button">SAVE TO DRAFTS</button>
@@ -1540,6 +1540,9 @@ function normalizeGenreList(value) {
 }
 
 let editingDraftId = null;
+// Preserve database row IDs while a saved Draft is being edited.
+let editingDraftImageRows = [];
+let editingDraftDownloadRows = [];
 
 function setMovieFormMode(movie = null) {
   editingDraftId = movie?.id || null;
@@ -1558,6 +1561,8 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   }
   const imageRows = sourceImages.filter(row => row.movie_id === movie.id);
   const links = sourceLinks.filter(row => row.movie_id === movie.id);
+  editingDraftImageRows = imageRows.map(row => ({ ...row }));
+  editingDraftDownloadRows = links.map(row => ({ ...row }));
   $("uploadTitle").value = movie.title || "";
   $("uploadYear").value = movie.release_year || "";
   $("uploadRuntime").value = movie.runtime || "";
@@ -1584,6 +1589,8 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
 
 function resetMovieForm() {
   ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  editingDraftImageRows = [];
+  editingDraftDownloadRows = [];
   setMovieFormMode(null);
   setStatus("movieUploadStatus", "Form reset. You can add a new movie.");
 }
@@ -1603,32 +1610,56 @@ async function submitMovieWithStatus(targetStatus) {
   if (rating !== null && (!Number.isFinite(rating) || rating < 0 || rating > 10)) {
     setStatus("movieUploadStatus", "Rating must be between 0 and 10.", "error"); return;
   }
-  const downloadLinks = [];
-  const rawLinks = $("downloadLinks").value.split("\n").map(v => v.trim()).filter(Boolean);
+
+  const supportedQualities = [
+    "480p", "720p", "720pHEVC", "1080p", "1080pHEVC",
+    "1080P(10bit)", "1080p HQ", "4k", "8k", "2K", "4K"
+  ];
+  const newQualityLabels = [
+    "480p", "720p", "720pHEVC", "1080p", "1080pHEVC",
+    "1080P(10bit)", "1080p HQ", "4k", "8k"
+  ];
+  const parsedLinks = [];
+  const rawLinks = $("downloadLinks").value.split(/\r?\n/).map(v => v.trim()).filter(Boolean);
+  const qualityCounts = new Map();
   for (const line of rawLinks) {
     const splitAt = line.indexOf("|");
     if (splitAt < 1) { setStatus("movieUploadStatus", `Invalid download link line: ${line}`, "error"); return; }
     const quality = line.slice(0, splitAt).trim();
     const download_url = line.slice(splitAt + 1).trim();
-    try { if (!new URL(download_url) || new URL(download_url).protocol !== "https:") throw new Error(); }
-    catch { setStatus("movieUploadStatus", `Only valid HTTPS links are accepted: ${download_url}`, "error"); return; }
-    if (!["480p", "720p", "1080p", "2K", "4K"].includes(quality)) { setStatus("movieUploadStatus", `Unsupported quality: ${quality}`, "error"); return; }
-    downloadLinks.push({ quality, download_url });
+    if (!supportedQualities.includes(quality)) {
+      setStatus("movieUploadStatus", `Unsupported quality: ${quality}`, "error"); return;
+    }
+    try {
+      const parsed = new URL(download_url);
+      if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) throw new Error();
+    } catch {
+      setStatus("movieUploadStatus", `Only valid HTTPS links are accepted: ${download_url}`, "error"); return;
+    }
+    qualityCounts.set(quality, (qualityCounts.get(quality) || 0) + 1);
+    if (newQualityLabels.includes(quality) && qualityCounts.get(quality) > 2) {
+      setStatus("movieUploadStatus", `Maximum 2 download links allowed for ${quality}.`, "error"); return;
+    }
+    parsedLinks.push({ quality, download_url });
   }
-  if (downloadLinks.length > 20) { setStatus("movieUploadStatus", "Maximum 20 download links allowed.", "error"); return; }
+  if (parsedLinks.length > 20) {
+    setStatus("movieUploadStatus", "Maximum 20 download links allowed by the current database function.", "error"); return;
+  }
 
   if (targetStatus === "published" && !window.confirm(`Publish “${title}” to the public RIVORA website now?`)) return;
   const buttons = [$("saveToDraftsBtn"), $("publishToPublicBtn")];
   buttons.forEach(button => button.disabled = true);
-  const images = []; let posterPath = null; let backdropPath = null;
+
   try {
     setStatus("movieUploadStatus", "Uploading poster and backdrop securely...");
     const posterFile = $("posterFile").files[0];
     const backdropFile = $("backdropFile").files[0];
-    if (posterFile) posterPath = await uploadImageFile(posterFile);
-    else posterPath = validatePublicImageUrl($("posterUrl").value, "Poster");
-    if (backdropFile) backdropPath = await uploadImageFile(backdropFile);
-    else backdropPath = validatePublicImageUrl($("backdropUrl").value, "Backdrop");
+    const posterPath = posterFile
+      ? await uploadImageFile(posterFile)
+      : validatePublicImageUrl($("posterUrl").value, "Poster");
+    const backdropPath = backdropFile
+      ? await uploadImageFile(backdropFile)
+      : validatePublicImageUrl($("backdropUrl").value, "Backdrop");
 
     const thumbnailFiles = Array.from($("thumbnailFiles").files);
     const screenshotFiles = Array.from($("screenshotFiles").files);
@@ -1647,17 +1678,78 @@ async function submitMovieWithStatus(targetStatus) {
     const screenshotTotal = screenshotFiles.length + screenshotUrls.length;
     if (thumbnailTotal > 1) throw new Error("इस मूवी के लिए केवल 1 Thumbnail स्लॉट उपलब्ध है।");
     if (screenshotTotal > 5) throw new Error("इस मूवी के लिए अधिकतम 5 Screenshot स्लॉट उपलब्ध हैं।");
-    for (const file of thumbnailFiles) {
-      setStatus("movieUploadStatus", "Thumbnail अपलोड हो रहा है…");
-      images.push({ image_path: await uploadImageFile(file), image_type: "thumbnail", display_order: 1 });
+
+    const images = [];
+    const usedImageIds = new Set();
+    const oldRows = Array.isArray(editingDraftImageRows) ? editingDraftImageRows : [];
+    const oldThumbnail = oldRows.filter(row => row.image_type === "thumbnail").sort((a,b) => Number(a.display_order)-Number(b.display_order));
+    const oldScreenshots = oldRows.filter(row => row.image_type === "screenshot").sort((a,b) => Number(a.display_order)-Number(b.display_order));
+    const oldHiddenRows = oldRows.filter(row => !["thumbnail", "screenshot"].includes(row.image_type));
+
+    const originalPathFor = (row, shownValue) => {
+      if (!row || !shownValue) return shownValue;
+      const displayed = libraryImageUrl(row.image_path);
+      return displayed === shownValue ? row.image_path : shownValue;
+    };
+    const appendImageSlot = async (file, url, type, order, oldRow) => {
+      let imagePath = null;
+      if (file) {
+        setStatus("movieUploadStatus", `${type === "thumbnail" ? "Thumbnail" : `Screenshot ${order - 2}`} अपलोड हो रहा है…`);
+        imagePath = await uploadImageFile(file);
+      } else if (url) {
+        imagePath = originalPathFor(oldRow, url);
+      }
+      if (!imagePath) return;
+      const row = { image_path: imagePath, image_type: type, display_order: order };
+      if (oldRow?.id) { row.id = oldRow.id; usedImageIds.add(oldRow.id); }
+      images.push(row);
+    };
+
+    if (thumbnailFiles[0] || thumbnailUrls[0]) {
+      await appendImageSlot(thumbnailFiles[0] || null, thumbnailUrls[0] || null, "thumbnail", 1, oldThumbnail[0] || null);
     }
-    for (const url of thumbnailUrls) images.push({ image_path: url, image_type: "thumbnail", display_order: 1 });
-    let screenshotOrder = 3;
-    for (const file of screenshotFiles) {
-      setStatus("movieUploadStatus", `Screenshot ${screenshotOrder - 2}/5 अपलोड हो रहा है…`);
-      images.push({ image_path: await uploadImageFile(file), image_type: "screenshot", display_order: screenshotOrder++ });
+    for (let i = 0; i < screenshotTotal; i++) {
+      const file = screenshotFiles[i] || null;
+      const url = screenshotUrls[i - screenshotFiles.length] || null;
+      await appendImageSlot(file, url, "screenshot", i + 3, oldScreenshots[i] || null);
     }
-    for (const url of screenshotUrls) images.push({ image_path: url, image_type: "screenshot", display_order: screenshotOrder++ });
+
+    // Preserve non-editor image rows (e.g. backdrop records) without changing their IDs.
+    for (const row of oldHiddenRows) {
+      if (!row?.id) continue;
+      images.push({
+        id: row.id,
+        image_path: row.image_path,
+        image_type: row.image_type,
+        display_order: Number(row.display_order)
+      });
+      usedImageIds.add(row.id);
+    }
+
+    // Only explicitly removed image rows are sent as deletions.
+    for (const row of oldRows) {
+      if (row?.id && !usedImageIds.has(row.id)) images.push({ id: row.id, _delete: true });
+    }
+
+    // Match download links by exact content first, then by same quality, then same prior position.
+    // This keeps the database row ID stable when a URL is edited or lines are reordered.
+    const oldLinks = Array.isArray(editingDraftDownloadRows) ? editingDraftDownloadRows : [];
+    const usedLinkIds = new Set();
+    const downloadLinks = parsedLinks.map((entry, index) => {
+      let match = oldLinks.find(row => row?.id && !usedLinkIds.has(row.id) && row.quality === entry.quality && row.download_url === entry.download_url);
+      if (!match) match = oldLinks.find(row => row?.id && !usedLinkIds.has(row.id) && row.quality === entry.quality);
+      if (!match && oldLinks[index]?.id && !usedLinkIds.has(oldLinks[index].id)) match = oldLinks[index];
+      // If that positional row was already matched by an exact/same-quality entry,
+      // reuse another unmatched old row before creating a new row. This keeps the
+      // RPC operation array within the database's 20-item limit.
+      if (!match) match = oldLinks.find(row => row?.id && !usedLinkIds.has(row.id));
+      if (match?.id) usedLinkIds.add(match.id);
+      return { ...(match?.id ? { id: match.id } : {}), ...entry };
+    });
+    // A removed line is an explicit deletion; all other saved links retain their IDs.
+    for (const row of oldLinks) {
+      if (row?.id && !usedLinkIds.has(row.id)) downloadLinks.push({ id: row.id, _delete: true });
+    }
 
     const payload = {
       action: editingDraftId ? "update_movie" : "save_movie",
@@ -1670,8 +1762,10 @@ async function submitMovieWithStatus(targetStatus) {
       rating, tmdb_id: $("uploadTmdb").value.trim() || null,
       trailer_url: $("uploadTrailer").value.trim() || null,
       status: targetStatus,
-      poster_path: posterPath, backdrop_path: backdropPath, images, download_links: downloadLinks
+      poster_path: posterPath, backdrop_path: backdropPath,
+      images, download_links: downloadLinks
     };
+
     setStatus("movieUploadStatus", targetStatus === "published" ? "Saving details and publishing to the public website..." : "Saving complete movie details to Draft Store...");
     const saved = await postJson(ADMIN_URL, payload, adminSessionToken, true);
     if (saved.success !== true) {
@@ -1680,7 +1774,7 @@ async function submitMovieWithStatus(targetStatus) {
       throw new Error((saved.error || "Movie save failed.") + detail + partial);
     }
     const verb = saved.status === "published" ? "published to the public website" : "saved to Draft Store";
-    setStatus("movieUploadStatus", `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.length}.`, "success");
+    setStatus("movieUploadStatus", `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.filter(row => !row._delete).length} · Links saved: ${downloadLinks.filter(row => !row._delete).length}.`, "success");
     resetMovieForm();
     await loadMovieLibrary(0);
     await loadDraftBox();
@@ -1689,9 +1783,10 @@ async function submitMovieWithStatus(targetStatus) {
     await loadMediaAssets(0);
   } catch (error) {
     setStatus("movieUploadStatus", error.message || "Upload/save failed.", "error");
-  } finally { buttons.forEach(button => button.disabled = false); }
+  } finally {
+    buttons.forEach(button => button.disabled = false);
+  }
 }
-
 $("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
 $("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("published"));
 
