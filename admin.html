@@ -41,15 +41,6 @@ footer{padding:25px;text-align:center;color:var(--muted);font-size:12px;border-t
 .field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .field-row input{min-width:0}
 @media(max-width:520px){.link-grid,.field-row{grid-template-columns:1fr}}
-
-.rivora-quality-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
-.rivora-quality-card{min-width:0;padding:13px;border:1px solid var(--border);border-radius:11px;background:var(--panel2)}
-.rivora-quality-card h4{color:var(--cyan);font-size:14px;margin-bottom:9px}
-.rivora-quality-card input{margin-top:8px;padding:11px;font-size:12px;min-width:0}
-.rivora-legacy-quality{margin-top:14px;padding:12px;border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:13px}
-.rivora-legacy-quality summary{cursor:pointer;color:var(--cyan);font-weight:bold}
-@media(max-width:520px){.rivora-quality-grid{grid-template-columns:1fr}}
-
 textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:white;font:14px Arial,sans-serif;outline:none}textarea:focus,select:focus{border-color:var(--cyan)}.upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.upload-grid>div{min-width:0}.upload-grid input[type=file]{padding:10px;font-size:12px}.upload-panel{border-top:1px solid var(--border);margin-top:18px;padding-top:8px}@media(max-width:520px){.upload-grid{grid-template-columns:1fr}}
 
 .dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
@@ -160,6 +151,25 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 .asset-studio-note{padding:11px;border-left:3px solid var(--cyan);background:#041321;color:var(--muted);font-size:11px;line-height:1.6;margin:12px 0}
 @media(max-width:650px){.asset-studio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.asset-studio-toolbar{grid-template-columns:1fr}}
 
+
+/* RIVORA LINK HEALTH ADMIN V1 */
+.link-health-toolbar{display:grid;grid-template-columns:minmax(160px,240px) minmax(0,1fr);gap:14px;align-items:end;margin-top:16px}
+.link-health-toolbar select{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);color:var(--text)}
+.link-health-actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}.link-health-actions button{margin:0;width:auto;min-width:145px;font-size:10px}
+.link-health-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}
+.link-health-list,.link-health-runs{display:grid;gap:10px;margin-top:14px}
+.link-health-card,.link-health-run{padding:14px;border:1px solid rgba(66,244,255,.2);border-radius:10px;background:linear-gradient(145deg,#0a1930,#080d1d);min-width:0}
+.link-health-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.link-health-card h3{font-size:13px;line-height:1.5;overflow-wrap:anywhere;color:#eafaff}.link-health-meta{font-size:10px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere;margin-top:7px}
+.link-health-state{display:inline-block;padding:5px 8px;border:1px solid var(--border);border-radius:30px;font-size:9px;text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
+.link-health-state.reachable{color:var(--ok);border-color:#247b70}.link-health-state.unavailable,.link-health-state.error,.link-health-state.timeout{color:var(--danger);border-color:#71344a}.link-health-state.blocked{color:#ffd27a;border-color:#80632e}.link-health-state.pending,.link-health-state.unsupported{color:#b8c9df}
+.link-health-url{display:block;margin-top:8px;color:var(--cyan);font-size:10px;overflow-wrap:anywhere;word-break:break-all}
+.link-health-edit{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.link-health-edit input{flex:1;min-width:180px;padding:10px;font-size:12px}.link-health-edit button{padding:9px 12px;font-size:10px}
+.link-health-buttons{display:flex;gap:8px;margin-top:10px}.link-health-buttons button{flex:1;padding:9px 12px;font-size:10px}.link-health-delete{border:1px solid #71344a;background:#28101b;color:#ff9bac}
+.link-health-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}.link-health-pagination button{width:auto;margin:0;font-size:10px}.link-health-pagination span{font-size:11px;color:var(--muted)}
+.link-health-subtitle{margin-top:25px;font-size:12px;letter-spacing:1px;color:var(--cyan)}.link-health-run{font-size:10px;line-height:1.7;color:var(--muted)}.link-health-empty{padding:18px;border:1px dashed var(--border);border-radius:9px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:700px){.link-health-toolbar{grid-template-columns:1fr}.link-health-actions{justify-content:stretch}.link-health-actions button{flex:1;min-width:0}.link-health-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -184,6 +194,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   <button class="nexus-nav" data-view="assetStudio" type="button"><span>✧</span> Auto Cinematic Studio <i>AI</i></button>
   <button class="nexus-nav" data-view="shortner" type="button"><span>↗</span> URL Shortner</button>
   <button class="nexus-nav" data-view="franchise" type="button"><span>◎</span> Franchise Explorer</button>
+  <button class="nexus-nav" data-view="linkHealth" type="button"><span>⌁</span> Link Health <i>NEW</i></button>
   <div class="nexus-side-status"><span class="nexus-pulse"></span><div><b>RIVORA CORE</b><small>ADMIN SESSION ACTIVE</small></div></div>
 </aside>
 
@@ -377,23 +388,12 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
     </div>
     <p class="notice">Upload files up to 10 MB each, or paste public HTTPS image URLs. You can mix both methods. Use images you own or have permission to use. A URL must point directly to a publicly viewable image.</p>
   </div>
-  <div class="upload-panel" id="downloadQualityPanel">
-    <h3>Download Quality</h3>
-    <p class="notice">हर Quality के लिए अधिकतम 2 अलग-अलग HTTPS लिंक भरें। खाली बॉक्स सेव नहीं होंगे और Public Website पर केवल उपलब्ध Quality दिखाई देगी।</p>
-    <div class="rivora-quality-grid">
-      <div class="rivora-quality-card"><h4>480p</h4><input id="dlq_480p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_480p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>720p</h4><input id="dlq_720p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_720p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>720p HEVC</h4><input id="dlq_720pHEVC_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_720pHEVC_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>1080p</h4><input id="dlq_1080p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>1080p HEVC</h4><input id="dlq_1080pHEVC_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080pHEVC_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>1080p (10bit)</h4><input id="dlq_1080P_10bit_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080P_10bit_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>1080p HQ</h4><input id="dlq_1080pHQ_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080pHQ_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>4K</h4><input id="dlq_4k_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_4k_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-      <div class="rivora-quality-card"><h4>8K</h4><input id="dlq_8k_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_8k_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
-    </div>
-    <details class="rivora-legacy-quality"><summary>Legacy Quality Records (2K / 4K)</summary><label for="legacyDownloadLinks">पुराने 2K और uppercase 4K रिकॉर्ड</label><textarea id="legacyDownloadLinks" rows="2" placeholder="2K|https://authorized-host.example/file"></textarea></details>
-    <textarea id="downloadLinks" class="hidden" aria-hidden="true" tabindex="-1"></textarea>
-    <p class="notice">कुल 9 Qualities और 18 Link Boxes। पुराने 2K और 4K रिकॉर्ड भी सुरक्षित रहेंगे। केवल वही डाउनलोड लिंक जोड़ें जिन्हें साझा करने की स्पष्ट अनुमति आपके पास है।</p>
+  <div class="upload-panel">
+    <h3>Authorized Download Links</h3>
+    <label for="downloadLinks">One link per line: quality|HTTPS URL</label>
+    <textarea id="downloadLinks" rows="4" placeholder="720p|https://your-authorized-host.example/file
+1080p|https://your-authorized-host.example/file"></textarea>
+    <p class="notice">Supported qualities: 480p, 720p, 720pHEVC, 1080p, 1080pHEVC, 1080P(10bit), 1080p HQ, 4k, 8k. Maximum 2 URLs per quality. Legacy 2K and 4K records remain supported. Do not add links to content you are not authorized to distribute.</p>
   </div>
   <div class="field-row" style="margin-top:18px">
     <button class="secondary" id="saveToDraftsBtn" type="button">SAVE TO DRAFTS</button>
@@ -498,6 +498,27 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
 @media(max-width:520px){.franchise-fields{grid-template-columns:1fr}.franchise-actions button{flex:1}}
 </style>
 
+
+<section class="panel hidden" id="linkHealthPanel">
+  <div class="topline"><h2>12 / DOWNLOAD LINK HEALTH</h2><span class="spacer"></span><span class="pill">ADMIN ONLY</span></div>
+  <p class="notice">Review the latest checks for movie download links. Blocked responses are kept separate from confirmed unavailable links. Editing or deleting affects only the selected download link; the movie remains published.</p>
+  <div class="link-health-toolbar">
+    <div><label for="linkHealthStatusFilter">Filter status</label><select id="linkHealthStatusFilter"><option value="">All statuses</option><option value="pending">Pending</option><option value="reachable">Reachable</option><option value="unavailable">Unavailable</option><option value="blocked">Blocked</option><option value="timeout">Timeout</option><option value="error">Error</option><option value="unsupported">Unsupported</option></select></div>
+    <div class="link-health-actions"><button class="secondary" id="linkHealthRefreshBtn" type="button">↻ REFRESH REPORT</button><button class="primary" id="linkHealthScanBtn" type="button">▶ RUN MANUAL SCAN</button></div>
+  </div>
+  <p class="status" id="linkHealthStatus" aria-live="polite">Link Health report loads after secure admin login.</p>
+  <div class="link-health-stats" id="linkHealthStats">
+    <div class="dashboard-card"><small>Loaded links</small><strong id="lhTotal">—</strong></div>
+    <div class="dashboard-card"><small>Reachable</small><strong id="lhReachable">—</strong></div>
+    <div class="dashboard-card"><small>Unavailable</small><strong id="lhUnavailable">—</strong></div>
+    <div class="dashboard-card"><small>Blocked</small><strong id="lhBlocked">—</strong></div>
+  </div>
+  <div class="link-health-list" id="linkHealthList" aria-live="polite"></div>
+  <div class="link-health-pagination"><button class="secondary" id="linkHealthPrevBtn" type="button">← PREVIOUS</button><span id="linkHealthPageLabel">Page 1</span><button class="secondary" id="linkHealthNextBtn" type="button">NEXT →</button></div>
+  <h3 class="link-health-subtitle">RECENT SCAN HISTORY</h3>
+  <div id="linkHealthRuns" class="link-health-runs"></div>
+</section>
+
 </main>
 <footer>RIVORA ADMIN INTELLIGENCE · ONE WORLD. ENDLESS CINEMA.</footer>
 
@@ -582,6 +603,7 @@ function clearSessionUI(message = "You are logged out.") {
   $("seriesPanel").classList.add("hidden");
   $("movieUploadPanel").classList.add("hidden");
   $("franchisePanel")?.classList.add("hidden");
+  $("linkHealthPanel")?.classList.add("hidden");
   $("previewSection").classList.add("hidden");
   $("logoutBtn").classList.add("hidden");
   $("adminPin").value = "";
@@ -1325,6 +1347,7 @@ $("loginBtn").addEventListener("click", async () => {
     $("seriesPanel").classList.remove("hidden");
     $("movieUploadPanel").classList.remove("hidden");
     $("franchisePanel")?.classList.remove("hidden");
+    $("linkHealthPanel")?.classList.remove("hidden");
     $("logoutBtn").classList.remove("hidden");
     // Reveal navigation only after the server confirms the asynchronous login.
     $("nexusSidebar")?.classList.remove("hidden");
@@ -1596,7 +1619,7 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   $("backdropUrl").value = libraryImageUrl(movie.backdrop_path);
   $("thumbnailUrls").value = imageRows.filter(row => row.image_type === "thumbnail").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
   $("screenshotUrls").value = imageRows.filter(row => row.image_type === "screenshot").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
-  loadDownloadQualityFields(links);
+  $("downloadLinks").value = links.map(link => `${link.quality}|${link.download_url}`).join("\n");
   ["posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   setMovieFormMode(movie);
   setStatus("movieUploadStatus", `Draft loaded: ${movie.title}. Review or edit the details, then Update Draft or Update & Publish.`, "success");
@@ -1607,58 +1630,8 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   $("movieUploadPanel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-const RIVORA_QUALITY_FIELDS = [
-  { quality: "480p", ids: ["dlq_480p_1", "dlq_480p_2"] },
-  { quality: "720p", ids: ["dlq_720p_1", "dlq_720p_2"] },
-  { quality: "720pHEVC", ids: ["dlq_720pHEVC_1", "dlq_720pHEVC_2"] },
-  { quality: "1080p", ids: ["dlq_1080p_1", "dlq_1080p_2"] },
-  { quality: "1080pHEVC", ids: ["dlq_1080pHEVC_1", "dlq_1080pHEVC_2"] },
-  { quality: "1080P(10bit)", ids: ["dlq_1080P_10bit_1", "dlq_1080P_10bit_2"] },
-  { quality: "1080p HQ", ids: ["dlq_1080pHQ_1", "dlq_1080pHQ_2"] },
-  { quality: "4k", ids: ["dlq_4k_1", "dlq_4k_2"] },
-  { quality: "8k", ids: ["dlq_8k_1", "dlq_8k_2"] }
-];
-
-function loadDownloadQualityFields(linkRows) {
-  const rows = Array.isArray(linkRows) ? linkRows : [];
-  const grouped = new Map();
-  const legacy = [];
-  for (const row of rows) {
-    const quality = String(row?.quality || "").trim();
-    const url = String(row?.download_url || "").trim();
-    if (!quality || !url) continue;
-    if (quality === "2K" || quality === "4K") { legacy.push(`${quality}|${url}`); continue; }
-    const field = RIVORA_QUALITY_FIELDS.find(item => item.quality === quality);
-    if (!field) { legacy.push(`${quality}|${url}`); continue; }
-    if (!grouped.has(quality)) grouped.set(quality, []);
-    grouped.get(quality).push(url);
-  }
-  for (const field of RIVORA_QUALITY_FIELDS) {
-    field.ids.forEach((id, index) => { $(id).value = grouped.get(field.quality)?.[index] || ""; });
-  }
-  $("legacyDownloadLinks").value = legacy.join("\n");
-  syncDownloadQualityFields();
-}
-
-function syncDownloadQualityFields() {
-  const lines = [];
-  for (const field of RIVORA_QUALITY_FIELDS) {
-    for (const id of field.ids) {
-      const value = $(id).value.trim();
-      if (value) lines.push(`${field.quality}|${value}`);
-    }
-  }
-  const legacyLines = $("legacyDownloadLinks").value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-  $("downloadLinks").value = [...lines, ...legacyLines].join("\n");
-}
-
-for (const field of RIVORA_QUALITY_FIELDS) {
-  for (const id of field.ids) $(id).addEventListener("input", syncDownloadQualityFields);
-}
-$("legacyDownloadLinks").addEventListener("input", syncDownloadQualityFields);
-
 function resetMovieForm() {
-  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "legacyDownloadLinks", ...RIVORA_QUALITY_FIELDS.flatMap(field => field.ids), "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   editingDraftImageRows = [];
   editingDraftDownloadRows = [];
   setMovieFormMode(null);
@@ -1681,7 +1654,6 @@ async function submitMovieWithStatus(targetStatus) {
     setStatus("movieUploadStatus", "Rating must be between 0 and 10.", "error"); return;
   }
 
-  syncDownloadQualityFields();
   const supportedQualities = [
     "480p", "720p", "720pHEVC", "1080p", "1080pHEVC",
     "1080P(10bit)", "1080p HQ", "4k", "8k", "2K", "4K"
@@ -2382,7 +2354,8 @@ window.addEventListener("pageshow", () => {
   media:['mediaAssetPanel'],
   assetStudio:['assetStudioPanel'],
   shortner:['urlShortnerPanel'],
-  franchise:['franchisePanel']
+  franchise:['franchisePanel'],
+  linkHealth:['linkHealthPanel']
  };
  const allPanels=Object.values(views).flat();
  function showView(name){
@@ -2581,5 +2554,224 @@ window.addEventListener("pageshow", () => {
   }
 })();
 </script>
+
+<script>
+// RIVORA LINK HEALTH ADMIN V1 — uses the existing authenticated Admin Edge Function.
+(() => {
+  const PAGE_SIZE = 50;
+  let page = 0;
+  let total = 0;
+  let currentRows = [];
+  let scanRuns = [];
+  let busy = false;
+
+  const el = (id) => document.getElementById(id);
+  const escText = (value) => String(value ?? "");
+  const fmtDate = (value) => value ? new Date(value).toLocaleString() : "Not checked yet";
+  const fmtMs = (value) => Number.isFinite(Number(value)) ? `${Number(value)} ms` : "—";
+
+  async function linkHealthRequest(action, extra = {}) {
+    if (!adminSessionToken) throw new Error("Admin session expired. Please log in again.");
+    return await postJson(ADMIN_URL, { action, ...extra }, adminSessionToken, true);
+  }
+
+  function emptyNode(message) {
+    const node = document.createElement("div");
+    node.className = "link-health-empty";
+    node.textContent = message;
+    return node;
+  }
+
+  function renderStats(rows) {
+    const counts = { reachable: 0, unavailable: 0, blocked: 0 };
+    rows.forEach((row) => { if (Object.hasOwn(counts, row.status)) counts[row.status]++; });
+    el("lhTotal").textContent = String(total);
+    el("lhReachable").textContent = String(counts.reachable);
+    el("lhUnavailable").textContent = String(counts.unavailable);
+    el("lhBlocked").textContent = String(counts.blocked);
+  }
+
+  function renderRuns() {
+    const host = el("linkHealthRuns");
+    host.replaceChildren();
+    if (!scanRuns.length) { host.append(emptyNode("No scan history available yet.")); return; }
+    scanRuns.forEach((run) => {
+      const card = document.createElement("div");
+      card.className = "link-health-run";
+      const line = document.createElement("strong");
+      line.textContent = `${String(run.trigger_source || "scan").toUpperCase()} · ${String(run.status || "unknown").toUpperCase()}`;
+      const details = document.createElement("div");
+      details.textContent = `Started: ${fmtDate(run.started_at)} · Finished: ${fmtDate(run.finished_at)} · Scanned: ${Number(run.scanned_count || 0)} · Reachable: ${Number(run.reachable_count || 0)} · Unavailable: ${Number(run.unavailable_count || 0)} · Blocked: ${Number(run.blocked_count || 0)} · Errors: ${Number(run.error_count || 0)}${run.summary ? ` · ${run.summary}` : ""}`;
+      card.append(line, details);
+      host.append(card);
+    });
+  }
+
+  function renderRows() {
+    const host = el("linkHealthList");
+    host.replaceChildren();
+    if (!currentRows.length) {
+      host.append(emptyNode("No Link Health records found for this page or filter."));
+      return;
+    }
+
+    currentRows.forEach((row) => {
+      const card = document.createElement("article");
+      card.className = "link-health-card";
+      const head = document.createElement("div");
+      head.className = "link-health-card-head";
+      const title = document.createElement("h3");
+      title.textContent = row.movie?.title || `Movie ${row.movie_id}`;
+      const state = document.createElement("span");
+      state.className = `link-health-state ${String(row.status || "pending")}`;
+      state.textContent = String(row.status || "pending");
+      head.append(title, state);
+
+      const meta = document.createElement("div");
+      meta.className = "link-health-meta";
+      meta.textContent = `Quality: ${row.download_link?.quality || "Unknown"} · HTTP: ${row.http_status ?? "—"} · Response: ${fmtMs(row.response_time_ms)} · Consecutive failures: ${Number(row.consecutive_failures || 0)} · Last checked: ${fmtDate(row.checked_at)} · Next check: ${fmtDate(row.next_check_at)}`;
+
+      const url = document.createElement("div");
+      url.className = "link-health-url";
+      url.textContent = row.download_link?.download_url || row.checked_url || "Download URL unavailable";
+
+      const buttons = document.createElement("div");
+      buttons.className = "link-health-buttons";
+      const movieScanBtn = document.createElement("button");
+      movieScanBtn.type = "button";
+      movieScanBtn.className = "secondary";
+      movieScanBtn.textContent = "SCAN MOVIE LINKS";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "secondary";
+      editBtn.textContent = "EDIT LINK";
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "link-health-delete";
+      deleteBtn.textContent = "DELETE LINK";
+      buttons.append(editBtn, deleteBtn);
+      movieScanBtn.addEventListener("click", async () => {
+        if (!row.movie_id) return;
+        movieScanBtn.disabled = true;
+        setStatus("linkHealthStatus", `Checking links for ${row.movie?.title || "selected movie"}…`);
+        try {
+          const result = await linkHealthRequest("check_movie_links", { movie_id: row.movie_id });
+          if (result.success !== true) throw new Error(result.error || "Movie link scan failed.");
+          setStatus("linkHealthStatus", `Movie scan completed · Scanned: ${Number(result.scanned_count || 0)} · Reachable: ${Number(result.reachable_count || 0)} · Unavailable: ${Number(result.unavailable_count || 0)} · Blocked: ${Number(result.blocked_count || 0)} · Errors: ${Number(result.error_count || 0)}.`, "success");
+          await loadReport();
+        } catch (error) { setStatus("linkHealthStatus", error.message || "Movie link scan failed.", "error"); }
+        finally { movieScanBtn.disabled = false; }
+      });
+
+      const editArea = document.createElement("div");
+      editArea.className = "link-health-edit hidden";
+      const input = document.createElement("input");
+      input.type = "url";
+      input.inputMode = "url";
+      input.autocomplete = "url";
+      input.placeholder = "https://authorized-host.example/file";
+      input.value = row.download_link?.download_url || row.checked_url || "";
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "primary";
+      saveBtn.textContent = "SAVE URL";
+      saveBtn.style.width = "auto";
+      saveBtn.style.marginTop = "0";
+      const cancelBtn = document.createElement("button");
+      cancelBtn.type = "button";
+      cancelBtn.className = "secondary";
+      cancelBtn.textContent = "CANCEL";
+      editArea.append(input, saveBtn, cancelBtn);
+
+      editBtn.addEventListener("click", () => editArea.classList.toggle("hidden"));
+      cancelBtn.addEventListener("click", () => editArea.classList.add("hidden"));
+      saveBtn.addEventListener("click", async () => {
+        const download_url = input.value.trim();
+        if (!/^https:\/\//i.test(download_url)) { setStatus("linkHealthStatus", "Enter a valid HTTPS download URL.", "error"); return; }
+        saveBtn.disabled = true;
+        try {
+          const result = await linkHealthRequest("update_download_link", { download_link_id: row.download_link_id, download_url });
+          if (result.success !== true) throw new Error(result.error || "Selected link could not be updated.");
+          setStatus("linkHealthStatus", result.warning || "Selected download link updated. Its health status has been reset to pending.", "success");
+          await loadReport();
+        } catch (error) { setStatus("linkHealthStatus", error.message || "Update failed.", "error"); }
+        finally { saveBtn.disabled = false; }
+      });
+
+      deleteBtn.addEventListener("click", async () => {
+        const label = row.movie?.title || "this movie";
+        if (!confirm(`Delete only this ${row.download_link?.quality || "download"} link from ${label}? The movie itself will remain published.`)) return;
+        deleteBtn.disabled = true;
+        try {
+          const result = await linkHealthRequest("delete_download_link", { download_link_id: row.download_link_id });
+          if (result.success !== true) throw new Error(result.error || "Selected link could not be deleted.");
+          setStatus("linkHealthStatus", "Selected download link deleted. The movie record and its other links were not selected for deletion.", "success");
+          await loadReport();
+        } catch (error) { setStatus("linkHealthStatus", error.message || "Delete failed.", "error"); }
+        finally { deleteBtn.disabled = false; }
+      });
+
+      card.append(head, meta, url, movieScanBtn, buttons, editArea);
+      host.append(card);
+    });
+  }
+
+  async function loadReport() {
+    if (!adminSessionToken || busy) return;
+    busy = true;
+    el("linkHealthRefreshBtn").disabled = true;
+    setStatus("linkHealthStatus", "Loading Link Health report…");
+    try {
+      const status = el("linkHealthStatusFilter").value;
+      const result = await linkHealthRequest("get_link_health_report", { page, page_size: PAGE_SIZE, ...(status ? { status } : {}) });
+      if (result.success !== true || !Array.isArray(result.rows)) throw new Error(result.error || "Link Health report response was incomplete.");
+      currentRows = result.rows;
+      total = Number(result.total || 0);
+      scanRuns = Array.isArray(result.scan_runs) ? result.scan_runs : [];
+      renderStats(currentRows);
+      renderRows();
+      renderRuns();
+      el("linkHealthPageLabel").textContent = `Page ${page + 1} · ${total} total links`;
+      el("linkHealthPrevBtn").disabled = page <= 0;
+      el("linkHealthNextBtn").disabled = (page + 1) * PAGE_SIZE >= total;
+      setStatus("linkHealthStatus", `Report updated ${new Date().toLocaleTimeString()}. Showing ${currentRows.length} link records.`, "success");
+    } catch (error) {
+      setStatus("linkHealthStatus", error.message || "Could not load Link Health report.", "error");
+      el("linkHealthList").replaceChildren(emptyNode("Report unavailable. Confirm Link Health SQL-1 has been executed and the Edge Function is deployed."));
+    } finally {
+      busy = false;
+      el("linkHealthRefreshBtn").disabled = false;
+    }
+  }
+
+  async function runManualScan() {
+    if (!adminSessionToken || busy) return;
+    busy = true;
+    const btn = el("linkHealthScanBtn");
+    btn.disabled = true;
+    setStatus("linkHealthStatus", "Starting manual scan. The scanner processes a limited batch per run; repeat scans can process remaining queued links.");
+    try {
+      const result = await linkHealthRequest("run_link_health_scan");
+      if (result.success !== true) throw new Error(result.error || "Manual scan failed.");
+      setStatus("linkHealthStatus", `Scan completed · Scanned: ${Number(result.scanned_count || 0)} · Reachable: ${Number(result.reachable_count || 0)} · Unavailable: ${Number(result.unavailable_count || 0)} · Blocked: ${Number(result.blocked_count || 0)} · Errors: ${Number(result.error_count || 0)}.`, "success");
+      busy = false;
+      await loadReport();
+    } catch (error) {
+      setStatus("linkHealthStatus", error.message || "Manual scan failed.", "error");
+    } finally {
+      busy = false;
+      btn.disabled = false;
+    }
+  }
+
+  el("linkHealthRefreshBtn").addEventListener("click", loadReport);
+  el("linkHealthScanBtn").addEventListener("click", runManualScan);
+  el("linkHealthStatusFilter").addEventListener("change", () => { page = 0; loadReport(); });
+  el("linkHealthPrevBtn").addEventListener("click", () => { if (page > 0) { page--; loadReport(); } });
+  el("linkHealthNextBtn").addEventListener("click", () => { if ((page + 1) * PAGE_SIZE < total) { page++; loadReport(); } });
+  document.querySelector('[data-view="linkHealth"]')?.addEventListener("click", () => { if (adminSessionToken) loadReport(); });
+})();
+</script>
+
 </body>
 </html>
