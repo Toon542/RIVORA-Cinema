@@ -41,6 +41,15 @@ footer{padding:25px;text-align:center;color:var(--muted);font-size:12px;border-t
 .field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .field-row input{min-width:0}
 @media(max-width:520px){.link-grid,.field-row{grid-template-columns:1fr}}
+
+.rivora-quality-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.rivora-quality-card{min-width:0;padding:13px;border:1px solid var(--border);border-radius:11px;background:var(--panel2)}
+.rivora-quality-card h4{color:var(--cyan);font-size:14px;margin-bottom:9px}
+.rivora-quality-card input{margin-top:8px;padding:11px;font-size:12px;min-width:0}
+.rivora-legacy-quality{margin-top:14px;padding:12px;border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:13px}
+.rivora-legacy-quality summary{cursor:pointer;color:var(--cyan);font-weight:bold}
+@media(max-width:520px){.rivora-quality-grid{grid-template-columns:1fr}}
+
 textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:white;font:14px Arial,sans-serif;outline:none}textarea:focus,select:focus{border-color:var(--cyan)}.upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.upload-grid>div{min-width:0}.upload-grid input[type=file]{padding:10px;font-size:12px}.upload-panel{border-top:1px solid var(--border);margin-top:18px;padding-top:8px}@media(max-width:520px){.upload-grid{grid-template-columns:1fr}}
 
 .dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
@@ -368,12 +377,23 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
     </div>
     <p class="notice">Upload files up to 10 MB each, or paste public HTTPS image URLs. You can mix both methods. Use images you own or have permission to use. A URL must point directly to a publicly viewable image.</p>
   </div>
-  <div class="upload-panel">
-    <h3>Authorized Download Links</h3>
-    <label for="downloadLinks">One link per line: quality|HTTPS URL</label>
-    <textarea id="downloadLinks" rows="4" placeholder="720p|https://your-authorized-host.example/file
-1080p|https://your-authorized-host.example/file"></textarea>
-    <p class="notice">Supported qualities: 480p, 720p, 720pHEVC, 1080p, 1080pHEVC, 1080P(10bit), 1080p HQ, 4k, 8k. Maximum 2 URLs per quality. Legacy 2K and 4K records remain supported. Do not add links to content you are not authorized to distribute.</p>
+  <div class="upload-panel" id="downloadQualityPanel">
+    <h3>Download Quality</h3>
+    <p class="notice">हर Quality के लिए अधिकतम 2 अलग-अलग HTTPS लिंक भरें। खाली बॉक्स सेव नहीं होंगे और Public Website पर केवल उपलब्ध Quality दिखाई देगी।</p>
+    <div class="rivora-quality-grid">
+      <div class="rivora-quality-card"><h4>480p</h4><input id="dlq_480p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_480p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>720p</h4><input id="dlq_720p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_720p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>720p HEVC</h4><input id="dlq_720pHEVC_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_720pHEVC_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p</h4><input id="dlq_1080p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p HEVC</h4><input id="dlq_1080pHEVC_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080pHEVC_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p (10bit)</h4><input id="dlq_1080P_10bit_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080P_10bit_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p HQ</h4><input id="dlq_1080pHQ_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080pHQ_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>4K</h4><input id="dlq_4k_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_4k_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>8K</h4><input id="dlq_8k_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_8k_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+    </div>
+    <details class="rivora-legacy-quality"><summary>Legacy Quality Records (2K / 4K)</summary><label for="legacyDownloadLinks">पुराने 2K और uppercase 4K रिकॉर्ड</label><textarea id="legacyDownloadLinks" rows="2" placeholder="2K|https://authorized-host.example/file"></textarea></details>
+    <textarea id="downloadLinks" class="hidden" aria-hidden="true" tabindex="-1"></textarea>
+    <p class="notice">कुल 9 Qualities और 18 Link Boxes। पुराने 2K और 4K रिकॉर्ड भी सुरक्षित रहेंगे। केवल वही डाउनलोड लिंक जोड़ें जिन्हें साझा करने की स्पष्ट अनुमति आपके पास है।</p>
   </div>
   <div class="field-row" style="margin-top:18px">
     <button class="secondary" id="saveToDraftsBtn" type="button">SAVE TO DRAFTS</button>
@@ -1576,7 +1596,7 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   $("backdropUrl").value = libraryImageUrl(movie.backdrop_path);
   $("thumbnailUrls").value = imageRows.filter(row => row.image_type === "thumbnail").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
   $("screenshotUrls").value = imageRows.filter(row => row.image_type === "screenshot").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
-  $("downloadLinks").value = links.map(link => `${link.quality}|${link.download_url}`).join("\n");
+  loadDownloadQualityFields(links);
   ["posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   setMovieFormMode(movie);
   setStatus("movieUploadStatus", `Draft loaded: ${movie.title}. Review or edit the details, then Update Draft or Update & Publish.`, "success");
@@ -1587,8 +1607,58 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   $("movieUploadPanel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+const RIVORA_QUALITY_FIELDS = [
+  { quality: "480p", ids: ["dlq_480p_1", "dlq_480p_2"] },
+  { quality: "720p", ids: ["dlq_720p_1", "dlq_720p_2"] },
+  { quality: "720pHEVC", ids: ["dlq_720pHEVC_1", "dlq_720pHEVC_2"] },
+  { quality: "1080p", ids: ["dlq_1080p_1", "dlq_1080p_2"] },
+  { quality: "1080pHEVC", ids: ["dlq_1080pHEVC_1", "dlq_1080pHEVC_2"] },
+  { quality: "1080P(10bit)", ids: ["dlq_1080P_10bit_1", "dlq_1080P_10bit_2"] },
+  { quality: "1080p HQ", ids: ["dlq_1080pHQ_1", "dlq_1080pHQ_2"] },
+  { quality: "4k", ids: ["dlq_4k_1", "dlq_4k_2"] },
+  { quality: "8k", ids: ["dlq_8k_1", "dlq_8k_2"] }
+];
+
+function loadDownloadQualityFields(linkRows) {
+  const rows = Array.isArray(linkRows) ? linkRows : [];
+  const grouped = new Map();
+  const legacy = [];
+  for (const row of rows) {
+    const quality = String(row?.quality || "").trim();
+    const url = String(row?.download_url || "").trim();
+    if (!quality || !url) continue;
+    if (quality === "2K" || quality === "4K") { legacy.push(`${quality}|${url}`); continue; }
+    const field = RIVORA_QUALITY_FIELDS.find(item => item.quality === quality);
+    if (!field) { legacy.push(`${quality}|${url}`); continue; }
+    if (!grouped.has(quality)) grouped.set(quality, []);
+    grouped.get(quality).push(url);
+  }
+  for (const field of RIVORA_QUALITY_FIELDS) {
+    field.ids.forEach((id, index) => { $(id).value = grouped.get(field.quality)?.[index] || ""; });
+  }
+  $("legacyDownloadLinks").value = legacy.join("\n");
+  syncDownloadQualityFields();
+}
+
+function syncDownloadQualityFields() {
+  const lines = [];
+  for (const field of RIVORA_QUALITY_FIELDS) {
+    for (const id of field.ids) {
+      const value = $(id).value.trim();
+      if (value) lines.push(`${field.quality}|${value}`);
+    }
+  }
+  const legacyLines = $("legacyDownloadLinks").value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  $("downloadLinks").value = [...lines, ...legacyLines].join("\n");
+}
+
+for (const field of RIVORA_QUALITY_FIELDS) {
+  for (const id of field.ids) $(id).addEventListener("input", syncDownloadQualityFields);
+}
+$("legacyDownloadLinks").addEventListener("input", syncDownloadQualityFields);
+
 function resetMovieForm() {
-  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "legacyDownloadLinks", ...RIVORA_QUALITY_FIELDS.flatMap(field => field.ids), "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   editingDraftImageRows = [];
   editingDraftDownloadRows = [];
   setMovieFormMode(null);
@@ -1611,6 +1681,7 @@ async function submitMovieWithStatus(targetStatus) {
     setStatus("movieUploadStatus", "Rating must be between 0 and 10.", "error"); return;
   }
 
+  syncDownloadQualityFields();
   const supportedQualities = [
     "480p", "720p", "720pHEVC", "1080p", "1080pHEVC",
     "1080P(10bit)", "1080p HQ", "4k", "8k", "2K", "4K"
