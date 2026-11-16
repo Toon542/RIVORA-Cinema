@@ -136,6 +136,21 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 .url-short-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.url-short-grid>div{min-width:0}.url-short-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.url-short-actions button{padding:9px 12px;font-size:11px}.url-short-card{padding:15px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,#0a2033,#071322);min-width:0}.url-short-card h3{font-size:14px;overflow-wrap:anywhere}.url-short-card p{font-size:11px;line-height:1.6;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}.url-short-link{color:var(--cyan)}.url-short-state{display:inline-block;margin-top:8px;padding:4px 8px;border:1px solid var(--border);border-radius:20px;font-size:10px}.url-short-state.active{color:var(--ok);border-color:#247b70}.url-short-state.disabled{color:var(--danger);border-color:#71344a}
 @media(max-width:600px){.url-short-grid{grid-template-columns:1fr}}
 
+
+/* AUTO CINEMATIC ASSET STUDIO V1 */
+.asset-studio-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin:14px 0}
+.asset-studio-toolbar label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+.asset-studio-toolbar select{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px}
+.asset-studio-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.asset-slot{min-width:0;padding:11px;border:1px solid rgba(83,245,255,.2);border-radius:10px;background:linear-gradient(145deg,#0a2033,#061321)}
+.asset-slot strong{display:block;font-size:12px;color:#e9fcff;margin-bottom:6px}
+.asset-slot small{display:block;color:var(--muted);font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+.asset-slot .slot-state{display:inline-block;margin-top:8px;padding:4px 7px;border:1px solid var(--border);border-radius:20px;font-size:10px;color:var(--muted)}
+.asset-studio-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.asset-studio-actions button{flex:1;min-width:160px}
+.asset-studio-note{padding:11px;border-left:3px solid var(--cyan);background:#041321;color:var(--muted);font-size:11px;line-height:1.6;margin:12px 0}
+@media(max-width:650px){.asset-studio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.asset-studio-toolbar{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -157,6 +172,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   <button class="nexus-nav" data-view="library" type="button"><span>▧</span> Movie Library</button>
   <button class="nexus-nav" data-view="publishing" type="button"><span>◈</span> Publishing Control</button>
   <button class="nexus-nav" data-view="media" type="button"><span>▩</span> Media Assets</button>
+  <button class="nexus-nav" data-view="assetStudio" type="button"><span>✧</span> Auto Cinematic Studio <i>AI</i></button>
   <button class="nexus-nav" data-view="shortner" type="button"><span>↗</span> URL Shortner</button>
   <div class="nexus-side-status"><span class="nexus-pulse"></span><div><b>RIVORA CORE</b><small>ADMIN SESSION ACTIVE</small></div></div>
 </aside>
@@ -262,6 +278,23 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   <div class="media-summary" id="mediaAssetSummary"></div>
   <div class="media-grid" id="mediaAssetGrid" aria-live="polite"></div>
   <div class="library-pagination"><button class="secondary" id="mediaAssetPrevBtn" type="button" disabled>← PREVIOUS</button><span class="notice" id="mediaAssetPageText">Page 0 of 0</span><button class="secondary" id="mediaAssetNextBtn" type="button" disabled>NEXT →</button></div>
+</section>
+
+<section class="panel hidden" id="assetStudioPanel">
+  <div class="topline"><h2>04 / AUTO CINEMATIC ASSET STUDIO</h2><span class="spacer"></span><span class="pill">SMART ASSET ENGINE</span></div>
+  <p class="notice">हर मूवी के लिए मौजूदा Image Limit के अनुसार 8 Asset स्लॉट जाँचे जाएँगे। पहले से मौजूद सही इमेज सुरक्षित रहेंगी; केवल खाली या खराब स्लॉट के लिए जनरेशन होगी।</p>
+  <div class="asset-studio-note">8 स्लॉट: 1 Poster, 1 Primary Backdrop, 1 Thumbnail और 5 Screenshots। मौजूदा Image Limit नहीं बढ़ाई जाएगी।</div>
+  <div class="asset-studio-toolbar">
+    <div><label for="assetStudioMovie">मूवी चुनें</label><select id="assetStudioMovie"><option value="">पहले मूवी सूची लोड करें</option></select></div>
+    <button class="secondary" id="assetStudioRefreshBtn" type="button">↻ मूवी लोड करें</button>
+  </div>
+  <p class="status" id="assetStudioStatus" aria-live="polite">सुरक्षित Admin Login के बाद मूवी सूची लोड करें।</p>
+  <div class="asset-studio-grid" id="assetStudioSlots" aria-live="polite"></div>
+  <div class="asset-studio-actions">
+    <button class="primary" id="assetStudioGenerateBtn" type="button" disabled>खाली / खराब इमेज तैयार करें</button>
+    <button class="secondary" id="assetStudioRefreshStatusBtn" type="button" disabled>स्थिति फिर जाँचें</button>
+  </div>
+  <p class="notice">किसी स्लॉट का मैनुअल री-जेनरेशन केवल उसी चुने हुए स्लॉट को बदलेगा। बाकी सही इमेज सुरक्षित रहेंगी।</p>
 </section>
 
 <section class="panel hidden" id="searchPanel">
@@ -436,6 +469,7 @@ function clearSessionUI(message = "You are logged out.") {
   $("movieLibraryPanel").classList.add("hidden");
   $("publishingPanel").classList.add("hidden");
   $("mediaAssetPanel").classList.add("hidden");
+  $("assetStudioPanel").classList.add("hidden");
   $("urlShortnerPanel").classList.add("hidden");
   $("seriesPanel").classList.add("hidden");
   $("movieUploadPanel").classList.add("hidden");
@@ -1176,6 +1210,8 @@ $("loginBtn").addEventListener("click", async () => {
     loadPublishingQueue();
     $("mediaAssetPanel").classList.remove("hidden");
     loadMediaAssets(0);
+    $("assetStudioPanel").classList.remove("hidden");
+    loadAssetStudioMovies();
     $("urlShortnerPanel").classList.remove("hidden");
     $("seriesPanel").classList.remove("hidden");
     $("movieUploadPanel").classList.remove("hidden");
@@ -1517,21 +1553,21 @@ async function submitMovieWithStatus(targetStatus) {
     });
     const thumbnailUrls = parseImageUrls("thumbnailUrls", "Thumbnail");
     const screenshotUrls = parseImageUrls("screenshotUrls", "Screenshot");
-    if (thumbnailFiles.length + screenshotFiles.length + thumbnailUrls.length + screenshotUrls.length > 30) {
-      throw new Error("Maximum 30 thumbnails and screenshots combined (uploads + URLs).");
-    }
-    let order = 0;
+    const thumbnailTotal = thumbnailFiles.length + thumbnailUrls.length;
+    const screenshotTotal = screenshotFiles.length + screenshotUrls.length;
+    if (thumbnailTotal > 1) throw new Error("इस मूवी के लिए केवल 1 Thumbnail स्लॉट उपलब्ध है।");
+    if (screenshotTotal > 5) throw new Error("इस मूवी के लिए अधिकतम 5 Screenshot स्लॉट उपलब्ध हैं।");
     for (const file of thumbnailFiles) {
-      setStatus("movieUploadStatus", `Uploading thumbnail file ${order + 1}/${thumbnailFiles.length}...`);
-      images.push({ image_path: await uploadImageFile(file), image_type: "thumbnail", display_order: order++ });
+      setStatus("movieUploadStatus", "Thumbnail अपलोड हो रहा है…");
+      images.push({ image_path: await uploadImageFile(file), image_type: "thumbnail", display_order: 1 });
     }
-    for (const url of thumbnailUrls) images.push({ image_path: url, image_type: "thumbnail", display_order: order++ });
-    order = 0;
+    for (const url of thumbnailUrls) images.push({ image_path: url, image_type: "thumbnail", display_order: 1 });
+    let screenshotOrder = 2;
     for (const file of screenshotFiles) {
-      setStatus("movieUploadStatus", `Uploading screenshot file ${order + 1}/${screenshotFiles.length}...`);
-      images.push({ image_path: await uploadImageFile(file), image_type: "screenshot", display_order: order++ });
+      setStatus("movieUploadStatus", `Screenshot ${screenshotOrder - 1}/5 अपलोड हो रहा है…`);
+      images.push({ image_path: await uploadImageFile(file), image_type: "screenshot", display_order: screenshotOrder++ });
     }
-    for (const url of screenshotUrls) images.push({ image_path: url, image_type: "screenshot", display_order: order++ });
+    for (const url of screenshotUrls) images.push({ image_path: url, image_type: "screenshot", display_order: screenshotOrder++ });
 
     const payload = {
       action: editingDraftId ? "update_movie" : "save_movie",
@@ -1568,6 +1604,122 @@ async function submitMovieWithStatus(targetStatus) {
 
 $("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
 $("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("published"));
+
+// AUTO CINEMATIC ASSET STUDIO — Admin V15 front-end integration.
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const ASSET_STUDIO_SLOTS = [
+  {key:"poster", label:"Poster", source:"movies.poster_path"},
+  {key:"backdrop_primary", label:"Primary Backdrop", source:"movies.backdrop_path"},
+  {key:"thumbnail", label:"Thumbnail", type:"thumbnail", order:1},
+  {key:"screenshot_1", label:"Screenshot 1", type:"screenshot", order:2},
+  {key:"screenshot_2", label:"Screenshot 2", type:"screenshot", order:3},
+  {key:"screenshot_3", label:"Screenshot 3", type:"screenshot", order:4},
+  {key:"screenshot_4", label:"Screenshot 4", type:"screenshot", order:5},
+  {key:"screenshot_5", label:"Screenshot 5", type:"screenshot", order:6}
+];
+let assetStudioMovies = [];
+let assetStudioSelectedMovie = null;
+
+function getAssetStudioSlotPath(movie, rows, slot) {
+  if (slot.key === "poster") return movie.poster_path || null;
+  if (slot.key === "backdrop_primary") return movie.backdrop_path || null;
+  const row = rows.find(item => item.image_type === slot.type && Number(item.display_order) === slot.order);
+  return row?.image_path || null;
+}
+
+function renderAssetStudioSlots() {
+  const root = $("assetStudioSlots");
+  const movie = assetStudioSelectedMovie;
+  if (!movie) { root.innerHTML = ""; return; }
+  const rows = Array.isArray(movie.__assetImages) ? movie.__assetImages : [];
+  const jobs = Array.isArray(movie.__assetJobs) ? movie.__assetJobs : [];
+  root.innerHTML = ASSET_STUDIO_SLOTS.map(slot => {
+    const path = getAssetStudioSlotPath(movie, rows, slot);
+    const job = jobs.find(item => item.asset_key === slot.key);
+    const jobState = job?.status === "completed" ? "Completed" : job?.status === "processing" ? "Processing" : job?.status === "pending" ? "Pending" : job?.status === "failed" ? `Failed: ${job.last_error || "Generation failed"}` : "";
+    const label = jobState || (path ? "मौजूद इमेज" : "खाली स्लॉट");
+    return `<div class="asset-slot"><strong>${slot.label}</strong><small>${path ? escapeHtml(String(path)) : "इस स्लॉट में अभी इमेज दर्ज नहीं है।"}</small><span class="slot-state">${escapeHtml(label)}</span><button class="secondary asset-slot-regenerate" type="button" data-asset-key="${slot.key}" style="width:100%;margin-top:9px;padding:7px;font-size:10px">${path ? "इस इमेज को फिर बनाएँ" : "यह स्लॉट बनाएँ"}</button></div>`;
+  }).join("");
+}
+
+async function loadAssetStudioMovies() {
+  if (!adminSessionToken) return;
+  const btn = $("assetStudioRefreshBtn");
+  btn.disabled = true;
+  setStatus("assetStudioStatus", "मूवी सूची सुरक्षित रूप से लोड हो रही है…");
+  try {
+    const result = await postJson(ADMIN_URL, {
+      action:"list_movies", limit:100, offset:0, status:"all",
+      sort_by:"created_at", sort_order:"desc"
+    }, adminSessionToken, true);
+    if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "मूवी सूची नहीं मिली।");
+    const rows = Array.isArray(result.images) ? result.images : [];
+    const jobs = Array.isArray(result.asset_jobs) ? result.asset_jobs : [];
+    assetStudioMovies = result.movies.map(movie => ({
+      ...movie,
+      __assetImages: rows.filter(row => String(row.movie_id) === String(movie.id)),
+      __assetJobs: jobs.filter(job => String(job.movie_id) === String(movie.id))
+    }));
+    const select = $("assetStudioMovie");
+    const previous = select.value;
+    select.innerHTML = '<option value="">मूवी चुनें…</option>' + assetStudioMovies.map(movie =>
+      `<option value="${escapeHtml(String(movie.id))}">${escapeHtml(movie.title || "बिना नाम की मूवी")} · ${escapeHtml(movie.status || "unknown")}</option>`
+    ).join("");
+    if (assetStudioMovies.some(movie => String(movie.id) === previous)) select.value = previous;
+    assetStudioSelectedMovie = assetStudioMovies.find(movie => String(movie.id) === select.value) || null;
+    $("assetStudioGenerateBtn").disabled = !assetStudioSelectedMovie;
+    $("assetStudioRefreshStatusBtn").disabled = !assetStudioSelectedMovie;
+    renderAssetStudioSlots();
+    setStatus("assetStudioStatus", `${assetStudioMovies.length} मूवी लोड हुईं। किसी मूवी को चुनकर उसके 8 Asset स्लॉट देखें।`, "success");
+  } catch (error) {
+    setStatus("assetStudioStatus", error.message || "मूवी सूची लोड नहीं हुई।", "error");
+  } finally { btn.disabled = false; }
+}
+
+$("assetStudioMovie").addEventListener("change", () => {
+  assetStudioSelectedMovie = assetStudioMovies.find(movie => String(movie.id) === $("assetStudioMovie").value) || null;
+  $("assetStudioGenerateBtn").disabled = !assetStudioSelectedMovie;
+  $("assetStudioRefreshStatusBtn").disabled = !assetStudioSelectedMovie;
+  renderAssetStudioSlots();
+});
+$("assetStudioRefreshBtn").addEventListener("click", loadAssetStudioMovies);
+$("assetStudioRefreshStatusBtn").addEventListener("click", loadAssetStudioMovies);
+$("assetStudioGenerateBtn").addEventListener("click", async () => {
+  if (!adminSessionToken || !assetStudioSelectedMovie) return;
+  if (!window.confirm(`“${assetStudioSelectedMovie.title}” के केवल खाली या खराब इमेज स्लॉट तैयार करें? मौजूदा सही इमेज सुरक्षित रहेंगी।`)) return;
+  const button = $("assetStudioGenerateBtn");
+  button.disabled = true;
+  setStatus("assetStudioStatus", "खाली / खराब स्लॉट की जाँच और जनरेशन अनुरोध भेजा जा रहा है…");
+  try {
+    const result = await postJson(ADMIN_URL, {action:"asset_studio_generate_missing", movie_id:assetStudioSelectedMovie.id}, adminSessionToken, true);
+    if (result.success !== true) throw new Error(result.error || "जनरेशन अनुरोध पूरा नहीं हुआ।");
+    setStatus("assetStudioStatus", result.message || "जनरेशन प्रक्रिया पूरी हुई।", result.failed > 0 ? "error" : "success");
+    await loadAssetStudioMovies();
+  } catch (error) {
+    setStatus("assetStudioStatus", error.message || "जनरेशन अनुरोध विफल हुआ।", "error");
+  } finally { button.disabled = !assetStudioSelectedMovie; }
+});
+
+$("assetStudioSlots").addEventListener("click", async event => {
+  const button = event.target.closest(".asset-slot-regenerate");
+  if (!button || !adminSessionToken || !assetStudioSelectedMovie) return;
+  const assetKey = button.dataset.assetKey;
+  const slot = ASSET_STUDIO_SLOTS.find(item => item.key === assetKey);
+  if (!slot || !window.confirm(`“${assetStudioSelectedMovie.title}” की ${slot.label} इमेज दोबारा बनानी है? यह केवल इसी चुने हुए स्लॉट को बदलेगा।`)) return;
+  button.disabled = true;
+  try {
+    const result = await postJson(ADMIN_URL, {
+      action:"asset_studio_regenerate_asset",
+      movie_id:assetStudioSelectedMovie.id,
+      asset_key:assetKey
+    }, adminSessionToken, true);
+    if (result.error) throw new Error(result.error);
+    setStatus("assetStudioStatus", result.message || `${slot.label} की प्रक्रिया पूरी हुई।`, result.failed > 0 ? "error" : "success");
+    await loadAssetStudioMovies();
+  } catch (error) {
+    setStatus("assetStudioStatus", error.message || "चुना हुआ स्लॉट अपडेट नहीं हुआ।", "error");
+  } finally { button.disabled = false; }
+});
 
 // Hybrid Series Manager v1.2 — local preview only; no database writes are enabled.
 const SERIES_QUALITIES = ["480p", "720p", "1080p", "2K", "4K"];
@@ -1956,6 +2108,7 @@ window.addEventListener("pageshow", () => {
   library:['movieLibraryPanel'],
   publishing:['publishingPanel'],
   media:['mediaAssetPanel'],
+  assetStudio:['assetStudioPanel'],
   shortner:['urlShortnerPanel']
  };
  const allPanels=Object.values(views).flat();
