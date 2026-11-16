@@ -7,6 +7,7 @@
   <meta name="description" content="RIVORA — One World. Endless Cinema. Discover Bollywood, Hollywood and global entertainment.">
   <title>RIVORA — One World. Endless Cinema.</title>
   <style>
+    /* RIVORA PUBLIC V7 — MULTI-VIEW MOVIE GALLERY + HOLOGRAPHIC CARDS */
     :root {
       --bg:#080b18; --panel:#11172b; --panel-light:#171f39;
       --cyan:#42d9ff; --purple:#9255ff; --text:#f5f6ff;
@@ -24,12 +25,27 @@
     nav{display:flex;align-items:center;gap:23px}
     nav a,.nav-button{color:var(--muted);text-decoration:none;font-size:14px;background:none;border:0}
     nav a:hover,.nav-button:hover{color:var(--cyan)}
-    .hero{min-height:410px;padding:80px 7%;display:flex;align-items:center;background:radial-gradient(ellipse at 82% 48%,rgba(115,58,205,.48),transparent 45%),radial-gradient(ellipse at 65% 100%,rgba(25,139,255,.18),transparent 48%),linear-gradient(110deg,#080b18,#101a38);border-bottom:1px solid var(--border)}
-    .hero-content{max-width:650px}
-    .eyebrow{color:var(--cyan);letter-spacing:4px;font-size:12px;margin-bottom:20px}
-    .hero h1{font-size:clamp(46px,9vw,82px);line-height:1;letter-spacing:2px;margin-bottom:18px}
-    .hero h1 span{color:var(--cyan)}
-    .hero p{color:var(--muted);line-height:1.7;max-width:470px}
+    .hero{position:relative;isolation:isolate;min-height:clamp(430px,54vw,620px);padding:64px 7% 78px;display:flex;align-items:center;overflow:hidden;background:linear-gradient(110deg,#080b18,#101a38);border-bottom:1px solid var(--border)}
+    .hero-backdrop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;z-index:-2;opacity:.72;transform:scale(1.025);transition:opacity .65s ease,transform 7s ease}
+    .hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(5,8,19,.98) 0%,rgba(5,8,19,.84) 38%,rgba(5,8,19,.28) 75%,rgba(5,8,19,.2) 100%),linear-gradient(0deg,rgba(8,11,24,.96),transparent 42%,rgba(8,11,24,.18))}
+    .hero-content{width:min(680px,75%);max-width:680px;position:relative;z-index:1}
+    .hero .eyebrow{color:var(--cyan);letter-spacing:3px;font-size:11px;font-weight:800;margin-bottom:16px}
+    .hero h1{font-size:clamp(38px,6.2vw,76px);line-height:1.04;letter-spacing:.2px;margin-bottom:15px;text-wrap:balance}
+    .hero p{color:#d7dced;line-height:1.65;max-width:590px;font-size:clamp(13px,1.45vw,16px);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .hero-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:15px 0 0;color:#dce6ff;font-size:12px}
+    .hero-meta span{padding:6px 10px;border:1px solid rgba(255,255,255,.2);border-radius:30px;background:rgba(8,11,24,.48);backdrop-filter:blur(8px)}
+    .hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .hero .primary-button{margin-top:22px}
+    .hero-controls{position:absolute;right:6%;bottom:27px;z-index:2;display:flex;align-items:center;gap:9px}
+    .hero-arrow,.hero-pause{width:38px;height:38px;border:1px solid rgba(255,255,255,.35);border-radius:50%;background:rgba(8,11,24,.62);color:white;font-size:19px;display:grid;place-items:center;backdrop-filter:blur(9px)}
+    .hero-arrow:hover,.hero-pause:hover{border-color:var(--cyan);color:var(--cyan)}
+    .hero-dots{display:flex;align-items:center;gap:7px;margin-right:5px}
+    .hero-dot{width:8px;height:8px;padding:0;border:0;border-radius:20px;background:rgba(255,255,255,.45);transition:width .25s,background .25s}
+    .hero-dot[aria-current="true"]{width:25px;background:var(--cyan)}
+    .hero-counter{position:absolute;right:7%;top:25px;z-index:2;color:#e5eaff;font-size:11px;letter-spacing:2px;text-shadow:0 1px 8px #000}
+    .hero-empty{display:none}
+    @media(max-width:650px){.hero{min-height:470px;padding:65px 6% 100px;align-items:flex-end}.hero-backdrop{object-position:center center;opacity:.62}.hero::before{background:linear-gradient(0deg,rgba(5,8,19,.99) 0%,rgba(5,8,19,.82) 43%,rgba(5,8,19,.25) 100%)}.hero-content{width:100%}.hero h1{font-size:clamp(34px,10vw,54px)}.hero p{-webkit-line-clamp:3}.hero-controls{left:6%;right:auto;bottom:24px}.hero-counter{right:6%;top:20px}}
+    @media(prefers-reduced-motion:reduce){.hero-backdrop,.hero-dot{transition:none!important}}
     .primary-button{margin-top:27px;padding:13px 23px;border:0;border-radius:30px;color:white;font-weight:700;background:linear-gradient(90deg,#168bff,#923cff)}
     .primary-button:hover{filter:brightness(1.12)}
     .section{padding:36px 6%}
@@ -83,6 +99,43 @@
     .filter{padding:8px 17px;color:var(--muted);background:transparent;border:1px solid #303957;border-radius:20px}
     .filter.active,.filter:hover{color:white;background:#7139d5;border-color:#7139d5}
     .movie-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+    /* RIVORA V12 — accessible animated skeleton loading */
+    .movie-grid[aria-busy="true"]{min-height:220px}
+    .skeleton-card{
+      overflow:hidden;position:relative;border:1px solid rgba(110,135,190,.18);
+      border-radius:14px;background:linear-gradient(145deg,#101a31,#090e1d);
+      min-width:0;pointer-events:none;
+    }
+    .skeleton-poster,.skeleton-line,.poster-image-loading::before{
+      background:linear-gradient(100deg,#151f37 20%,#263657 38%,#151f37 58%);
+      background-size:220% 100%;animation:rivoraSkeletonShimmer 1.35s ease-in-out infinite;
+    }
+    .skeleton-poster{height:230px;position:relative;overflow:hidden}
+    .skeleton-poster::after{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 55%,rgba(4,8,19,.58));
+    }
+    .skeleton-copy{padding:14px;display:grid;gap:11px}
+    .skeleton-line{height:10px;border-radius:6px}
+    .skeleton-line.title{height:15px;width:76%}
+    .skeleton-line.short{width:48%}
+    .poster-image-loading{position:relative!important;overflow:hidden}
+    .poster-image-loading::before{
+      content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    }
+    .poster-image-loaded::before{display:none}
+    @keyframes rivoraSkeletonShimmer{0%{background-position:100% 0}100%{background-position:-120% 0}}
+    @media(prefers-reduced-motion:reduce){
+      .skeleton-poster,.skeleton-line,.poster-image-loading::before{animation:none;background:#1b2945}
+    }
+    .movie-grid.view-list .skeleton-card{display:grid;grid-template-columns:minmax(125px,190px) minmax(0,1fr);min-height:190px}
+    .movie-grid.view-list .skeleton-poster{height:190px}
+    .movie-grid.view-compact .skeleton-poster{height:160px}
+    .movie-grid.view-masonry .skeleton-card{display:inline-block;width:100%;margin:0 0 16px;break-inside:avoid}
+    .movie-grid.view-masonry .skeleton-card:nth-child(3n) .skeleton-poster{height:265px}
+    .movie-grid.view-masonry .skeleton-card:nth-child(4n) .skeleton-poster{height:205px}
+    .movie-grid.view-poster .skeleton-copy{display:none}
+    .movie-grid.view-poster .skeleton-poster{height:auto;aspect-ratio:2/3}
     .movie-card{overflow:hidden;background:var(--panel);border:1px solid #252e49;border-radius:12px;transition:transform .25s,border-color .25s}
     .movie-card:hover{transform:translateY(-5px);border-color:var(--cyan)}
     .poster{height:190px;padding:15px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:23px;font-weight:900;letter-spacing:2px;background:linear-gradient(145deg,#152e63,#6429a5)}
@@ -90,6 +143,126 @@
     .poster.p3{background:linear-gradient(145deg,#174c55,#17234e)}
     .poster.p4{background:linear-gradient(145deg,#48204f,#132c5e)}
     .movie-info{padding:14px}
+
+
+    /* RIVORA V5 — holographic movie-card experience */
+    .movie-card.holo-card{
+      --holo-x:50%;--holo-y:50%;--holo-glow:rgba(66,217,255,.38);
+      position:relative;isolation:isolate;overflow:visible;
+      border:1px solid rgba(66,217,255,.24);
+      border-radius:14px;background:linear-gradient(145deg,#101a31,#090e1d);
+      transform-style:preserve-3d;
+      transition:transform .24s cubic-bezier(.2,.75,.25,1),border-color .25s,box-shadow .25s;
+      box-shadow:0 9px 24px rgba(0,0,0,.22);
+    }
+    .movie-card.holo-card::before{
+      content:"";position:absolute;inset:-1px;padding:1px;border-radius:15px;z-index:5;
+      background:conic-gradient(from var(--holo-angle,0deg),transparent 0deg,#42d9ff 70deg,#9255ff 145deg,transparent 220deg,#42d9ff 300deg,transparent 360deg);
+      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;mask-composite:exclude;opacity:.32;pointer-events:none;
+      animation:holoBorderSpin 7s linear infinite;transition:opacity .25s;
+    }
+    .movie-card.holo-card::after{
+      content:"";position:absolute;inset:0;border-radius:14px;z-index:4;pointer-events:none;
+      background:radial-gradient(circle at var(--holo-x) var(--holo-y),rgba(255,255,255,.23),rgba(66,217,255,.08) 18%,transparent 48%);
+      opacity:0;transition:opacity .25s;mix-blend-mode:screen;
+    }
+    .movie-card.holo-card.holo-interacting{will-change:transform}
+    .movie-card.holo-card:hover,.movie-card.holo-card:focus-within,.movie-card.holo-card.is-touch-active{
+      border-color:rgba(66,217,255,.85);
+      box-shadow:0 18px 38px rgba(0,0,0,.38),0 0 24px var(--holo-glow);
+    }
+    .movie-card.holo-card:hover::before,.movie-card.holo-card:focus-within::before,.movie-card.holo-card.is-touch-active::before{opacity:1}
+    .movie-card.holo-card:hover::after,.movie-card.holo-card:focus-within::after,.movie-card.holo-card.is-touch-active::after{opacity:1}
+    .holo-stage{height:230px;position:relative;isolation:isolate;overflow:hidden;border-radius:13px 13px 0 0;transform:translateZ(16px)}
+    .holo-stage .poster{position:absolute;inset:0 0 40px;height:190px;border-radius:0;z-index:1;transform:translateZ(1px);background-color:#11172b}
+    .holo-reflection{
+      position:absolute;left:0;right:0;top:190px;height:40px;z-index:0;pointer-events:none;
+      background-image:var(--holo-poster-image,linear-gradient(145deg,#152e63,#6429a5));
+      background-size:cover;background-position:var(--holo-reflect-x,50%) var(--holo-reflect-y,50%);
+      transform:scaleY(-1);opacity:var(--holo-reflect-opacity,.32);
+      filter:blur(var(--holo-reflect-blur,.55px)) saturate(1.18);
+      transition:opacity .2s ease,filter .2s ease,background-position .2s ease;
+      -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.68),transparent 92%);
+      mask-image:linear-gradient(to bottom,rgba(0,0,0,.68),transparent 92%);
+    }
+    .holo-reflection::after{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(100deg,transparent 15%,rgba(120,235,255,.24) 48%,transparent 78%);
+      opacity:var(--holo-reflect-sheen,0);mix-blend-mode:screen;
+    }
+    .holo-card.holo-interacting .holo-reflection{filter:blur(.2px) saturate(1.35)}
+    .holo-stage .movie-info{
+      position:absolute;inset:0 0 40px;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;
+      padding:15px;background:linear-gradient(180deg,transparent 8%,rgba(5,8,20,.45) 38%,rgba(5,8,20,.97) 100%);
+      opacity:0;transform:translateY(9px);transition:opacity .24s ease,transform .24s ease;
+      pointer-events:none;
+    }
+    .holo-card:hover .movie-info,.holo-card:focus-within .movie-info,.holo-card.is-touch-active .movie-info{opacity:1;transform:translateY(0)}
+    .holo-stage .movie-info h3{font-size:16px;text-shadow:0 2px 10px #000}
+    .holo-stage .movie-info p{font-size:11px;color:#dce8ff}
+    .holo-stage .movie-info .secondary-button{align-self:flex-start;pointer-events:auto;margin-top:10px;background:rgba(10,17,38,.76);backdrop-filter:blur(8px)}
+    @keyframes holoBorderSpin{to{--holo-angle:360deg}}
+    @property --holo-angle{syntax:"<angle>";inherits:false;initial-value:0deg}
+    @media(hover:none){.holo-stage .movie-info{opacity:1;transform:none;background:linear-gradient(180deg,transparent 35%,rgba(5,8,20,.9) 100%)}.holo-stage .movie-info .secondary-button{display:none}}
+    @media(prefers-reduced-motion:reduce){
+      .movie-card.holo-card,.holo-stage .movie-info,.holo-reflection{transition:none}
+      .movie-card.holo-card::before{animation:none}
+      .holo-reflection::after{display:none}
+    }
+    /* RIVORA V6 — responsive multi-view movie gallery */
+    .gallery-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:-5px 0 18px}
+    .gallery-view-label{font-size:10px;letter-spacing:2px;color:var(--muted);font-weight:800}
+    .gallery-view-buttons{display:flex;gap:7px;flex-wrap:wrap}
+    .gallery-view-button{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid #303957;border-radius:9px;background:rgba(17,23,43,.8);color:var(--muted);font-size:12px;transition:background .2s,border-color .2s,color .2s}
+    .gallery-view-button:hover,.gallery-view-button[aria-pressed="true"]{color:#fff;background:rgba(113,57,213,.28);border-color:var(--purple)}
+    .gallery-view-button span:first-child{font-size:16px;line-height:1}
+    .movie-grid.view-list{display:flex;flex-direction:column;gap:12px}
+    .movie-grid.view-list .movie-card{display:block;width:100%;min-height:190px}
+    .movie-grid.view-list .holo-stage{display:grid;grid-template-columns:minmax(125px,190px) minmax(0,1fr);height:190px;min-height:190px;border-radius:13px;transform:none}
+    .movie-grid.view-list .holo-stage .poster{position:relative;grid-column:1;grid-row:1;inset:auto;height:100%;min-height:190px;bottom:auto}
+    .movie-grid.view-list .holo-reflection{display:none}
+    .movie-grid.view-list .holo-stage .movie-info{position:relative;grid-column:2;grid-row:1;inset:auto;opacity:1;transform:none;justify-content:center;padding:14px;background:linear-gradient(135deg,rgba(12,20,42,.96),rgba(5,8,20,.78));pointer-events:auto}
+    .movie-grid.view-list .holo-stage .movie-info .secondary-button{display:inline-flex}
+    .movie-grid.view-compact{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+    .movie-grid.view-compact .holo-stage{height:160px}
+    .movie-grid.view-compact .holo-stage .poster{height:auto;bottom:34px}
+    .movie-grid.view-compact .holo-reflection{top:auto;bottom:0;height:34px}
+    .movie-grid.view-compact .holo-stage .movie-info{inset:0 0 34px;padding:10px}
+    .movie-grid.view-compact .holo-stage .movie-info h3{font-size:13px}
+    .movie-grid.view-compact .holo-stage .movie-info p{font-size:10px}
+    .movie-grid.view-compact .holo-stage .movie-info .secondary-button{font-size:10px;padding:6px 8px}
+    .movie-grid.view-masonry{display:block;column-width:190px;column-gap:16px}
+    .movie-grid.view-masonry .movie-card{display:inline-block;width:100%;margin:0 0 16px;break-inside:avoid;vertical-align:top}
+    .movie-grid.view-masonry .holo-stage{height:230px}
+    .movie-grid.view-masonry .movie-card:nth-of-type(3n) .holo-stage{height:265px}
+    .movie-grid.view-masonry .movie-card:nth-of-type(4n) .holo-stage{height:205px}
+    .movie-grid.view-masonry .holo-stage .poster{height:auto;inset:0 0 40px}
+    .movie-grid.view-masonry .holo-reflection{top:auto;bottom:0}
+    .movie-grid.view-poster{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px}
+    .movie-grid.view-poster .holo-stage{height:auto;aspect-ratio:2/3}
+    .movie-grid.view-poster .holo-stage .poster{inset:0;height:auto;bottom:0}
+    .movie-grid.view-poster .holo-reflection{display:none}
+    .movie-grid.view-poster .holo-stage .movie-info{display:none}
+    .movie-grid.view-poster .movie-card{border-radius:12px}
+    .movie-grid.view-masonry .empty{column-span:all}
+    @media(max-width:1000px){.movie-grid.view-compact{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    @media(max-width:650px){
+      .gallery-toolbar{align-items:flex-start;flex-direction:column}
+      .gallery-view-buttons{width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+      .gallery-view-button{justify-content:center;flex-direction:column;gap:3px;padding:7px 3px;font-size:10px}
+      .movie-grid.view-compact{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+      .movie-grid.view-compact .holo-stage{height:135px}
+      .movie-grid.view-list .holo-stage{grid-template-columns:105px minmax(0,1fr);height:155px;min-height:155px}
+      .movie-grid.view-list .holo-stage .poster{min-height:155px}
+      .movie-grid.view-list .holo-stage .movie-info{padding:8px}
+      .movie-grid.view-list .holo-stage .movie-info h3{font-size:12px}
+      .movie-grid.view-list .holo-stage .movie-info p{font-size:9px}
+      .movie-grid.view-list .holo-stage .movie-info .secondary-button{font-size:10px;padding:6px 7px;margin-top:6px}
+      .movie-grid.view-poster{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    }
+    @media(prefers-reduced-motion:reduce){.gallery-view-button{transition:none}}
+
     .movie-info h3{font-size:16px;margin-bottom:8px}
     .movie-info p{color:var(--muted);font-size:12px;line-height:1.5}
     .secondary-button{margin-top:13px;padding:8px 12px;color:white;background:transparent;border:1px solid var(--purple);border-radius:7px}
@@ -109,6 +282,29 @@
     .detail-block h2{font-size:19px;color:var(--cyan);margin-bottom:15px}
     .detail-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:13px}
     .detail-gallery img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:1px solid var(--border);cursor:zoom-in;background:#080b18}
+    .dna-profile-block{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(14,24,49,.98),rgba(8,12,27,.98));}
+    .dna-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .dna-heading h2{margin:3px 0 0!important}
+    .dna-engine-label{padding:6px 9px;border:1px solid rgba(66,217,255,.35);border-radius:7px;color:#65e5ff;font-size:9px;letter-spacing:1.3px}
+    .dna-intro,.dna-disclaimer{color:var(--muted);font-size:12px;line-height:1.6}
+    .dna-profile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:17px}
+    .dna-item{min-width:0;padding:13px;border:1px solid rgba(95,126,190,.25);border-radius:11px;background:rgba(17,27,52,.68)}
+    .dna-item-label{display:block;margin-bottom:8px;color:#8e9fca;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+    .dna-item-value{color:#edf4ff;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+    .dna-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .dna-tag{padding:5px 8px;border:1px solid rgba(66,217,255,.2);border-radius:20px;background:rgba(66,217,255,.07);color:#c9f6ff;font-size:10px}
+    .dna-similar-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:23px 0 11px}
+    .dna-similar-heading h3{font-size:13px;color:#dce8ff;letter-spacing:1px}
+    .dna-similar-heading span{font-size:10px;color:var(--muted)}
+    .dna-similar-list{display:grid;gap:8px}
+    .dna-match{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:11px 13px;border:1px solid #293654;border-radius:10px;background:rgba(9,16,34,.75);color:#eef4ff;text-align:left;cursor:pointer}
+    .dna-match:hover{border-color:var(--cyan);background:rgba(22,43,74,.8)}
+    .dna-match-title{font-size:12px;font-weight:700}
+    .dna-match-meta{display:block;margin-top:4px;color:var(--muted);font-size:10px}
+    .dna-score{flex:0 0 auto;color:#68e5ff;font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+    .dna-disclaimer{margin:13px 0 0;font-size:10px}
+    @media(max-width:650px){.dna-profile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.dna-item{padding:10px}.dna-item-value{font-size:12px}.dna-similar-heading{align-items:flex-start;flex-direction:column}}
+
     .detail-cast{display:flex;flex-wrap:wrap;gap:9px}
     .detail-cast span{padding:9px 12px;border-radius:9px;background:var(--panel-light);border:1px solid var(--border);font-size:13px}
     .detail-trailer{display:inline-flex;padding:12px 18px;border-radius:9px;background:linear-gradient(90deg,#168bff,#923cff);color:white;text-decoration:none;font-weight:700}
@@ -145,7 +341,7 @@
     .list-empty{color:var(--muted);line-height:1.6}
     .status-message{min-height:18px;margin-top:10px;color:var(--muted);font-size:12px}
     @media(max-width:800px){nav{gap:13px}nav a,.nav-button{font-size:12px}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:480px){header{padding:13px 5%;flex-wrap:wrap}.logo{font-size:25px}nav{order:2;width:100%;justify-content:space-between}.hero{min-height:330px;padding:55px 6%}.hero h1{font-size:49px}.section{padding:28px 5%}.section-heading{align-items:stretch}.search-box{width:100%}.poster{height:145px;font-size:18px}.modal-content{padding:25px 21px}}
+    @media(max-width:480px){header{padding:13px 5%;flex-wrap:wrap}.logo{font-size:25px}nav{order:2;width:100%;justify-content:space-between}.hero{min-height:420px;padding:65px 6% 100px}.hero h1{font-size:clamp(34px,10vw,49px)}.section{padding:28px 5%}.section-heading{align-items:stretch}.search-box{width:100%}.poster{height:145px;font-size:18px}.modal-content{padding:25px 21px}}
   
     /* RIVORA V4: persistent cinematic corner identity */
     .rivora-floating-brand{
@@ -161,7 +357,47 @@
     @keyframes rivoraBrandGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(66,217,255,.38)) drop-shadow(0 0 12px rgba(146,85,255,.22))}50%{filter:drop-shadow(0 0 11px rgba(66,217,255,.72)) drop-shadow(0 0 20px rgba(146,85,255,.48))}}
     @media(max-width:600px){.rivora-floating-brand{top:82px;right:8px;width:clamp(92px,29vw,126px);border-radius:8px}}
     @media(prefers-reduced-motion:reduce){.rivora-floating-brand{animation:none}}
-  </style>
+  
+/* RIVORA V9 — Movie Knowledge Graph */
+.knowledge-graph-block{margin-top:24px;overflow:hidden}
+.kg-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.kg-heading h2{margin:0;color:var(--text);font-size:clamp(19px,3vw,25px);letter-spacing:.04em}
+.kg-kicker{color:var(--cyan);font-size:10px;font-weight:800;letter-spacing:.18em;margin-bottom:7px}
+.kg-intro{color:var(--muted);font-size:13px;line-height:1.65;margin:10px 0 16px}
+.kg-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.kg-toolbar button{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}
+.kg-toolbar button:hover{border-color:var(--cyan);color:var(--cyan)}
+.kg-status{color:var(--muted);font-size:12px;min-height:18px;margin:0 0 10px}
+.kg-viewport{width:100%;overflow:auto;border:1px solid var(--border);border-radius:14px;background:radial-gradient(ellipse at 48% 48%,rgba(24,48,86,.62),rgba(6,11,25,.98) 72%);overscroll-behavior:contain;scrollbar-color:#3a4d78 #0a1020}
+.kg-svg{display:block;width:100%;min-width:760px;height:auto;min-height:390px;touch-action:pan-x pan-y;user-select:none}
+.kg-edge{stroke:rgba(90,190,230,.48);stroke-width:1.6;fill:none}
+.kg-edge.kg-edge-director{stroke:rgba(183,125,255,.65)}
+.kg-edge.kg-edge-genre{stroke:rgba(75,220,177,.55)}
+.kg-edge.kg-edge-expanded{stroke:rgba(255,190,90,.7);stroke-dasharray:5 5}
+.kg-node{cursor:pointer;outline:none}
+.kg-node rect,.kg-node circle{stroke-width:1.5;transition:filter .16s,stroke-width .16s}
+.kg-node text{fill:#f2f7ff;font:600 12px system-ui,sans-serif;pointer-events:none;text-anchor:middle}
+.kg-node .kg-node-sub{fill:#aebbd4;font-size:9px;font-weight:500}
+.kg-node:hover rect,.kg-node:hover circle,.kg-node:focus rect,.kg-node:focus circle{stroke:#fff;stroke-width:2.5;filter:drop-shadow(0 0 8px rgba(0,220,255,.55))}
+.kg-node-movie rect{fill:#153c61;stroke:#39d7ff}
+.kg-node-actor rect{fill:#28204d;stroke:#a98aff}
+.kg-node-director rect{fill:#40264e;stroke:#ed9cff}
+.kg-node-genre rect{fill:#123c38;stroke:#56dfb3}
+.kg-node-film rect{fill:#46351d;stroke:#ffc66b}
+.kg-legend{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 0;color:var(--muted);font-size:11px}
+.kg-legend span{display:inline-flex;align-items:center;gap:6px}
+.kg-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.kg-dot-movie{background:#39d7ff}.kg-dot-person{background:#a98aff}.kg-dot-director{background:#ed9cff}.kg-dot-genre{background:#56dfb3}.kg-dot-film{background:#ffc66b}
+.kg-related{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-top:14px}
+.kg-related-card{display:flex;gap:9px;align-items:center;text-align:left;border:1px solid var(--border);border-radius:10px;background:rgba(17,26,48,.85);color:var(--text);padding:8px;cursor:pointer;min-width:0}
+.kg-related-card:hover{border-color:var(--cyan)}
+.kg-related-card img{width:38px;height:54px;object-fit:cover;border-radius:5px;background:#111a2d;flex:none}
+.kg-related-card strong{display:block;font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.kg-related-card small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
+.kg-related-empty{grid-column:1/-1;color:var(--muted);font-size:12px;padding:8px 0}
+@media(max-width:650px){.kg-svg{min-width:760px}.kg-intro{font-size:12px}.kg-toolbar button{padding:7px 10px;font-size:11px}}
+
+</style>
 </head>
 <body>
 
@@ -221,16 +457,64 @@
           <p class="status-message" id="detailStatus" aria-live="polite"></p>
         </div>
       </div>
+      <section class="detail-block dna-profile-block" id="digitalDnaSection">
+        <div class="dna-heading">
+          <div><div class="eyebrow">RIVORA INTELLIGENCE LAYER</div><h2>DIGITAL DNA PROFILE</h2></div>
+          <span class="dna-engine-label">DNA ENGINE · JS</span>
+        </div>
+        <p class="dna-intro">An estimated identity profile generated from the movie's available metadata.</p>
+        <div class="dna-profile-grid" id="digitalDnaProfile" aria-live="polite"></div>
+        <div class="dna-similar-heading"><h3>SIMILARITY MATCHES</h3><span>Compared with published movies</span></div>
+        <div class="dna-similar-list" id="digitalDnaSimilar"><p class="gallery-empty">Similarity matches will appear here.</p></div>
+        <p class="dna-disclaimer">Scores are heuristic estimates based on available genres, synopsis, runtime and release year. They are not editorial ratings.</p>
+      </section>
+
+      <section class="detail-block knowledge-graph-block" id="movieKnowledgeGraphSection">
+        <div class="kg-heading">
+          <div><div class="kg-kicker">RIVORA CONNECTION INTELLIGENCE</div><h2>MOVIE KNOWLEDGE GRAPH</h2></div>
+          <span class="dna-engine-label">NETWORK ENGINE · SVG</span>
+        </div>
+        <p class="kg-intro">Explore how this movie connects to its cast, director, genres and other films. Select an Actor or Director node to expand their filmography.</p>
+        <div class="kg-toolbar" role="group" aria-label="Knowledge graph controls">
+          <button type="button" id="kgZoomIn" aria-label="Zoom in">＋ Zoom</button>
+          <button type="button" id="kgZoomOut" aria-label="Zoom out">− Zoom</button>
+          <button type="button" id="kgReset" aria-label="Reset graph view">Reset View</button>
+        </div>
+        <p class="kg-status" id="kgStatus" role="status" aria-live="polite">Knowledge Graph will load when movie details open.</p>
+        <div class="kg-viewport" id="kgViewport" tabindex="0" aria-label="Scrollable interactive movie connection graph">
+          <svg class="kg-svg" id="kgSvg" viewBox="0 0 1020 560" role="group" aria-label="Interactive network of movie, actors, director, genres and related films">
+            <text x="510" y="280" text-anchor="middle" fill="#aebbd4" font-size="14">Loading Knowledge Graph…</text>
+          </svg>
+        </div>
+        <div class="kg-legend" aria-label="Graph node legend">
+          <span><i class="kg-dot kg-dot-movie"></i>Movie</span><span><i class="kg-dot kg-dot-person"></i>Actor</span><span><i class="kg-dot kg-dot-director"></i>Director</span><span><i class="kg-dot kg-dot-genre"></i>Genre</span><span><i class="kg-dot kg-dot-film"></i>Filmography</span>
+        </div>
+        <div class="kg-related" id="kgRelated" aria-live="polite"></div>
+        <p class="dna-disclaimer">Movie and person credits provided by TMDB. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+      </section>
+
       <section class="detail-block"><h2>SCREENSHOTS & GALLERY</h2><div class="detail-gallery" id="detailGallery"><p class="gallery-empty">No screenshots available.</p></div></section>
       <section class="detail-block"><h2>CAST</h2><div class="detail-cast" id="detailCast"><p class="gallery-empty">Cast details unavailable.</p></div></section>
       <section class="detail-block"><h2>AVAILABLE OFFICIAL LINKS</h2><div class="download-list" id="detailLinks"><p class="download-empty">No links available.</p></div></section>
     </section>
-    <section class="hero">
-      <div class="hero-content">
-        <div class="eyebrow">BOLLYWOOD • HOLLYWOOD • BEYOND</div>
-        <h1>RIVORA<span>.</span></h1>
-        <p>One World. Endless Cinema. Discover a new dimension of entertainment with stories from around the world.</p>
-        <button class="primary-button" type="button" id="exploreButton">Explore Movies →</button>
+    <section class="hero" id="dynamicHero" aria-label="Featured movies">
+      <img class="hero-backdrop" id="heroBackdrop" alt="" aria-hidden="true">
+      <div class="hero-counter" id="heroCounter" aria-live="off">01 / 01</div>
+      <div class="hero-content" aria-live="polite">
+        <div class="eyebrow" id="heroEyebrow">RIVORA FEATURED • BOLLYWOOD • HOLLYWOOD</div>
+        <h1 id="heroTitle">RIVORA<span>.</span></h1>
+        <div class="hero-meta" id="heroMeta"></div>
+        <p id="heroOverview">One World. Endless Cinema. Discover a new dimension of entertainment with stories from around the world.</p>
+        <div class="hero-actions">
+          <button class="primary-button" type="button" id="heroDetailsButton">View Details</button>
+          <button class="primary-button" type="button" id="exploreButton">Explore Movies →</button>
+        </div>
+      </div>
+      <div class="hero-controls" id="heroControls" aria-label="Featured movie controls">
+        <div class="hero-dots" id="heroDots" aria-label="Choose featured movie"></div>
+        <button class="hero-arrow" id="heroPrevious" type="button" aria-label="Previous featured movie">‹</button>
+        <button class="hero-arrow" id="heroNext" type="button" aria-label="Next featured movie">›</button>
+        <button class="hero-pause" id="heroPause" type="button" aria-label="Pause slideshow" title="Pause slideshow">Ⅱ</button>
       </div>
     </section>
 
@@ -271,6 +555,16 @@
       </div>
       <div class="filters" id="genreFilters" aria-label="Movie genre filters">
         <button class="filter active" type="button" data-category="All" aria-pressed="true">ALL</button>
+      </div>
+      <div class="gallery-toolbar" aria-label="Movie gallery layout">
+        <span class="gallery-view-label">VIEW MODE</span>
+        <div class="gallery-view-buttons" role="group" aria-label="Choose movie layout">
+          <button class="gallery-view-button" type="button" data-gallery-view="grid" aria-pressed="true" title="Grid view"><span aria-hidden="true">▦</span><span>Grid</span></button>
+          <button class="gallery-view-button" type="button" data-gallery-view="list" aria-pressed="false" title="List view"><span aria-hidden="true">☷</span><span>List</span></button>
+          <button class="gallery-view-button" type="button" data-gallery-view="compact" aria-pressed="false" title="Compact view"><span aria-hidden="true">▤</span><span>Compact</span></button>
+          <button class="gallery-view-button" type="button" data-gallery-view="masonry" aria-pressed="false" title="Masonry view"><span aria-hidden="true">▥</span><span>Masonry</span></button>
+          <button class="gallery-view-button" type="button" data-gallery-view="poster" aria-pressed="false" title="Poster-only view"><span aria-hidden="true">▣</span><span>Posters</span></button>
+        </div>
       </div>
       <div class="movie-grid" id="movieGrid">
         <div class="empty" id="emptyMessage" role="status">No published movies are available yet.</div>
@@ -350,6 +644,28 @@
     let filterButtons = Array.from(document.querySelectorAll(".filter"));
     const genreFilters = document.getElementById("genreFilters");
     const emptyMessage = document.getElementById("emptyMessage");
+    const movieGrid = document.getElementById("movieGrid");
+    const galleryViewButtons = Array.from(document.querySelectorAll("[data-gallery-view]"));
+    const galleryViewStorageKey = "rivoraGalleryView";
+    const supportedGalleryViews = ["grid", "list", "compact", "masonry", "poster"];
+    function setGalleryView(view, savePreference = true) {
+      const safeView = supportedGalleryViews.includes(view) ? view : "grid";
+      movieGrid.classList.remove(...supportedGalleryViews.map(name => "view-" + name));
+      if (safeView !== "grid") movieGrid.classList.add("view-" + safeView);
+      galleryViewButtons.forEach(button => {
+        const selected = button.dataset.galleryView === safeView;
+        button.setAttribute("aria-pressed", selected ? "true" : "false");
+      });
+      if (savePreference) {
+        try { localStorage.setItem(galleryViewStorageKey, safeView); }
+        catch (error) { console.warn("RIVORA gallery preference could not be saved.", error); }
+      }
+    }
+    galleryViewButtons.forEach(button => button.addEventListener("click", () => setGalleryView(button.dataset.galleryView)));
+    let savedGalleryView = "grid";
+    try { savedGalleryView = localStorage.getItem(galleryViewStorageKey) || "grid"; }
+    catch (error) { console.warn("RIVORA gallery preference could not be read.", error); }
+    setGalleryView(savedGalleryView, false);
     const movieModal = document.getElementById("movieModal");
     const listModal = document.getElementById("listModal");
     const watchlistKey = "rivoraWatchlist";
@@ -471,6 +787,228 @@
       openModal(movieModal, document.getElementById("closeMovieModal"));
     }
 
+
+    // RIVORA V9 — Movie Knowledge Graph. This module is isolated from search,
+    // genre filters, gallery rendering and the existing Digital DNA engine.
+    const kgEndpoint = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/rivora-knowledge-graph";
+    const kgCache = new Map();
+    let kgCurrentMovie = null;
+    let kgGraphData = null;
+    let kgExpandedPerson = null;
+    let kgZoom = 1;
+    let kgPanX = 0;
+    let kgPanY = 0;
+
+    async function kgRequest(payload) {
+      const response = await fetch(kgEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPABASE_KEY },
+        body: JSON.stringify(payload),
+        cache: "force-cache"
+      });
+      let data = {};
+      try { data = await response.json(); } catch (_) {}
+      if (!response.ok || data.success !== true) throw new Error(data.error || `Knowledge Graph request failed (${response.status}).`);
+      return data;
+    }
+
+    function kgSetStatus(message) {
+      const status = document.getElementById("kgStatus");
+      if (status) status.textContent = message;
+    }
+
+    function kgMakeSvg(tag, attrs = {}) {
+      const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, String(value)));
+      return element;
+    }
+
+    function kgShort(value, max = 19) {
+      const text = String(value || "Unknown");
+      return text.length > max ? text.slice(0, max - 1) + "…" : text;
+    }
+
+    function kgOpenMovie(movie) {
+      const local = publishedDatabaseMovies.find(item => Number(item.tmdb_id) === Number(movie.id));
+      if (local) {
+        window.location.href = window.location.pathname + "?movie=" + encodeURIComponent(local.id);
+        return;
+      }
+      if (movie.tmdb_url || movie.url) window.open(movie.tmdb_url || movie.url, "_blank", "noopener,noreferrer");
+    }
+
+    function kgRenderRelated(movies, heading) {
+      const root = document.getElementById("kgRelated");
+      if (!root) return;
+      root.replaceChildren();
+      if (heading) {
+        const label = document.createElement("p"); label.className = "kg-related-empty";
+        label.textContent = heading; root.append(label);
+      }
+      if (!movies.length) {
+        const empty = document.createElement("p"); empty.className = "kg-related-empty";
+        empty.textContent = "No matching titles are available in this connection."; root.append(empty); return;
+      }
+      movies.slice(0, 12).forEach(movie => {
+        const button = document.createElement("button"); button.type = "button"; button.className = "kg-related-card";
+        if (movie.poster) { const img = document.createElement("img"); img.src = movie.poster; img.alt = ""; img.loading = "lazy"; button.append(img); }
+        const copy = document.createElement("span");
+        const title = document.createElement("strong"); title.textContent = movie.title || "Untitled film";
+        const meta = document.createElement("small"); meta.textContent = (movie.release_date || "Year unavailable").slice(0, 4) + (movie.role ? " · " + movie.role : "");
+        copy.append(title, meta); button.append(copy);
+        button.addEventListener("click", () => kgOpenMovie(movie)); root.append(button);
+      });
+    }
+
+    function kgRenderGraph() {
+      const svg = document.getElementById("kgSvg");
+      if (!svg || !kgGraphData) return;
+      svg.replaceChildren();
+      const group = kgMakeSvg("g", { transform: `translate(${kgPanX} ${kgPanY}) translate(510 280) scale(${kgZoom}) translate(-510 -280)` });
+      svg.append(group);
+      const nodes = [];
+      const edges = [];
+      const movie = kgGraphData.movie;
+      nodes.push({ id: "movie-main", type: "movie", label: movie.title, sub: "CURRENT MOVIE", x: 420, y: 260, width: 190, height: 58, data: movie });
+      if (kgGraphData.directors?.length) {
+        kgGraphData.directors.slice(0, 2).forEach((person, index) => {
+          const node = { id: "director-" + person.id, type: "director", label: person.name, sub: "DIRECTOR", x: 420 + (index - .5) * 205, y: 62, width: 160, height: 44, data: person };
+          nodes.push(node); edges.push({ from: "movie-main", to: node.id, type: "director" });
+        });
+      }
+      (kgGraphData.cast || []).slice(0, 8).forEach((person, index) => {
+        const row = index < 4 ? 0 : 1;
+        const col = index % 4;
+        const node = { id: "actor-" + person.id, type: "actor", label: person.name, sub: person.role || "ACTOR", x: 125 + col * 190, y: row === 0 ? 145 : 365, width: 154, height: 44, data: person };
+        nodes.push(node); edges.push({ from: "movie-main", to: node.id, type: "actor" });
+      });
+      (kgGraphData.genres || []).slice(0, 6).forEach((genre, index) => {
+        const node = { id: "genre-" + genre.id, type: "genre", label: genre.name, sub: "GENRE", x: 150 + index * 145, y: 505, width: 118, height: 38, data: genre };
+        nodes.push(node); edges.push({ from: "movie-main", to: node.id, type: "genre" });
+      });
+
+      if (kgExpandedPerson?.result) {
+        const personNodeId = (kgExpandedPerson.person_type === "director" ? "director-" : "actor-") + kgExpandedPerson.person_id;
+        const personNode = nodes.find(node => node.id === personNodeId);
+        kgExpandedPerson.result.movies.slice(0, 10).forEach((film, index) => {
+          if (Number(film.id) === Number(movie.id)) return;
+          const node = { id: "film-" + film.id, type: "film", label: film.title, sub: (film.release_date || "").slice(0, 4) || "FILMOGRAPHY", x: 850, y: 75 + index * 43, width: 155, height: 38, data: film };
+          nodes.push(node);
+          if (personNode) edges.push({ from: personNode.id, to: node.id, type: "expanded" });
+        });
+      }
+
+      const nodeMap = new Map(nodes.map(node => [node.id, node]));
+      edges.forEach(edge => {
+        const from = nodeMap.get(edge.from), to = nodeMap.get(edge.to);
+        if (!from || !to) return;
+        const line = kgMakeSvg("line", { x1: from.x, y1: from.y, x2: to.x, y2: to.y, class: "kg-edge kg-edge-" + edge.type });
+        group.append(line);
+      });
+
+      nodes.forEach(node => {
+        const g = kgMakeSvg("g", { class: "kg-node kg-node-" + node.type, tabindex: "0", role: "button", "aria-label": `${node.type}: ${node.label}. Select to explore connections.`, transform: `translate(${node.x} ${node.y})` });
+        const rect = kgMakeSvg("rect", { x: -node.width / 2, y: -node.height / 2, width: node.width, height: node.height, rx: node.type === "movie" ? 16 : 11 });
+        const label = kgMakeSvg("text", { x: 0, y: node.sub ? -2 : 4 }); label.textContent = kgShort(node.label, node.type === "movie" ? 24 : 19);
+        const sub = kgMakeSvg("text", { x: 0, y: 14, class: "kg-node-sub" }); sub.textContent = kgShort(node.sub, 23);
+        g.append(rect, label); if (node.sub) g.append(sub);
+        const activate = () => {
+          if (node.type === "actor" || node.type === "director") kgExpandPerson(node.data, node.type);
+          else if (node.type === "film") kgOpenMovie(node.data);
+          else if (node.type === "genre") {
+            const matching = publishedDatabaseMovies.filter(item => {
+              const genres = Array.isArray(item.genres) ? item.genres : String(item.genres || "").split(",");
+              return genres.some(value => String(value).trim().toLowerCase() === String(node.data.name).toLowerCase());
+            }).map(item => ({ id: item.tmdb_id, title: item.title, release_date: String(item.release_year || ""), poster: resolveMovieAsset(item.poster_path || ""), role: "RIVORA CATALOG" })).filter(item => item.id);
+            kgRenderRelated(matching, `Published RIVORA movies tagged ${node.data.name}`);
+            kgSetStatus(`${node.data.name}: ${matching.length} matching published RIVORA title(s).`);
+          }
+        };
+        g.addEventListener("click", activate);
+        g.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(); } });
+        group.append(g);
+      });
+    }
+
+    async function kgExpandPerson(person, personType) {
+      const cacheKey = personType + ":" + person.id;
+      kgSetStatus(`Loading ${person.name} filmography…`);
+      try {
+        let result = kgCache.get(cacheKey);
+        if (!result) {
+          result = await kgRequest({ action: "person_filmography", person_id: Number(person.id), person_type: personType });
+          kgCache.set(cacheKey, result);
+        }
+        kgExpandedPerson = { person_id: Number(person.id), person_type: personType, result };
+        kgRenderGraph();
+        kgRenderRelated(result.movies || [], `${person.name} · ${personType === "director" ? "Director Filmography" : "Actor Filmography"} · TMDB results`);
+        kgSetStatus(`${person.name}: ${result.movies.length} film(s) connected. Select a film node or card to open it.`);
+      } catch (error) {
+        kgSetStatus(error.message || "Could not load this filmography.");
+      }
+    }
+
+    async function loadMovieKnowledgeGraph(movie) {
+      const section = document.getElementById("movieKnowledgeGraphSection");
+      if (!section) return;
+      section.hidden = false;
+      kgCurrentMovie = movie;
+      kgExpandedPerson = null; kgZoom = 1; kgPanX = 0; kgPanY = 0;
+      const svg = document.getElementById("kgSvg");
+      const related = document.getElementById("kgRelated");
+      if (related) related.replaceChildren();
+      if (!movie.tmdbId || !Number.isSafeInteger(Number(movie.tmdbId))) {
+        kgSetStatus("This movie does not have a TMDB ID. Knowledge Graph data is unavailable.");
+        if (svg) svg.innerHTML = '<text x="510" y="280" text-anchor="middle" fill="#aebbd4" font-size="14">TMDB ID required</text>';
+        return;
+      }
+      const cacheKey = "movie:" + Number(movie.tmdbId);
+      kgSetStatus("Mapping movie connections from TMDB…");
+      try {
+        kgGraphData = kgCache.get(cacheKey);
+        if (!kgGraphData) {
+          kgGraphData = await kgRequest({ action: "movie_graph", movie_id: Number(movie.tmdbId) });
+          kgCache.set(cacheKey, kgGraphData);
+        }
+        kgRenderGraph();
+        kgSetStatus(`Connected ${kgGraphData.cast.length} actors, ${kgGraphData.directors.length} director(s) and ${kgGraphData.genres.length} genres. Select a person node to expand.`);
+      } catch (error) {
+        kgSetStatus((error.message || "Knowledge Graph could not load.") + " Check that the RIVORA Knowledge Graph Edge Function is deployed.");
+        if (svg) {
+          svg.replaceChildren();
+          const message = kgMakeSvg("text", { x: 510, y: 270, "text-anchor": "middle", fill: "#aebbd4", "font-size": 14 });
+          message.textContent = "Graph data unavailable — retry by reopening this movie."; svg.append(message);
+        }
+      }
+    }
+
+    (function bindKnowledgeGraphControls() {
+      const svg = document.getElementById("kgSvg");
+      const zoomIn = document.getElementById("kgZoomIn");
+      const zoomOut = document.getElementById("kgZoomOut");
+      const reset = document.getElementById("kgReset");
+      const update = () => kgRenderGraph();
+      if (zoomIn) zoomIn.addEventListener("click", () => { kgZoom = Math.min(1.6, kgZoom + .15); update(); });
+      if (zoomOut) zoomOut.addEventListener("click", () => { kgZoom = Math.max(.65, kgZoom - .15); update(); });
+      if (reset) reset.addEventListener("click", () => { kgZoom = 1; kgPanX = 0; kgPanY = 0; update(); const viewport = document.getElementById("kgViewport"); if (viewport) viewport.scrollTo({ left: 0, top: 0, behavior: "smooth" }); });
+      if (!svg) return;
+      let drag = null;
+      svg.addEventListener("pointerdown", event => {
+        if (event.target !== svg && event.target.tagName !== "svg") return;
+        drag = { x: event.clientX, y: event.clientY, panX: kgPanX, panY: kgPanY };
+        svg.setPointerCapture?.(event.pointerId);
+      });
+      svg.addEventListener("pointermove", event => {
+        if (!drag) return;
+        kgPanX = drag.panX + (event.clientX - drag.x) * (1020 / Math.max(320, svg.clientWidth));
+        kgPanY = drag.panY + (event.clientY - drag.y) * (560 / Math.max(260, svg.clientHeight));
+        const group = svg.querySelector("g");
+        if (group) group.setAttribute("transform", `translate(${kgPanX} ${kgPanY}) translate(510 280) scale(${kgZoom}) translate(-510 -280)`);
+      });
+      const endDrag = () => { drag = null; };
+      svg.addEventListener("pointerup", endDrag); svg.addEventListener("pointercancel", endDrag); svg.addEventListener("lostpointercapture", endDrag);
+    })();
+
     function renderFullMoviePage(movie) {
       if (!movie) return;
       currentMovie = movie.title;
@@ -479,6 +1017,7 @@
       document.title = (movie.title || "Movie") + " | RIVORA";
       document.getElementById("detailTitle").textContent = movie.title || "Untitled Movie";
       document.getElementById("detailOverview").textContent = movie.description || "No overview is available for this movie.";
+      if (typeof window.rivoraRenderDigitalDNAProfile === "function") window.rivoraRenderDigitalDNAProfile(movie);
       const poster = document.getElementById("detailPoster");
       if (movie.posterUrl) { poster.src = movie.posterUrl; poster.hidden = false; }
       else { poster.removeAttribute("src"); poster.hidden = true; }
@@ -497,6 +1036,7 @@
       const cast=document.getElementById("detailCast"); cast.replaceChildren();
       (Array.isArray(movie.castMembers)?movie.castMembers:[]).forEach(person=>{const name=typeof person==="string"?person:(person?.name||person?.character||"");if(name){const chip=document.createElement("span");chip.textContent=name;cast.append(chip)}});
       if(!cast.children.length){const p=document.createElement("p");p.className="gallery-empty";p.textContent="Cast details unavailable.";cast.append(p)}
+      loadMovieKnowledgeGraph(movie);
       const linksMovie={downloadLinks:movie.downloadLinks||[]};
       const links=document.getElementById("detailLinks"); links.replaceChildren();
       (linksMovie.downloadLinks).forEach(item=>{if(!item||typeof item.download_url!=="string"||!/^https:\/\//i.test(item.download_url))return;const a=document.createElement("a");a.className="download-link";a.href=item.download_url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=String(item.quality||"OPEN LINK").toUpperCase()+" LINK";links.append(a)});
@@ -755,6 +1295,43 @@
   status.textContent = "Connecting to RIVORA Database...";
   grid.before(status);
 
+  // Show layout-matched placeholders immediately while the published catalogue loads.
+  const skeletonLayer = document.createDocumentFragment();
+  const skeletonCards = [];
+  grid.setAttribute("aria-busy", "true");
+  for (let i = 0; i < 8; i++) {
+    const skeleton = document.createElement("div");
+    skeleton.className = "skeleton-card";
+    skeleton.setAttribute("aria-hidden", "true");
+    skeleton.innerHTML = '<div class="skeleton-poster"></div><div class="skeleton-copy"><span class="skeleton-line title"></span><span class="skeleton-line"></span><span class="skeleton-line short"></span></div>';
+    skeletonCards.push(skeleton);
+    skeletonLayer.appendChild(skeleton);
+  }
+  grid.insertBefore(skeletonLayer, empty);
+  function clearMovieSkeletons() {
+    skeletonCards.forEach(card => card.remove());
+    grid.removeAttribute("aria-busy");
+  }
+  function watchPosterImage(poster, posterURL) {
+    if (!posterURL) return;
+    poster.classList.add("poster-image-loading");
+    const imageProbe = new Image();
+    imageProbe.onload = () => {
+      poster.classList.remove("poster-image-loading");
+      poster.classList.add("poster-image-loaded");
+    };
+    imageProbe.onerror = () => {
+      poster.classList.remove("poster-image-loading");
+      poster.classList.add("poster-image-loaded");
+      poster.style.backgroundImage = "linear-gradient(145deg,#152e63,#6429a5)";
+    };
+    imageProbe.src = posterURL;
+    if (imageProbe.complete && imageProbe.naturalWidth > 0) {
+      poster.classList.remove("poster-image-loading");
+      poster.classList.add("poster-image-loaded");
+    }
+  }
+
   const genreAliases = new Map([
     ["sci-fi", "Sci-Fi"], ["sci fi", "Sci-Fi"], ["science fiction", "Sci-Fi"],
     ["rom-com", "Romance"], ["rom com", "Romance"]
@@ -797,6 +1374,138 @@
     publishedDatabaseMovies = Array.isArray(movies)
       ? movies.filter(movie => movie && movie.status === "published" && movie.id && movie.title)
       : [];
+
+    // RIVORA V8 — Digital DNA Profile & heuristic similarity engine.
+    // Uses only already-fetched published movie metadata; no extra API or database writes.
+    const dnaThemeLexicon = {
+      "Family": ["family", "parent", "mother", "father", "son", "daughter", "siblings"],
+      "Friendship": ["friend", "friendship", "companion", "teammate"],
+      "Love": ["love", "romance", "relationship", "lover", "wedding"],
+      "Revenge": ["revenge", "vengeance", "revengeful"],
+      "Survival": ["survive", "survival", "escape", "stranded", "wilderness"],
+      "Justice": ["justice", "court", "lawyer", "trial", "innocent", "detective"],
+      "Identity": ["identity", "secret", "double life", "past"],
+      "Freedom": ["freedom", "liberty", "prison", "escape", "oppression"],
+      "Courage": ["courage", "brave", "fearless", "heroic"],
+      "Betrayal": ["betrayal", "betray", "traitor", "deception"],
+      "Redemption": ["redemption", "forgive", "forgiveness", "second chance"],
+      "Ambition": ["ambition", "power", "success", "dream", "aspiration"],
+      "Sacrifice": ["sacrifice", "selfless", "protect", "save"],
+      "Mystery": ["mystery", "mysterious", "clue", "secret", "disappearance"],
+      "War": ["war", "battle", "soldier", "army", "military"],
+      "Technology": ["technology", "robot", "artificial intelligence", "computer", "cyber", "spacecraft"],
+      "Crime": ["crime", "criminal", "heist", "gang", "murder", "corruption"],
+      "Coming of Age": ["coming of age", "teenager", "adolescence", "school", "growing up"]
+    };
+    const dnaMoodLexicon = {
+      "Uplifting": ["hope", "inspire", "inspiring", "joy", "happy", "triumph", "comedy", "funny", "celebrate"],
+      "Romantic": ["love", "romance", "relationship", "wedding", "lover", "heart"],
+      "Tense": ["danger", "chase", "threat", "suspense", "thriller", "pursuit", "hostage"],
+      "Dark": ["revenge", "murder", "death", "tragedy", "grief", "haunted", "evil", "horror"],
+      "Adventurous": ["journey", "quest", "adventure", "explore", "treasure", "expedition"],
+      "Emotional": ["family", "sacrifice", "loss", "memories", "friendship", "struggle", "heartbreaking"],
+      "Thought-provoking": ["identity", "existence", "society", "humanity", "philosophy", "dystopia"]
+    };
+    function dnaText(movie) {
+      return [movie.title, movie.overview, ...(movieGenreList(movie) || [])].filter(Boolean).join(" ").toLowerCase();
+    }
+    function dnaExtract(profileMap, textValue) {
+      const found = [];
+      for (const [label, terms] of Object.entries(profileMap)) {
+        if (terms.some(term => textValue.includes(term))) found.push(label);
+      }
+      return found;
+    }
+    function buildDigitalDNA(movie) {
+      const textValue = dnaText(movie);
+      const genres = movieGenreList(movie);
+      const themes = dnaExtract(dnaThemeLexicon, textValue);
+      const moods = dnaExtract(dnaMoodLexicon, textValue);
+      const runtime = Number(movie.runtime);
+      const runtimeCategory = !Number.isFinite(runtime) || runtime <= 0 ? "Unknown" :
+        runtime <= 90 ? "Short" : runtime <= 120 ? "Standard" : runtime <= 150 ? "Long" : "Epic";
+      const year = Number(movie.release_year ?? movie.releaseYear ?? movie.year);
+      const releaseEra = !Number.isFinite(year) || year < 1888 ? "Unknown" :
+        year < 1980 ? "Classic (Pre-1980)" : year < 2000 ? "Retro (1980s–90s)" :
+        year < 2010 ? "2000s" : year < 2020 ? "Modern (2010s)" : "Contemporary (2020s+)";
+      const tags = [...new Set([...genres, ...themes])];
+      return {genres, moods, themes, runtimeCategory, releaseEra, tags};
+    }
+    function dnaJaccard(a, b) {
+      const left = new Set(a || []), right = new Set(b || []);
+      if (!left.size && !right.size) return null;
+      if (!left.size || !right.size) return 0;
+      let common = 0;
+      left.forEach(value => { if (right.has(value)) common++; });
+      return common / (left.size + right.size - common);
+    }
+    function scoreDigitalDNA(a, b) {
+      const pa = buildDigitalDNA(a), pb = buildDigitalDNA(b);
+      const parts = [
+        [30, dnaJaccard(pa.genres, pb.genres)],
+        [25, dnaJaccard(pa.themes, pb.themes)],
+        [15, dnaJaccard(pa.moods, pb.moods)],
+        [10, dnaJaccard(pa.tags, pb.tags)],
+        [10, pa.runtimeCategory === "Unknown" || pb.runtimeCategory === "Unknown" ? null : (pa.runtimeCategory === pb.runtimeCategory ? 1 : 0)],
+        [10, pa.releaseEra === "Unknown" || pb.releaseEra === "Unknown" ? null : (pa.releaseEra === pb.releaseEra ? 1 : 0)]
+      ].filter(([, value]) => value !== null);
+      const totalWeight = parts.reduce((sum, [weight]) => sum + weight, 0);
+      return totalWeight ? Math.round(parts.reduce((sum, [weight, value]) => sum + weight * value, 0) / totalWeight * 100) : 0;
+    }
+    window.rivoraRenderDigitalDNAProfile = function(movie) {
+      const section = document.getElementById("digitalDnaSection");
+      const profileRoot = document.getElementById("digitalDnaProfile");
+      const similarRoot = document.getElementById("digitalDnaSimilar");
+      if (!section || !profileRoot || !similarRoot) return;
+      section.hidden = false;
+      profileRoot.replaceChildren();
+      similarRoot.replaceChildren();
+      const dna = buildDigitalDNA(movie);
+      const addProfileItem = (label, values) => {
+        const item = document.createElement("div"); item.className = "dna-item";
+        const heading = document.createElement("span"); heading.className = "dna-item-label"; heading.textContent = label;
+        const value = document.createElement("div"); value.className = "dna-item-value";
+        if (Array.isArray(values) && values.length) {
+          const tags = document.createElement("div"); tags.className = "dna-tags";
+          values.forEach(entry => { const tag = document.createElement("span"); tag.className = "dna-tag"; tag.textContent = entry; tags.append(tag); });
+          value.append(tags);
+        } else value.textContent = Array.isArray(values) ? "Not enough metadata" : values;
+        item.append(heading, value); profileRoot.append(item);
+      };
+      addProfileItem("Genre Composition", dna.genres);
+      addProfileItem("Mood Profile", dna.moods);
+      addProfileItem("Story Themes", dna.themes);
+      addProfileItem("Runtime Category", dna.runtimeCategory);
+      addProfileItem("Release Era", dna.releaseEra);
+      addProfileItem("DNA Tags", dna.tags);
+      const matches = publishedDatabaseMovies
+        .filter(candidate => candidate && String(candidate.id) !== String(movie.movieId || movie.id))
+        .map(candidate => ({movie:candidate, score:scoreDigitalDNA(movie, candidate)}))
+        .sort((a,b) => b.score - a.score || String(a.movie.title || "").localeCompare(String(b.movie.title || "")))
+        .slice(0, 4);
+      if (!matches.length) {
+        const emptyMatch = document.createElement("p"); emptyMatch.className = "gallery-empty";
+        emptyMatch.textContent = "Add more published movies to calculate similarity matches.";
+        similarRoot.append(emptyMatch);
+      } else {
+        matches.forEach(match => {
+          const button = document.createElement("button"); button.type = "button"; button.className = "dna-match";
+          const copy = document.createElement("span");
+          const title = document.createElement("span"); title.className = "dna-match-title"; title.textContent = match.movie.title || "Untitled Movie";
+          const meta = document.createElement("span"); meta.className = "dna-match-meta";
+          const otherDNA = buildDigitalDNA(match.movie);
+          meta.textContent = [...otherDNA.genres.slice(0,2), ...otherDNA.themes.slice(0,1)].join(" · ") || "Metadata similarity";
+          copy.append(title, meta);
+          const score = document.createElement("span"); score.className = "dna-score"; score.textContent = match.score + "%";
+          button.append(copy, score);
+          button.setAttribute("aria-label", "Open " + (match.movie.title || "movie") + ", similarity " + match.score + " percent");
+          button.addEventListener("click", () => {
+            window.location.href = window.location.pathname + "?movie=" + encodeURIComponent(match.movie.id);
+          });
+          similarRoot.append(button);
+        });
+      }
+    };
 
     // Filters are rebuilt from Published movies only; ALL is permanent.
     renderGenreFilters(publishedDatabaseMovies);
@@ -841,6 +1550,70 @@
         : "No published movies are available for Surprise Me yet.";
     }
 
+    function attachHolographicInteraction(card, stage) {
+      card.classList.add("holo-card");
+      const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduceMotion) return;
+      let framePending = false;
+      let latestPointer = null;
+      const reset = () => {
+        latestPointer = null;
+        card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)";
+        card.style.setProperty("--holo-x", "50%");
+        card.style.setProperty("--holo-y", "50%");
+        card.style.setProperty("--holo-reflect-x", "50%");
+        card.style.setProperty("--holo-reflect-y", "50%");
+        card.style.setProperty("--holo-reflect-opacity", ".32");
+        card.style.setProperty("--holo-reflect-sheen", "0");
+        card.classList.remove("is-touch-active", "holo-interacting");
+      };
+      const renderPointer = () => {
+        framePending = false;
+        if (!latestPointer) return;
+        const { x, y, pointerType } = latestPointer;
+        const tiltLimit = pointerType === "touch" ? 4 : 10;
+        const tiltX = (0.5 - y) * tiltLimit;
+        const tiltY = (x - 0.5) * tiltLimit;
+        card.style.transform = "perspective(1000px) rotateX(" + tiltX.toFixed(2) + "deg) rotateY(" + tiltY.toFixed(2) + "deg) translateY(-3px)";
+        card.style.setProperty("--holo-x", (x * 100).toFixed(1) + "%");
+        card.style.setProperty("--holo-y", (y * 100).toFixed(1) + "%");
+        card.style.setProperty("--holo-reflect-x", (50 + (x - .5) * 24).toFixed(1) + "%");
+        card.style.setProperty("--holo-reflect-y", (50 + (y - .5) * 18).toFixed(1) + "%");
+        card.style.setProperty("--holo-reflect-opacity", (0.27 + Math.abs(x - .5) * .22 + Math.abs(y - .5) * .12).toFixed(2));
+        card.style.setProperty("--holo-reflect-sheen", (0.18 + Math.abs(x - .5) * .34).toFixed(2));
+      };
+      const queuePointer = event => {
+        if (event.pointerType === "mouse" && !window.matchMedia("(hover: hover)").matches) return;
+        const rect = card.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        latestPointer = {
+          x: Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width)),
+          y: Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height)),
+          pointerType: event.pointerType
+        };
+        card.classList.add("holo-interacting");
+        if (!framePending) {
+          framePending = true;
+          requestAnimationFrame(renderPointer);
+        }
+      };
+      card.addEventListener("pointermove", event => {
+        if (event.pointerType === "touch") return; // Touch tilt is driven by a deliberate press, not page scrolling.
+        queuePointer(event);
+      }, { passive: true });
+      card.addEventListener("pointerdown", event => {
+        if (event.pointerType !== "touch") return;
+        card.classList.add("is-touch-active");
+        queuePointer(event);
+      }, { passive: true });
+      card.addEventListener("pointerup", event => {
+        if (event.pointerType === "touch") reset();
+      }, { passive: true });
+      card.addEventListener("pointerleave", reset, { passive: true });
+      card.addEventListener("pointercancel", reset, { passive: true });
+      card.addEventListener("blur", event => { if (!card.contains(event.relatedTarget)) reset(); }, true);
+    }
+
     publishedDatabaseMovies.forEach(movie => {
       const title = movie.title || "Untitled Movie";
 
@@ -868,6 +1641,7 @@
       }
 
       poster.textContent = title;
+      watchPosterImage(poster, posterURL);
 
       const info = document.createElement("div");
       info.className = "movie-info";
@@ -899,8 +1673,12 @@
         trailerUrl: movie.trailer_url || "",
         tmdbId: movie.tmdb_id ?? null,
         year: movie.release_year || "",
+        releaseYear: movie.release_year || "",
         genres: genres,
+        genreList: genreNames,
+        overview: movie.overview || "",
         rating: movie.rating ?? null,
+        id: movie.id,
         backdropUrl: resolveMovieAsset(movie.backdrop_path || ""),
         trailerUrl: movie.trailer_url || "",
         images: publicMovieImages
@@ -927,9 +1705,186 @@
       });
 
       info.append(heading, details, button);
-      card.append(poster, info);
+      const stage = document.createElement("div");
+      stage.className = "holo-stage";
+      const reflection = document.createElement("div");
+      reflection.className = "holo-reflection";
+      reflection.setAttribute("aria-hidden", "true");
+      if (poster.style.backgroundImage) {
+        stage.style.setProperty("--holo-poster-image", poster.style.backgroundImage);
+      }
+      stage.append(poster, reflection, info);
+      card.append(stage);
+      attachHolographicInteraction(card, stage);
       grid.insertBefore(card, empty);
     });
+    clearMovieSkeletons();
+
+    // RIVORA V10 — Dynamic Hero Engine. Uses only published movie records already loaded above.
+    (function initDynamicHero() {
+      const root = document.getElementById("dynamicHero");
+      const backdrop = document.getElementById("heroBackdrop");
+      const titleNode = document.getElementById("heroTitle");
+      const eyebrow = document.getElementById("heroEyebrow");
+      const overview = document.getElementById("heroOverview");
+      const meta = document.getElementById("heroMeta");
+      const detailsButton = document.getElementById("heroDetailsButton");
+      const dotsRoot = document.getElementById("heroDots");
+      const counter = document.getElementById("heroCounter");
+      const previous = document.getElementById("heroPrevious");
+      const next = document.getElementById("heroNext");
+      const pause = document.getElementById("heroPause");
+      if (!root || !backdrop || !publishedDatabaseMovies.length) {
+        if (root) {
+          const oldTitle = document.createElement("h1");
+          oldTitle.textContent = "RIVORA.";
+          titleNode.replaceWith(oldTitle);
+          eyebrow.textContent = "BOLLYWOOD • HOLLYWOOD • BEYOND";
+          overview.textContent = "One World. Endless Cinema. Discover a new dimension of entertainment with stories from around the world.";
+          meta.replaceChildren();
+          detailsButton.hidden = true;
+          dotsRoot.parentElement.hidden = true;
+          previous.hidden = true; next.hidden = true; pause.hidden = true;
+        }
+        return;
+      }
+
+      const rankFeatured = (a, b) => {
+        const ratingA = Number(a.rating) || 0, ratingB = Number(b.rating) || 0;
+        if (ratingA !== ratingB) return ratingB - ratingA;
+        const yearA = Number(a.release_year) || 0, yearB = Number(b.release_year) || 0;
+        return yearB - yearA || String(a.title).localeCompare(String(b.title));
+      };
+      const withBackdrops = publishedDatabaseMovies
+        .filter(movie => movie && movie.id && movie.title && movie.backdrop_path)
+        .sort(rankFeatured);
+      const withoutBackdrops = publishedDatabaseMovies
+        .filter(movie => movie && movie.id && movie.title && !movie.backdrop_path && movie.poster_path)
+        .sort(rankFeatured);
+      const candidates = [...withBackdrops, ...withoutBackdrops].slice(0, 5);
+
+      if (!candidates.length) {
+        detailsButton.hidden = true;
+        dotsRoot.parentElement.hidden = true;
+        previous.hidden = true; next.hidden = true; pause.hidden = true;
+        return;
+      }
+
+      const prefersReducedMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      const slideDuration = 6500;
+      let activeIndex = 0;
+      let timer = null;
+      let isPaused = prefersReducedMotion;
+      let touchStartX = null;
+
+      function heroImageFor(movie) {
+        const path = movie.backdrop_path || movie.poster_path || "";
+        if (!path) return "";
+        if (/^https:\/\//i.test(path)) return path;
+        if (path.startsWith("/")) return "https://image.tmdb.org/t/p/w1280" + path;
+        return resolveMovieAsset(path);
+      }
+
+      function setSlide(index, announce) {
+        activeIndex = (index + candidates.length) % candidates.length;
+        const movie = candidates[activeIndex];
+        const genres = movieGenreList(movie);
+        const imageUrl = heroImageFor(movie);
+        backdrop.style.opacity = "0";
+        window.setTimeout(() => {
+          backdrop.src = imageUrl;
+          backdrop.onload = () => { backdrop.style.opacity = ""; };
+          backdrop.onerror = () => {
+            const fallback = resolveMovieAsset(movie.poster_path || "");
+            if (fallback && backdrop.src !== fallback) backdrop.src = fallback;
+            else backdrop.style.opacity = ".25";
+          };
+          if (backdrop.complete && backdrop.naturalWidth) backdrop.style.opacity = "";
+        }, prefersReducedMotion ? 0 : 180);
+
+        titleNode.textContent = movie.title || "Featured Movie";
+        eyebrow.textContent = "RIVORA FEATURED • " + (genres[0] || "CINEMA").toUpperCase();
+        overview.textContent = movie.overview || "Discover this title in the RIVORA movie collection.";
+        meta.replaceChildren();
+        [
+          movie.release_year ? String(movie.release_year) : "",
+          genres.slice(0, 2).join(" • "),
+          movie.rating !== null && movie.rating !== undefined && movie.rating !== "" ? "★ " + Number(movie.rating).toFixed(1) : ""
+        ].filter(Boolean).forEach(value => {
+          const chip = document.createElement("span");
+          chip.textContent = value;
+          meta.append(chip);
+        });
+        detailsButton.onclick = () => {
+          window.location.href = window.location.pathname + "?movie=" + encodeURIComponent(movie.id);
+        };
+        counter.textContent = String(activeIndex + 1).padStart(2, "0") + " / " + String(candidates.length).padStart(2, "0");
+        Array.from(dotsRoot.children).forEach((dot, dotIndex) => {
+          dot.setAttribute("aria-current", dotIndex === activeIndex ? "true" : "false");
+          dot.setAttribute("aria-label", "Show " + candidates[dotIndex].title);
+        });
+        if (announce) root.querySelector(".hero-content").setAttribute("aria-label", "Featured movie: " + movie.title);
+      }
+
+      candidates.forEach((movie, index) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "hero-dot";
+        dot.setAttribute("aria-label", "Show " + movie.title);
+        dot.setAttribute("aria-current", "false");
+        dot.addEventListener("click", () => { setSlide(index, true); restartTimer(); });
+        dotsRoot.append(dot);
+      });
+
+      function stopTimer() {
+        if (timer) window.clearInterval(timer);
+        timer = null;
+      }
+      function startTimer() {
+        stopTimer();
+        if (isPaused || candidates.length < 2 || document.hidden) return;
+        timer = window.setInterval(() => setSlide(activeIndex + 1, false), slideDuration);
+      }
+      function restartTimer() { stopTimer(); startTimer(); }
+      previous.addEventListener("click", () => { setSlide(activeIndex - 1, true); restartTimer(); });
+      next.addEventListener("click", () => { setSlide(activeIndex + 1, true); restartTimer(); });
+      pause.addEventListener("click", () => {
+        isPaused = !isPaused;
+        pause.textContent = isPaused ? "▶" : "Ⅱ";
+        pause.setAttribute("aria-label", isPaused ? "Resume slideshow" : "Pause slideshow");
+        pause.title = isPaused ? "Resume slideshow" : "Pause slideshow";
+        if (isPaused) stopTimer(); else startTimer();
+      });
+      root.addEventListener("mouseenter", stopTimer);
+      root.addEventListener("mouseleave", startTimer);
+      root.addEventListener("focusin", stopTimer);
+      root.addEventListener("focusout", event => {
+        if (!root.contains(event.relatedTarget)) startTimer();
+      });
+      root.addEventListener("touchstart", event => {
+        touchStartX = event.changedTouches[0]?.clientX ?? null;
+      }, { passive: true });
+      root.addEventListener("touchend", event => {
+        if (touchStartX === null) return;
+        const delta = event.changedTouches[0].clientX - touchStartX;
+        touchStartX = null;
+        if (Math.abs(delta) > 55) {
+          setSlide(activeIndex + (delta < 0 ? 1 : -1), true);
+          restartTimer();
+        }
+      }, { passive: true });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stopTimer(); else startTimer();
+      });
+
+      setSlide(0, false);
+      if (prefersReducedMotion) {
+        pause.textContent = "▶";
+        pause.setAttribute("aria-label", "Resume slideshow");
+        pause.title = "Resume slideshow";
+      }
+      startTimer();
+    })();
 
     const requestedMovieId = new URLSearchParams(window.location.search).get("movie");
     if (requestedMovieId) {
@@ -976,6 +1931,7 @@
       movies.length + " published movies loaded from RIVORA Database.";
 
   } catch (error) {
+    clearMovieSkeletons();
     console.error("RIVORA Database Error:", error);
     status.textContent =
       "Database connection failed. Please check the browser console.";
@@ -983,7 +1939,6 @@
 })();
         </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 <script>
 (function rivoraOperatingSystem(){
   "use strict";
@@ -1025,7 +1980,7 @@
   const safeRead=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key)||"null");return v===null?fallback:v}catch(_){return fallback}};
   const safeWrite=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true}catch(_){return false}};
   const validFavs=()=>{const v=safeRead(STORE.favourites,[]);return Array.isArray(v)?[...new Set(v.filter(id=>byId.has(id)))].slice(0,7):[]};
-  let current=null,lastTheme=null,renderer=null,scene=null,camera=null,mainObject=null,particles=null,frame=0,startedAt=0,animationId=0;
+  let current=null,lastTheme=null,startedAt=0,animationId=0,canvasContext=null,particleField=[];
   const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function pickTheme(preferred){
     const favs=validFavs();
@@ -1035,32 +1990,51 @@
     if(pool.length>1&&previous)choices=pool.filter(t=>t.id!==previous);
     return choices[Math.floor(Math.random()*choices.length)]||pool[0]||themes[0];
   }
-  function stopScene(){if(animationId)cancelAnimationFrame(animationId);animationId=0;if(renderer){renderer.dispose();renderer=null}scene=null;camera=null;mainObject=null;particles=null}
+  function stopScene(){
+    if(animationId)cancelAnimationFrame(animationId);
+    animationId=0;canvasContext=null;particleField=[];
+  }
   function startScene(theme){
     stopScene();
     const canvas=$("rivoraOsCanvas");
-    if(!window.THREE){canvas.style.background="radial-gradient(ellipse at 50% 45%,#172b58,#080b18 68%)";return}
-    try{
-      const T=window.THREE;scene=new T.Scene();scene.fog=new T.FogExp2(0x070b19,.035);
-      camera=new T.PerspectiveCamera(55,window.innerWidth/window.innerHeight,.1,100);camera.position.set(0,0,10);
-      renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:window.devicePixelRatio<2,powerPreference:"low-power"});
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setSize(window.innerWidth,window.innerHeight);renderer.setClearColor(0x050713,0);
-      scene.add(new T.AmbientLight(0xffffff,.75));
-      const light=new T.PointLight(theme.colors[0],2.8,30);light.position.set((Math.random()-.5)*7,(Math.random()-.5)*6,4);scene.add(light);
-      const geometrySet=[new T.IcosahedronGeometry(2.0,1),new T.TorusKnotGeometry(1.35,.32,120,16),new T.OctahedronGeometry(2.0,1),new T.TorusGeometry(1.7,.35,18,90),new T.DodecahedronGeometry(2,1),new T.TetrahedronGeometry(2,1),new T.SphereGeometry(1.7,32,24),new T.ConeGeometry(1.7,3.2,8),new T.TorusKnotGeometry(1.4,.18,160,12,2,5),new T.CylinderGeometry(1.2,1.8,2.7,9,1,true)];
-      const material=new T.MeshStandardMaterial({color:theme.colors[0],metalness:.62,roughness:.23,wireframe:theme.shape%3===1,emissive:theme.colors[1],emissiveIntensity:.18});
-      mainObject=new T.Mesh(geometrySet[theme.shape],material);mainObject.scale.setScalar(.84+Math.random()*.3);scene.add(mainObject);
-      const ring=new T.Mesh(new T.TorusGeometry(3.0,.018,8,140),new T.MeshBasicMaterial({color:theme.colors[1],transparent:true,opacity:.8}));ring.rotation.x=.6+Math.random()*1.1;ring.rotation.y=Math.random()*.9;scene.add(ring);
-      const ring2=new T.Mesh(new T.TorusGeometry(3.5,.012,6,120),new T.MeshBasicMaterial({color:theme.colors[2],transparent:true,opacity:.6}));ring2.rotation.x=1.8;scene.add(ring2);
-      const count=window.innerWidth<600?550:1000;const pos=new Float32Array(count*3);let seed=theme.seed+Math.floor(Math.random()*1000000);const rand=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
-      for(let i=0;i<count;i++){pos[i*3]=(rand()-.5)*24;pos[i*3+1]=(rand()-.5)*15;pos[i*3+2]=(rand()-.5)*16}
-      const pg=new T.BufferGeometry();pg.setAttribute("position",new T.BufferAttribute(pos,3));particles=new T.Points(pg,new T.PointsMaterial({color:theme.colors[2],size:.025,transparent:true,opacity:.8}));scene.add(particles);
-      startedAt=performance.now();
-      const animate=now=>{if(!renderer||!scene)return;const elapsed=(now-startedAt)*.00025;if(mainObject){mainObject.rotation.x=elapsed*.8;mainObject.rotation.y=elapsed*1.1}ring.rotation.z=-elapsed*.55;ring2.rotation.z=elapsed*.32;particles.rotation.y=elapsed*.08;renderer.render(scene,camera);animationId=requestAnimationFrame(animate)};
-      if(!reduced)animationId=requestAnimationFrame(animate);else renderer.render(scene,camera);
-    }catch(err){console.warn("RIVORA OS 3D scene fallback:",err);stopScene();canvas.style.background="radial-gradient(ellipse at 50% 45%,#172b58,#080b18 68%)"}
+    const ctx=canvas.getContext("2d",{alpha:true});
+    if(!ctx){canvas.style.background="radial-gradient(ellipse at 50% 45%,#172b58,#080b18 68%)";return}
+    canvasContext=ctx;
+    const colors=theme.colors.map(c=>"#"+Number(c).toString(16).padStart(6,"0"));
+    const resize=()=>{
+      const ratio=Math.min(window.devicePixelRatio||1,1.5);
+      canvas.width=Math.max(1,Math.floor(window.innerWidth*ratio));
+      canvas.height=Math.max(1,Math.floor(window.innerHeight*ratio));
+      ctx.setTransform(ratio,0,0,ratio,0,0);
+      const count=window.innerWidth<600?90:150;
+      particleField=Array.from({length:count},()=>({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:.5+Math.random()*1.8,s:.025+Math.random()*.075,p:Math.random()*Math.PI*2}));
+    };
+    resize();
+    const draw=now=>{
+      if(canvasContext!==ctx)return;
+      const w=window.innerWidth,h=window.innerHeight,t=(now-startedAt)*.00012;
+      ctx.clearRect(0,0,w,h);
+      const glow=ctx.createRadialGradient(w*.5,h*.48,0,w*.5,h*.48,Math.max(w,h)*.62);
+      glow.addColorStop(0,colors[0]+"30");glow.addColorStop(.48,colors[1]+"16");glow.addColorStop(1,"rgba(5,7,19,0)");
+      ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
+      // Flat 2D light trails retain the atmospheric glow without any 3D geometry.
+      ctx.save();ctx.translate(w*.5,h*.49);ctx.rotate(Math.sin(t)*.08);
+      [Math.min(w,h)*.22,Math.min(w,h)*.29].forEach((radius,i)=>{
+        ctx.beginPath();ctx.ellipse(0,0,radius*1.35,radius*.42,t*(i?-.7:.5),0,Math.PI*2);
+        ctx.strokeStyle=colors[i+1]+"55";ctx.lineWidth=1;ctx.stroke();
+      });ctx.restore();
+      for(const p of particleField){
+        p.y-=p.s;if(p.y<0)p.y=h;
+        const x=p.x+Math.sin(now*.00035+p.p)*10;
+        ctx.beginPath();ctx.arc(x,p.y,p.r,0,Math.PI*2);
+        ctx.globalAlpha=.25+.45*(.5+.5*Math.sin(now*.001+p.p));ctx.fillStyle=colors[2];ctx.fill();
+      }
+      ctx.globalAlpha=1;
+      if(!reduced)animationId=requestAnimationFrame(draw);
+    };
+    startedAt=performance.now();draw(startedAt);
   }
-  function setTheme(theme,remember=true){current=theme;$("rivoraOsStory").textContent=theme.story;$("rivoraOsThemeName").textContent="WORLD // "+theme.name;$("rivoraOsCurrent").textContent="Current world: "+theme.name;$("rivoraOsStatus").textContent="3D scene ready · Calibrating cinematic experience";startScene(theme);if(remember){safeWrite(STORE.last,theme.id);safeWrite(STORE.seen,Date.now())}renderPanel()}
+  function setTheme(theme,remember=true){current=theme;$("rivoraOsStory").textContent=theme.story;$("rivoraOsThemeName").textContent="WORLD // "+theme.name;$("rivoraOsCurrent").textContent="Current world: "+theme.name;$("rivoraOsStatus").textContent="Atmosphere ready · Calibrating cinematic experience";startScene(theme);if(remember){safeWrite(STORE.last,theme.id);safeWrite(STORE.seen,Date.now())}renderPanel()}
   function enterSite(){boot.classList.add("is-leaving");$("rivoraOsDock").hidden=false;window.setTimeout(()=>{boot.style.display="none";stopScene()},850)}
   function launch(theme){boot.style.display="grid";boot.classList.remove("is-leaving");$("rivoraOsProgress").style.animation="none";void $("rivoraOsProgress").offsetWidth;$("rivoraOsProgress").style.animation="";setTheme(theme);window.setTimeout(()=>{if(boot.style.display!=="none"&&!boot.classList.contains("is-leaving"))enterSite()},3900);}
   function renderPanel(){const favs=validFavs();$("rivoraOsFavCount").textContent=favs.length===7?"Your Favourite Collection is Full (7/7). Remove one theme before adding another.":favs.length+" / 7 saved. If you have favourites, startup themes are selected only from this collection.";$("rivoraOsAddFav").disabled=!current||favs.includes(current.id)||favs.length>=7;$("rivoraOsAddFav").textContent=current&&favs.includes(current.id)?"✓ Already Favourite":"☆ Favourite Current Theme";const list=$("rivoraOsFavList");list.replaceChildren();if(!favs.length){const p=document.createElement("p");p.textContent="No favourites yet. Save the current world to build your collection.";list.append(p)}else favs.forEach(id=>{const theme=byId.get(id);if(!theme)return;const row=document.createElement("div");row.className="rivora-os-fav-row";const label=document.createElement("span");label.textContent=theme.name;const remove=document.createElement("button");remove.type="button";remove.textContent="Remove";remove.addEventListener("click",()=>{safeWrite(STORE.favourites,validFavs().filter(x=>x!==id));renderPanel();$("rivoraOsPanelStatus").textContent="Favourite removed."});row.append(label,remove);list.append(row)})}
@@ -1069,7 +2043,7 @@
   $("rivoraOsManage").addEventListener("click",()=>{$("rivoraOsPanel").hidden=!$("rivoraOsPanel").hidden;renderPanel()});
   $("rivoraOsAddFav").addEventListener("click",()=>{const favs=validFavs();if(!current)return;if(favs.includes(current.id))return;if(favs.length>=7){$("rivoraOsPanelStatus").textContent="Your Favourite Collection is Full (7/7). Remove one first.";return}favs.push(current.id);safeWrite(STORE.favourites,favs);$("rivoraOsPanelStatus").textContent="Added to your Favourite Collection.";renderPanel()});
   $("rivoraOsPickFav").addEventListener("click",()=>{const theme=pickTheme(current?.id);$("rivoraOsPanel").hidden=true;launch(theme)});
-  window.addEventListener("resize",()=>{if(renderer&&camera){camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)}});
+  window.addEventListener("resize",()=>{if(current)startScene(current)});
   async function loadPublishedThemes(){
     try{
       const response=await fetch(THEME_API,{
@@ -1103,7 +2077,7 @@
     const initial=pickTheme();setTheme(initial);
     const bootStart=Date.now();
     window.setTimeout(()=>{if(boot.style.display!=="none"&&!boot.classList.contains("is-leaving")){const elapsed=Date.now()-bootStart;if(elapsed<2600)window.setTimeout(enterSite,2600-elapsed);else enterSite()}},3900);
-    window.RIVORA_OS={version:"1.1-v3-theme-registry",themeCount:themes.length,themeSource:source?"supabase-registry":"local-fallback",renderer:"Three.js WebGL with CSS fallback",getCurrentTheme:()=>current?.name||null,getFavouriteCount:()=>validFavs().length};
+    window.RIVORA_OS={version:"1.1-v3-theme-registry",themeCount:themes.length,themeSource:source?"supabase-registry":"local-fallback",renderer:"Native Canvas 2D atmosphere",getCurrentTheme:()=>current?.name||null,getFavouriteCount:()=>validFavs().length};
   }
   initializeOS();
 })();
