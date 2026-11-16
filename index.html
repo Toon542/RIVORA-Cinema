@@ -21,7 +21,13 @@
     button{cursor:pointer}
     button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
     header{min-height:76px;padding:15px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;position:sticky;top:0;z-index:20;background:rgba(8,11,24,.96);border-bottom:1px solid #202945;backdrop-filter:blur(12px)}
-    .logo{color:var(--cyan);background:linear-gradient(90deg,var(--cyan),#a78bfa);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;font-size:30px;font-weight:900;letter-spacing:2px}
+    .logo{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;min-width:max-content;text-decoration:none;line-height:.88;isolation:isolate;animation:hubLogoGlow 3.2s ease-in-out infinite}
+    .logo-main{font-size:clamp(23px,2.4vw,30px);font-weight:950;letter-spacing:1.2px;background:linear-gradient(100deg,#42d9ff 0%,#668cff 48%,#b46bff 100%);background-size:180% 100%;background-position:0% 50%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 5px rgba(66,217,255,.45)) drop-shadow(0 2px 7px rgba(215,165,45,.28));animation:hubLogoShimmer 5s ease-in-out infinite}
+    .logo-hub{margin-top:5px;margin-left:2px;font-size:11px;font-weight:950;letter-spacing:5px;background:linear-gradient(100deg,#ff5b9d 0%,#ff9b65 48%,#ffd45b 100%);background-size:180% 100%;background-position:0% 50%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 2px 5px rgba(0,0,0,.9);filter:drop-shadow(0 0 4px rgba(255,190,75,.55));animation:hubLogoShimmer 5s ease-in-out infinite reverse}
+    .logo-tagline{margin-top:5px;margin-left:2px;font-size:6px;font-weight:800;letter-spacing:1.35px;color:#d9d9e8;text-shadow:0 2px 3px #000;white-space:nowrap}
+    @keyframes hubLogoGlow{0%,100%{filter:drop-shadow(0 0 2px rgba(255,190,75,.18))}50%{filter:drop-shadow(0 0 8px rgba(255,190,75,.48))}}
+    @keyframes hubLogoShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    @media(prefers-reduced-motion:reduce){.logo,.logo-main,.logo-hub{animation:none!important}}
     nav{display:flex;align-items:center;gap:23px}
     nav a,.nav-button{color:var(--muted);text-decoration:none;font-size:14px;background:none;border:0}
     nav a:hover,.nav-button:hover{color:var(--cyan)}
@@ -341,7 +347,7 @@
     .list-empty{color:var(--muted);line-height:1.6}
     .status-message{min-height:18px;margin-top:10px;color:var(--muted);font-size:12px}
     @media(max-width:800px){nav{gap:13px}nav a,.nav-button{font-size:12px}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:480px){header{padding:13px 5%;flex-wrap:wrap}.logo{font-size:25px}nav{order:2;width:100%;justify-content:space-between}.hero{min-height:420px;padding:65px 6% 100px}.hero h1{font-size:clamp(34px,10vw,49px)}.section{padding:28px 5%}.section-heading{align-items:stretch}.search-box{width:100%}.poster{height:145px;font-size:18px}.modal-content{padding:25px 21px}}
+    @media(max-width:480px){header{padding:13px 5%;flex-wrap:wrap}nav{order:2;width:100%;justify-content:space-between}.hero{min-height:420px;padding:65px 6% 100px}.hero h1{font-size:clamp(34px,10vw,49px)}.section{padding:28px 5%}.section-heading{align-items:stretch}.search-box{width:100%}.poster{height:145px;font-size:18px}.modal-content{padding:25px 21px}}
   
     /* RIVORA V4: persistent cinematic corner identity */
     .rivora-floating-brand{
@@ -431,7 +437,11 @@
   </aside>
 
   <header>
-    <a class="logo" href="#" aria-label="RIVORA home">RIVORA.</a>
+    <a class="logo" href="./" aria-label="Rivora HUB home" title="Go to Home">
+      <span class="logo-main">Rivora</span>
+      <span class="logo-hub">HUB</span>
+      <span class="logo-tagline">YOUR MOVIE UNIVERSE</span>
+    </a>
     <nav aria-label="Main navigation">
       <a href="#">Home</a>
       <a href="#movies">Movies</a>
