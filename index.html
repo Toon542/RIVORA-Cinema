@@ -20,11 +20,11 @@
     button,input{font:inherit}
     button{cursor:pointer}
     button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-    header{min-height:76px;padding:15px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;position:sticky;top:0;z-index:20;background:rgba(8,11,24,.96);border-bottom:1px solid #202945;backdrop-filter:blur(12px)}
-    .logo{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:0;min-width:max-content;text-decoration:none;line-height:.88;isolation:isolate;animation:hubLogoGlow 3.2s ease-in-out infinite}
-    .logo-main{font-size:clamp(23px,2.4vw,30px);font-weight:950;letter-spacing:1.2px;background:linear-gradient(100deg,#42d9ff 0%,#668cff 48%,#b46bff 100%);background-size:180% 100%;background-position:0% 50%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 5px rgba(66,217,255,.45)) drop-shadow(0 2px 7px rgba(215,165,45,.28));animation:hubLogoShimmer 5s ease-in-out infinite}
-    .logo-hub{margin-top:5px;margin-left:2px;font-size:11px;font-weight:950;letter-spacing:5px;background:linear-gradient(100deg,#ff5b9d 0%,#ff9b65 48%,#ffd45b 100%);background-size:180% 100%;background-position:0% 50%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 2px 5px rgba(0,0,0,.9);filter:drop-shadow(0 0 4px rgba(255,190,75,.55));animation:hubLogoShimmer 5s ease-in-out infinite reverse}
-    .logo-tagline{margin-top:5px;margin-left:2px;font-size:6px;font-weight:800;letter-spacing:1.35px;color:#d9d9e8;text-shadow:0 2px 3px #000;white-space:nowrap}
+    header{min-height:104px;padding:15px 6%;display:flex;align-items:center;justify-content:flex-end;gap:20px;position:sticky;top:0;z-index:20;background:rgba(8,11,24,.96);border-bottom:1px solid #202945;backdrop-filter:blur(12px)}
+    .logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-width:max-content;text-decoration:none;line-height:.88;isolation:isolate;animation:hubLogoGlow 3.2s ease-in-out infinite}
+    .logo-main{font-size:clamp(30px,3.2vw,42px);font-weight:950;letter-spacing:1.2px;background:linear-gradient(100deg,#42d9ff 0%,#668cff 48%,#b46bff 100%);background-size:180% 100%;background-position:0% 50%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 5px rgba(66,217,255,.45)) drop-shadow(0 2px 7px rgba(215,165,45,.28));animation:hubLogoShimmer 5s ease-in-out infinite}
+    .logo-hub{margin-top:6px;margin-left:2px;font-size:14px;font-weight:950;letter-spacing:5px;background:linear-gradient(100deg,#ff5b9d 0%,#ff9b65 48%,#ffd45b 100%);background-size:180% 100%;background-position:0% 50%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 2px 5px rgba(0,0,0,.9);filter:drop-shadow(0 0 4px rgba(255,190,75,.55));animation:hubLogoShimmer 5s ease-in-out infinite reverse}
+    .logo-tagline{margin-top:6px;margin-left:2px;font-size:7px;font-weight:800;letter-spacing:1.35px;color:#d9d9e8;text-shadow:0 2px 3px #000;white-space:nowrap}
     @keyframes hubLogoGlow{0%,100%{filter:drop-shadow(0 0 2px rgba(255,190,75,.18))}50%{filter:drop-shadow(0 0 8px rgba(255,190,75,.48))}}
     @keyframes hubLogoShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
     @media(prefers-reduced-motion:reduce){.logo,.logo-main,.logo-hub{animation:none!important}}
@@ -78,7 +78,9 @@
     .rivora-os-vignette{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 45%,transparent 0%,rgba(3,5,15,.25) 45%,rgba(3,5,15,.88) 100%),linear-gradient(180deg,rgba(3,5,15,.1),rgba(3,5,15,.7))}
     .rivora-os-content{width:min(760px,90vw);padding:30px 18px;text-align:center;animation:osContentIn 1s ease both}
     .rivora-os-overline{font-size:10px;letter-spacing:5px;color:#76e7ff;font-weight:800;margin-bottom:17px}
-    .rivora-os-logo{font-size:clamp(42px,10vw,86px);font-weight:950;letter-spacing:clamp(5px,1.8vw,15px);line-height:1;background:linear-gradient(100deg,#fff,#65e5ff 42%,#ad85ff 75%,#fff);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:0 0 38px rgba(75,197,255,.15)}
+    .rivora-os-logo{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:clamp(54px,12vw,104px);font-weight:950;letter-spacing:clamp(1px,.5vw,5px);line-height:.9;background:linear-gradient(100deg,#fff,#42e8ff 30%,#7d8cff 62%,#d18bff 88%,#fff);background-size:220% 100%;background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 12px rgba(66,217,255,.72)) drop-shadow(0 0 28px rgba(165,105,255,.55));animation:bootBrandShine 3s ease-in-out infinite alternate}
+    .rivora-os-logo .boot-hub{font-size:.34em;letter-spacing:.42em;margin-left:.42em;background:linear-gradient(100deg,#ff4e9b 0%,#ff9b55 48%,#ffe16a 100%);background-size:200% 100%;background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(255,183,75,.8))}
+    @keyframes bootBrandShine{from{background-position:0% 50%;filter:drop-shadow(0 0 9px rgba(66,217,255,.55)) drop-shadow(0 0 20px rgba(165,105,255,.4))}to{background-position:100% 50%;filter:drop-shadow(0 0 17px rgba(66,217,255,.9)) drop-shadow(0 0 34px rgba(255,180,90,.58))}}
     .rivora-os-story{max-width:590px;margin:20px auto 24px;color:#d5d9ef;font-size:clamp(13px,2vw,16px);line-height:1.8;min-height:52px}
     .rivora-os-progress{width:min(390px,80vw);height:3px;margin:0 auto 13px;background:rgba(255,255,255,.13);border-radius:9px;overflow:hidden}
     .rivora-os-progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#43dfff,#a26cff);box-shadow:0 0 15px #58dfff;animation:osProgress 3.8s cubic-bezier(.2,.7,.2,1) forwards}
@@ -92,7 +94,7 @@
     .rivora-os-panel{position:fixed;right:16px;bottom:68px;z-index:41;width:min(360px,calc(100vw - 32px));max-height:65vh;overflow:auto;padding:17px;border:1px solid rgba(108,174,255,.4);border-radius:17px;background:rgba(7,12,29,.97);box-shadow:0 18px 55px rgba(0,0,0,.45);color:#f4f7ff}
     .rivora-os-panel[hidden]{display:none}.rivora-os-panel h3{font-size:16px;margin-bottom:7px}.rivora-os-panel p{color:#aab6d3;font-size:12px;line-height:1.6;margin-bottom:12px}.rivora-os-panel-list{display:grid;gap:8px}.rivora-os-fav-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px;border:1px solid #263556;border-radius:10px;background:#101a32;font-size:12px}.rivora-os-fav-row button{padding:6px 9px;color:#ffc1c8;border-color:#71404c}.rivora-os-current{color:#64e5ff!important;font-size:10px!important;letter-spacing:1.2px;text-transform:uppercase}
     @keyframes osProgress{to{width:100%}}@keyframes osContentIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @media(prefers-reduced-motion:reduce){.rivora-os-boot,.rivora-os-content{transition:none;animation:none}.rivora-os-progress span{animation-duration:1s}}
+    @media(prefers-reduced-motion:reduce){.rivora-os-boot,.rivora-os-content,.rivora-os-logo{transition:none;animation:none}.rivora-os-progress span{animation-duration:1s}}
 
     .section-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:22px}
     .section-heading h2{font-size:23px}
@@ -347,7 +349,7 @@
     .list-empty{color:var(--muted);line-height:1.6}
     .status-message{min-height:18px;margin-top:10px;color:var(--muted);font-size:12px}
     @media(max-width:800px){nav{gap:13px}nav a,.nav-button{font-size:12px}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:480px){header{padding:13px 5%;flex-wrap:wrap}nav{order:2;width:100%;justify-content:space-between}.hero{min-height:420px;padding:65px 6% 100px}.hero h1{font-size:clamp(34px,10vw,49px)}.section{padding:28px 5%}.section-heading{align-items:stretch}.search-box{width:100%}.poster{height:145px;font-size:18px}.modal-content{padding:25px 21px}}
+    @media(max-width:480px){header{min-height:112px;padding:12px 5% 10px;flex-wrap:wrap;justify-content:center}.logo{top:29px}nav{order:2;width:100%;justify-content:space-between;margin-top:48px}.hero{min-height:420px;padding:65px 6% 100px}.hero h1{font-size:clamp(34px,10vw,49px)}.section{padding:28px 5%}.section-heading{align-items:stretch}.search-box{width:100%}.poster{height:145px;font-size:18px}.modal-content{padding:25px 21px}}
   
     /* RIVORA V4: persistent cinematic corner identity */
     .rivora-floating-brand{
@@ -412,7 +414,7 @@
     <div class="rivora-os-vignette" aria-hidden="true"></div>
     <div class="rivora-os-content">
       <div class="rivora-os-overline">CINEMATIC OPERATING SYSTEM · INITIALIZING</div>
-      <div class="rivora-os-logo">RIVORA</div>
+      <div class="rivora-os-logo" aria-label="Rivora HUB"><span>Rivora</span><span class="boot-hub">HUB</span></div>
       <p class="rivora-os-story" id="rivoraOsStory">Preparing your cinematic universe...</p>
       <div class="rivora-os-progress" aria-hidden="true"><span id="rivoraOsProgress"></span></div>
       <div class="rivora-os-status" id="rivoraOsStatus">Rendering environment · Loading scene</div>
