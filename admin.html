@@ -216,7 +216,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
 
 <section class="panel hidden" id="seriesPanel">
   <div class="topline"><h2>02 / Hybrid Series Manager</h2><span class="spacer"></span><span class="pill">LOCAL DRAFT</span></div>
-  <p class="notice">Create a series, generate episodes in bulk, then edit any episode individually. Each episode supports up to 4 authorized HTTPS URLs per quality. Preview your work or save it privately to the Draft database. Saving never publishes the series.</p>
+  <p class="notice">Create a series, generate episodes in bulk, then edit any episode individually. Each episode supports up to 4 authorized URLs per quality. This stage keeps data in page memory only; it does not save to Supabase.</p>
   <label for="seriesTitle">Series Name</label><input id="seriesTitle" maxlength="150" placeholder="Enter series name">
   <div class="field-row">
     <div><label for="seriesYear">Release Year</label><input id="seriesYear" type="number" min="1880" max="2100" placeholder="e.g. 2024"></div>
@@ -229,12 +229,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
   </div>
   <p class="status" id="seriesStatus" aria-live="polite">Enter series details and generate episodes.</p>
   <div id="episodesEditor"></div>
-  <div class="field-row series-actions">
-    <button class="secondary" id="seriesPreviewBtn" type="button">PREVIEW SERIES DRAFT →</button>
-    <button class="primary" id="seriesSaveDraftBtn" type="button">SAVE TO DRAFT</button>
-  </div>
+  <button class="primary" id="seriesPreviewBtn" type="button">PREVIEW SERIES DRAFT →</button>
+  <button class="primary" id="seriesSaveDraftBtn" type="button">SAVE TO DRAFT</button>
   <div id="seriesPreview" class="candidate hidden"></div>
-  <p class="notice">Only use distribution URLs you are authorized to share. Save to Draft stores the series privately with status “draft”; it does not publish it to the public website.</p>
+  <p class="notice">Only use distribution URLs you are authorized to share. Save to Draft stores this series privately with status “draft”; it does not publish it to the public website.</p>
 </section>
 
 <section class="panel hidden" id="previewSection">
@@ -1481,10 +1479,7 @@ function validHttpUrl(value) {
   }
 }
 
-// Series Manager — preview locally and persist only as a private Draft.
-let currentSeriesId = null;
-
-function buildValidatedSeriesPayload() {
+$("seriesPreviewBtn").addEventListener("click", () => {
   const title = $("seriesTitle").value.trim();
   const year = Number($("seriesYear").value);
   const season = Number($("seasonNumber").value);
@@ -1492,138 +1487,168 @@ function buildValidatedSeriesPayload() {
 
   if (!adminSessionToken) {
     clearSessionUI("Admin session expired. Please log in again.");
-    return null;
+    return;
   }
-  if (!title || title.length > 150) {
-    setStatus("seriesStatus", "Enter a valid series name (maximum 150 characters).", "error");
-    return null;
+  if (!title) {
+    setStatus("seriesStatus", "Enter a series name.", "error");
+    return;
   }
-  if (!Number.isInteger(year) || year < 1880 || year > 2100) {
-    setStatus("seriesStatus", "Enter a valid release year between 1880 and 2100.", "error");
-    return null;
+  if (!Number.isInteger(year) || year < 1880 || year > new Date().getFullYear() + 5) {
+    setStatus("seriesStatus", "Enter a valid release year.", "error");
+    return;
   }
   if (!Number.isInteger(season) || season < 1 || season > 100) {
     setStatus("seriesStatus", "Season number must be between 1 and 100.", "error");
-    return null;
+    return;
+  }
+  if (!seriesEpisodes.length) {
+    setStatus("seriesStatus", "Generate episodes first.", "error");
+    return;
+  }
+
+  const seen = new Set();
+  for (const ep of seriesEpisodes) {
+    if (!Number.isInteger(Number(ep.number)) || Number(ep.number) < 1 || !String(ep.title).trim()) {
+      setStatus("seriesStatus", "Every episode needs a valid episode number and title.", "error");
+      return;
+    }
+    if (seen.has(Number(ep.number))) {
+      setStatus("seriesStatus", `Duplicate episode number found: ${ep.number}.`, "error");
+      return;
+    }
+    seen.add(Number(ep.number));
+
+    for (const quality of SERIES_QUALITIES) {
+      for (const url of ep.links[quality]) {
+        if (url && !validHttpUrl(url)) {
+          setStatus("seriesStatus", `Episode ${ep.number}: ${quality} link must be a valid http/https URL.`, "error");
+          return;
+        }
+      }
+    }
+  }
+
+  const totalLinks = seriesEpisodes.reduce((sum, ep) =>
+    sum + SERIES_QUALITIES.reduce((n, q) => n + ep.links[q].filter(Boolean).length, 0), 0
+  );
+
+  const preview = $("seriesPreview");
+  preview.replaceChildren();
+  preview.classList.remove("hidden");
+
+  const heading = document.createElement("strong");
+  heading.textContent = `${title} (${year})`;
+  const seasonLine = document.createElement("p");
+  seasonLine.textContent = `${seasonTitle || "Season " + season} · ${seriesEpisodes.length} episodes · ${totalLinks} authorized link(s)`;
+  preview.append(heading, seasonLine);
+
+  const list = document.createElement("div");
+  list.style.marginTop = "12px";
+  seriesEpisodes.forEach(ep => {
+    const p = document.createElement("p");
+    const count = SERIES_QUALITIES.reduce((n, q) => n + ep.links[q].filter(Boolean).length, 0);
+    p.textContent = `Episode ${ep.number}: ${ep.title} — ${count} link(s)`;
+    list.append(p);
+  });
+  preview.append(list);
+
+  const note = document.createElement("p");
+  note.textContent = "Preview only. This draft has not been saved to Supabase or published.";
+  note.style.marginTop = "12px";
+  preview.append(note);
+
+  setStatus("seriesStatus", "Series draft validated successfully. It is still only in this page's memory.", "success");
+});
+
+// Save the Series Manager content to the private Supabase Draft store.
+let savedSeriesId = null;
+$("seriesSaveDraftBtn").addEventListener("click", async () => {
+  const button = $("seriesSaveDraftBtn");
+  const title = $("seriesTitle").value.trim();
+  const year = Number($("seriesYear").value);
+  const season = Number($("seasonNumber").value);
+  const seasonTitle = $("seasonTitle").value.trim();
+
+  if (!adminSessionToken) {
+    clearSessionUI("Admin session expired. Please log in again.");
+    return;
+  }
+  if (!title || title.length > 150) {
+    setStatus("seriesStatus", "Enter a valid series name (maximum 150 characters).", "error");
+    return;
+  }
+  if (!Number.isInteger(year) || year < 1880 || year > new Date().getFullYear() + 5) {
+    setStatus("seriesStatus", "Enter a valid release year.", "error");
+    return;
+  }
+  if (!Number.isInteger(season) || season < 1 || season > 100) {
+    setStatus("seriesStatus", "Season number must be between 1 and 100.", "error");
+    return;
   }
   if (!seriesEpisodes.length || seriesEpisodes.length > 100) {
     setStatus("seriesStatus", "Generate between 1 and 100 episodes first.", "error");
-    return null;
+    return;
   }
 
   const seen = new Set();
   const episodes = [];
   for (const ep of seriesEpisodes) {
     const episodeNumber = Number(ep.number);
-    const episodeTitle = String(ep.title ?? "").trim();
+    const episodeTitle = String(ep.title || "").trim();
     if (!Number.isInteger(episodeNumber) || episodeNumber < 1 || episodeNumber > 1000 || !episodeTitle || episodeTitle.length > 150) {
-      setStatus("seriesStatus", "Every episode needs a valid number and title (maximum 150 characters).", "error");
-      return null;
+      setStatus("seriesStatus", "Every episode needs a valid episode number and title.", "error");
+      return;
     }
     if (seen.has(episodeNumber)) {
       setStatus("seriesStatus", `Duplicate episode number found: ${episodeNumber}.`, "error");
-      return null;
+      return;
     }
     seen.add(episodeNumber);
 
     const downloadLinks = {};
     for (const quality of SERIES_QUALITIES) {
-      const values = (ep.links?.[quality] || []).map(value => String(value ?? "").trim()).filter(Boolean);
+      const values = (ep.links[quality] || []).map(value => String(value || "").trim()).filter(Boolean);
       if (values.length > 4) {
         setStatus("seriesStatus", `Episode ${episodeNumber}: maximum four ${quality} links are allowed.`, "error");
-        return null;
+        return;
       }
       for (const url of values) {
-        try {
-          const parsed = new URL(url);
-          if (parsed.protocol !== "https:") throw new Error("HTTPS required");
-        } catch {
+        if (!validHttpUrl(url) || !url.startsWith("https://")) {
           setStatus("seriesStatus", `Episode ${episodeNumber}: ${quality} links must be valid HTTPS URLs.`, "error");
-          return null;
+          return;
         }
       }
       downloadLinks[quality] = values;
     }
-
     episodes.push({
       episode_number: episodeNumber,
       title: episodeTitle,
-      overview: String(ep.overview ?? "").trim().slice(0, 2000),
+      overview: String(ep.overview || "").trim().slice(0, 2000),
       download_links: downloadLinks
     });
   }
 
-  return {
-    action: "save_series",
-    series_id: currentSeriesId,
-    title,
-    release_year: year,
-    season_number: season,
-    season_title: seasonTitle,
-    episodes
-  };
-}
-
-function renderSeriesPreview(payload) {
-  const totalLinks = payload.episodes.reduce((sum, ep) =>
-    sum + SERIES_QUALITIES.reduce((n, q) => n + (ep.download_links[q] || []).length, 0), 0
-  );
-  const preview = $("seriesPreview");
-  preview.replaceChildren();
-  preview.classList.remove("hidden");
-
-  const heading = document.createElement("strong");
-  heading.textContent = `${payload.title} (${payload.release_year})`;
-  const seasonLine = document.createElement("p");
-  seasonLine.textContent = `${payload.season_title || "Season " + payload.season_number} · ${payload.episodes.length} episodes · ${totalLinks} authorized link(s)`;
-  preview.append(heading, seasonLine);
-
-  const list = document.createElement("div");
-  list.style.marginTop = "12px";
-  payload.episodes.forEach(ep => {
-    const p = document.createElement("p");
-    const count = SERIES_QUALITIES.reduce((n, q) => n + (ep.download_links[q] || []).length, 0);
-    p.textContent = `Episode ${ep.episode_number}: ${ep.title} — ${count} link(s)`;
-    list.append(p);
-  });
-  preview.append(list);
-  const note = document.createElement("p");
-  note.textContent = currentSeriesId
-    ? `Saved Draft ID: ${currentSeriesId}. Preview only; no public publishing action is available here.`
-    : "Preview only. Use Save to Draft to store this series privately in Supabase.";
-  note.style.marginTop = "12px";
-  preview.append(note);
-}
-
-$("seriesPreviewBtn").addEventListener("click", () => {
-  const payload = buildValidatedSeriesPayload();
-  if (!payload) return;
-  renderSeriesPreview(payload);
-  setStatus("seriesStatus", "Series draft validated successfully. It has not been saved by Preview.", "success");
-});
-
-$("seriesSaveDraftBtn").addEventListener("click", async () => {
-  const button = $("seriesSaveDraftBtn");
-  const payload = buildValidatedSeriesPayload();
-  if (!payload) return;
   if (!confirm("Save this series and its selected season as a private Draft? It will not be published to the public website.")) return;
 
-  button.disabled = true;
   const originalText = button.textContent;
+  button.disabled = true;
   button.textContent = "SAVING DRAFT…";
-  setStatus("seriesStatus", "Saving series and episodes securely…");
+  setStatus("seriesStatus", "Saving series and episodes as a private Draft…");
   try {
-    const result = await postJson(ADMIN_URL, payload, adminSessionToken, true);
+    const result = await postJson(ADMIN_URL, {
+      action: "save_series",
+      series_id: savedSeriesId,
+      title,
+      release_year: year,
+      season_number: season,
+      season_title: seasonTitle,
+      episodes
+    }, adminSessionToken, true);
     if (result.success !== true || !result.series_id) {
       throw new Error(result.error || "Series Draft could not be saved.");
     }
-    currentSeriesId = result.series_id;
-    renderSeriesPreview(payload);
-    const savedNote = document.createElement("p");
-    savedNote.textContent = `Saved successfully · Draft ID: ${currentSeriesId} · ${result.episodes_saved ?? payload.episodes.length} episode(s) · Status: DRAFT`;
-    savedNote.style.fontWeight = "700";
-    $("seriesPreview").append(savedNote);
-    setStatus("seriesStatus", "Series saved successfully as Draft. It is not published on the public website.", "success");
+    savedSeriesId = result.series_id;
+    setStatus("seriesStatus", `Series saved successfully as Draft. ${result.episodes_saved || episodes.length} episode(s) saved. It is not published.`, "success");
   } catch (error) {
     setStatus("seriesStatus", error.message || "Could not save Series Draft.", "error");
   } finally {
