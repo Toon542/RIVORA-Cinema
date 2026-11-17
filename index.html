@@ -146,6 +146,7 @@
     .movie-grid.view-poster .skeleton-poster{height:auto;aspect-ratio:2/3}
     .movie-card{overflow:hidden;background:var(--panel);border:1px solid #252e49;border-radius:12px;transition:transform .25s,border-color .25s}
     .movie-card:hover{transform:translateY(-5px);border-color:var(--cyan)}
+.movie-card.holo-card .movie-info h3{background:linear-gradient(90deg,var(--movie-gradient-a,#8b5cf6),var(--movie-gradient-b,#ec4899));background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
     .poster{height:190px;padding:15px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:23px;font-weight:900;letter-spacing:2px;background:linear-gradient(145deg,#152e63,#6429a5)}
     .poster.p2{background:linear-gradient(145deg,#5a210f,#c14c22)}
     .poster.p3{background:linear-gradient(145deg,#174c55,#17234e)}
@@ -405,6 +406,26 @@
 .kg-related-empty{grid-column:1/-1;color:var(--muted);font-size:12px;padding:8px 0}
 @media(max-width:650px){.kg-svg{min-width:760px}.kg-intro{font-size:12px}.kg-toolbar button{padding:7px 10px;font-size:11px}}
 
+
+/* RIVORA V18.1 — Discovery, rankings, request flow and dedicated quality directory */
+#movies{position:relative;isolation:isolate;border-radius:24px;margin:18px 2%;overflow:hidden;background:linear-gradient(135deg,var(--search-a,#a8e6ff),var(--search-b,#d8b4fe),var(--search-c,#ffb7d5),var(--search-d,#fff0a6));background-size:220% 220%;animation:rivoraSearchGradient 16s ease-in-out infinite alternate}
+#movies:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(255,255,255,.52));backdrop-filter:blur(16px)}
+#movies .section-heading h2,#movies .gallery-view-label{color:#211a36}#movies .search-box input{background:rgba(255,255,255,.82);color:#211a36;border-color:rgba(70,40,110,.25)}#movies .search-box button{background:linear-gradient(100deg,#8b5cf6,#ec4899,#f59e0b);color:#fff}
+#movies .filter{color:#39284e;border-color:rgba(55,30,85,.25);background:rgba(255,255,255,.4)}#movies .filter.active{color:#fff;background:linear-gradient(100deg,var(--genre-a,#8b5cf6),var(--genre-b,#ec4899));border-color:transparent}
+#movies .movie-card{background:rgba(20,16,38,.88);border-color:rgba(255,255,255,.32);box-shadow:0 12px 28px rgba(29,14,55,.18)}
+@keyframes rivoraSearchGradient{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+.rivora-discovery-section,.rivora-ranking-section,.rivora-request-section{padding:48px 6%;position:relative;overflow:hidden}
+.rivora-discovery-section{background:linear-gradient(140deg,#120d24,#211037 55%,#111b35)}
+.rivora-ranking-section{background:linear-gradient(135deg,#08152d,#2a2616);border-top:1px solid rgba(255,255,255,.08)}
+.trending-section{background:linear-gradient(135deg,#260f2b,#0d3026)}
+.rivora-request-section{background:radial-gradient(ellipse at 15% 50%,rgba(236,72,153,.22),transparent 42%),radial-gradient(ellipse at 90% 50%,rgba(245,158,11,.18),transparent 42%),#100d20}
+.rivora-section-heading{max-width:1100px;margin:0 auto 24px}.rivora-section-heading>span{font-size:10px;letter-spacing:3px;color:#fbbf24;font-weight:900}.rivora-section-heading h2{font-size:clamp(25px,4vw,38px);margin:8px 0;background:linear-gradient(90deg,#fff,#f0abfc,#fbbf24);background-clip:text;-webkit-background-clip:text;color:transparent}.rivora-section-heading p{font-size:13px;color:#c5c2d8;line-height:1.6}
+.rivora-genre-grid{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:13px}.rivora-genre-card{min-height:125px;text-align:left;padding:17px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));color:#fff;box-shadow:0 12px 28px rgba(0,0,0,.2);backdrop-filter:blur(12px);cursor:pointer}.rivora-genre-card[aria-pressed="true"]{border-color:rgba(255,255,255,.6);box-shadow:0 0 24px rgba(236,72,153,.28),0 12px 28px rgba(0,0,0,.2)}.rivora-genre-card strong{display:block;font-size:17px;margin-bottom:9px;background:linear-gradient(90deg,var(--genre-text-a),var(--genre-text-b));background-clip:text;-webkit-background-clip:text;color:transparent}.rivora-genre-card small{color:#d4d0e4}.rivora-genre-card .genre-stamp{display:inline-grid;place-items:center;width:35px;height:35px;border-radius:12px;margin-bottom:12px;background:linear-gradient(135deg,var(--genre-stamp-a),var(--genre-stamp-b));box-shadow:0 5px 15px rgba(0,0,0,.3);font-weight:900;color:#fff}
+#genreFilters .filter.genre-gradient-label{font-weight:900;background-clip:text;-webkit-background-clip:text;color:transparent;border-color:rgba(255,255,255,.35)}#genreFilters .filter.genre-gradient-label.active{color:#fff;-webkit-text-fill-color:#fff;background-image:linear-gradient(100deg,var(--genre-a,#8b5cf6),var(--genre-b,#ec4899))}
+.rivora-ranking-grid{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}.rivora-rank-card{position:relative;overflow:hidden;min-width:0;border:1px solid rgba(255,255,255,.16);border-radius:15px;background:rgba(255,255,255,.07);box-shadow:0 12px 28px rgba(0,0,0,.25);cursor:pointer}.rivora-rank-poster{aspect-ratio:2/3;background:linear-gradient(145deg,#26345a,#603a75);background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:12px}.rivora-rank-number{font-size:32px;font-weight:950;color:#fff;text-shadow:0 2px 10px #000}.rivora-rank-copy{padding:11px}.rivora-rank-copy strong{display:block;font-size:13px;line-height:1.4}.rivora-rank-copy small{display:block;color:#c4c2d2;font-size:10px;margin-top:5px}.rivora-download-page{min-height:72vh;padding:32px 6% 65px;background:linear-gradient(135deg,#0a142b,#21152e 55%,#30210d)}.download-page-heading{max-width:1050px;margin:26px auto;text-align:center}.download-page-heading span{color:#fbbf24;letter-spacing:3px;font-size:10px;font-weight:900}.download-page-heading h1{font-size:clamp(30px,6vw,52px);margin:10px 0;background:linear-gradient(90deg,#fef08a,#86efac,#60a5fa);background-clip:text;-webkit-background-clip:text;color:transparent}.download-page-heading p{color:#d4d0e4}.download-quality-grid{max-width:1000px;margin:30px auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}.download-quality-card{min-height:115px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;text-decoration:none;text-align:center;border-radius:17px;border:1px solid rgba(255,255,255,.26);color:#fff;font-weight:900;letter-spacing:1px;box-shadow:0 12px 24px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.25);transform:translateZ(0);transition:transform .2s,filter .2s}.download-quality-card:hover{transform:translateY(-5px) scale(1.02);filter:brightness(1.12)}.download-quality-card small{font-size:10px;letter-spacing:1px;opacity:.9}.download-page-note{text-align:center;color:#bcb6cd;font-size:11px;line-height:1.6}.detail-download-cta{padding:11px 16px;border:1px solid rgba(255,255,255,.3);border-radius:10px;color:#071526;font-weight:900;background:linear-gradient(100deg,#fef08a,#86efac,#60a5fa);box-shadow:0 8px 22px rgba(96,165,250,.2)}
+.rivora-request-form{max-width:950px;margin:25px auto 0;padding:22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,.38fr) auto;gap:13px;align-items:end;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.07);backdrop-filter:blur(14px);box-shadow:0 15px 35px rgba(0,0,0,.22)}.rivora-request-form label span{display:block;font-size:10px;letter-spacing:1.5px;color:#f8d5e8;font-weight:900;margin-bottom:8px}.rivora-request-form input{width:100%;min-width:0;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(10,8,24,.68);color:#fff}.rivora-request-form button{min-height:47px;padding:0 19px;border:1px solid rgba(255,255,255,.25);border-radius:11px;color:#fff;font-weight:900;background:linear-gradient(100deg,#fb7185,#f59e0b);box-shadow:0 0 24px rgba(244,114,182,.28)}.rivora-request-status{min-height:20px;max-width:950px;margin:13px auto 0;color:#fce7f3;font-size:12px}
+@media(max-width:680px){.rivora-request-form{grid-template-columns:1fr 110px;padding:15px}.rivora-request-form button{grid-column:1/-1}.rivora-discovery-section,.rivora-ranking-section,.rivora-request-section{padding:36px 5%}.rivora-ranking-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rivora-genre-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.download-quality-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){#movies{animation:none}.download-quality-card{transition:none}}
 </style>
 
 <style id="rivora-premium-v17-visual-system">
@@ -506,7 +527,7 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
 </style>
 
 </head>
-<body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="17.0">
+<body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="18.1">
 
   <section class="rivora-os-boot" id="rivoraOsBoot" aria-label="RIVORA OS startup" aria-live="polite">
     <canvas class="rivora-os-canvas" id="rivoraOsCanvas" aria-hidden="true"></canvas>
@@ -546,6 +567,9 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
     <nav aria-label="Main navigation">
       <a href="./">Home</a>
       <a href="#movies">Explore</a>
+      <a href="#genreDiscoverySection">Genres</a>
+      <a href="#topTenSection">Top 10</a>
+      <a href="#trendingSection">Trending</a>
       <a href="#features">About</a>
       <button class="nav-button" type="button" id="myListNav">My List</button>
     </nav>
@@ -563,6 +587,7 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
           <p class="detail-overview" id="detailOverview"></p>
           <div class="surprise-actions" style="margin-top:20px">
             <button class="watchlist-button" id="detailWatchlistButton" type="button">+ Add to My List</button>
+            <button class="detail-download-cta" id="detailDownloadButton" type="button">⬇ EXPLORE DOWNLOAD OPTIONS</button>
             <a class="detail-trailer" id="detailTrailer" href="#" target="_blank" rel="noopener noreferrer" hidden>Watch Trailer ↗</a>
           </div>
           <p class="status-message" id="detailStatus" aria-live="polite"></p>
@@ -606,8 +631,14 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
 
       <section class="detail-block"><h2>SCREENSHOTS & GALLERY</h2><div class="detail-gallery" id="detailGallery"><p class="gallery-empty">No screenshots available.</p></div></section>
       <section class="detail-block"><h2>CAST</h2><div class="detail-cast" id="detailCast"><p class="gallery-empty">Cast details unavailable.</p></div></section>
-      <section class="detail-block"><h2>AVAILABLE OFFICIAL LINKS</h2><div class="download-list" id="detailLinks"><p class="download-empty">No links available.</p></div></section>
     </section>
+    <section class="rivora-download-page" id="downloadLinksPage" hidden aria-labelledby="downloadPageTitle">
+      <button class="detail-back" id="downloadPageBack" type="button">← BACK TO MOVIE DETAILS</button>
+      <div class="download-page-heading"><span>RIVORA SECURE LINK DIRECTORY</span><h1 id="downloadPageTitle">Choose Your Quality</h1><p id="downloadPageMovieMeta">Available authorised links for this movie</p></div>
+      <div class="download-quality-grid" id="downloadQualityGrid" aria-live="polite"></div>
+      <p class="download-page-note">Only links supplied and approved by the RIVORA HUB Admin are shown. Availability depends on the movie.</p>
+    </section>
+
     <section class="hero" id="dynamicHero" aria-label="Featured movies">
       <img class="hero-backdrop" id="heroBackdrop" alt="" aria-hidden="true">
       <div class="hero-counter" id="heroCounter" aria-live="off">01 / 01</div>
@@ -680,6 +711,31 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
       <div class="movie-grid" id="movieGrid">
         <div class="empty" id="emptyMessage" role="status">No published movies are available yet.</div>
       </div>
+    </section>
+
+    <section class="rivora-discovery-section" id="genreDiscoverySection" aria-labelledby="genreDiscoveryTitle">
+      <div class="rivora-section-heading"><span>EXPLORE BY MOOD & CATEGORY</span><h2 id="genreDiscoveryTitle">GENRE DISCOVERY</h2><p>Choose a genre to explore the published movie library.</p></div>
+      <div class="rivora-genre-grid" id="genreDiscoveryGrid"></div>
+    </section>
+
+    <section class="rivora-ranking-section" id="topTenSection" aria-labelledby="topTenTitle">
+      <div class="rivora-section-heading"><span>RIVORA EDITORIAL RANKING</span><h2 id="topTenTitle">TOP 10 MOVIES</h2><p>Ranked from published catalogue ratings, with release year as the tie-breaker.</p></div>
+      <div class="rivora-ranking-grid" id="topTenGrid"></div>
+    </section>
+
+    <section class="rivora-ranking-section trending-section" id="trendingSection" aria-labelledby="trendingTitle">
+      <div class="rivora-section-heading"><span>RECENTLY ADDED TO RIVORA</span><h2 id="trendingTitle">TRENDING MOVIES</h2><p>Recent published additions, ordered by catalogue freshness and rating.</p></div>
+      <div class="rivora-ranking-grid" id="trendingGrid"></div>
+    </section>
+
+    <section class="rivora-request-section" id="requestMovieSection" aria-labelledby="requestMovieTitle">
+      <div class="rivora-section-heading"><span>YOUR NEXT MOVIE COULD BE HERE</span><h2 id="requestMovieTitle">REQUEST A MOVIE</h2><p>Tell the RIVORA team which movie you would like to see added.</p></div>
+      <form class="rivora-request-form" id="requestMovieForm">
+        <label class="request-movie-name" for="requestMovieName"><span>MOVIE NAME</span><input id="requestMovieName" name="movie_name" type="text" maxlength="150" autocomplete="off" placeholder="Enter movie name" required></label>
+        <label class="request-release-year" for="requestMovieYear"><span>RELEASE YEAR</span><input id="requestMovieYear" name="release_year" type="number" min="1880" max="2100" inputmode="numeric" placeholder="Year" required></label>
+        <button id="requestMovieSubmit" type="submit">REQUEST A MOVIE <span>→</span></button>
+      </form>
+      <p class="rivora-request-status" id="requestMovieStatus" role="status" aria-live="polite"></p>
     </section>
 
     <section class="section" id="features">
@@ -1160,6 +1216,7 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
     function renderFullMoviePage(movie) {
       if (!movie) return;
       currentMovie = movie.title;
+      window.rivoraActiveDownloadMovie = movie;
       document.querySelectorAll("main > section:not(#movieDetailsPage)").forEach(section => section.hidden = true);
       document.getElementById("movieDetailsPage").hidden = false;
       document.title = (movie.title || "Movie") + " | RIVORA";
@@ -1185,9 +1242,6 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
       (Array.isArray(movie.castMembers)?movie.castMembers:[]).forEach(person=>{const name=typeof person==="string"?person:(person?.name||person?.character||"");if(name){const chip=document.createElement("span");chip.textContent=name;cast.append(chip)}});
       if(!cast.children.length){const p=document.createElement("p");p.className="gallery-empty";p.textContent="Cast details unavailable.";cast.append(p)}
       loadMovieKnowledgeGraph(movie);
-      const links=document.getElementById("detailLinks"); links.replaceChildren();
-      getPublicDownloadLinks(movie).forEach(item=>{const a=document.createElement("a");a.className="download-link";a.href=item.download_url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=String(item.quality||"OPEN LINK").toUpperCase()+" LINK";links.append(a)});
-      if(!links.children.length){const p=document.createElement("p");p.className="download-empty";p.textContent="No official links are available.";links.append(p)}
       const trailer=document.getElementById("detailTrailer");
       if(movie.trailerUrl && /^https:\/\//i.test(movie.trailerUrl)){trailer.href=movie.trailerUrl;trailer.hidden=false}else trailer.hidden=true;
       const watch=document.getElementById("detailWatchlistButton");
@@ -1502,7 +1556,7 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
   try {
     const response = await fetch(
       SUPABASE_URL +
-      "/rest/v1/movies?select=id,title,release_year,overview,poster_path,backdrop_path,genres,cast_members,runtime,rating,trailer_url,tmdb_id,status&status=eq.published&order=created_at.desc",
+      "/rest/v1/movies?select=id,title,release_year,overview,poster_path,backdrop_path,genres,cast_members,runtime,rating,trailer_url,tmdb_id,status,created_at&status=eq.published&order=created_at.desc",
       {
         headers: {
           apikey: SUPABASE_KEY,
@@ -1863,6 +1917,97 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
       attachHolographicInteraction(card, stage);
       grid.insertBefore(card, empty);
     });
+    // RIVORA V18.1 — database-driven discovery pages and quality directory.
+    const genrePalette = {
+      "Action":["#ef4444","#f59e0b"],"Adventure":["#22c55e","#a3e635"],"Comedy":["#facc15","#f97316"],
+      "Drama":["#8b5cf6","#ec4899"],"Horror":["#991b1b","#111827"],"Romance":["#f9a8d4","#ec4899"],
+      "Sci-Fi":["#38bdf8","#06b6d4"],"Fantasy":["#8b5cf6","#fbbf24"],"Mystery":["#581c87","#a855f7"],
+      "Thriller":["#b91c1c","#111827"],"History":["#b45309","#365314"],"Mythology":["#991b1b","#d4a72c"]
+    };
+    const genreSymbols = {Action:"✦",Adventure:"➤",Comedy:"☺",Drama:"◆",Horror:"☾",Romance:"♥","Sci-Fi":"✧",Fantasy:"♜",Mystery:"◈",Thriller:"⚡",History:"⌛",Mythology:"✥"};
+    const genreColors = name => genrePalette[name] || ["#8b5cf6","#ec4899"];
+    document.querySelectorAll("#genreFilters .filter:not([data-category='All'])").forEach(button=>{const colors=genreColors(button.dataset.category||"");button.classList.add("genre-gradient-label");button.style.backgroundImage=`linear-gradient(90deg,${colors[0]},${colors[1]})`;button.style.backgroundClip="text";button.style.webkitBackgroundClip="text";button.style.color="transparent";});
+    // Apply each movie's own genre gradient to its glass card and glow.
+    document.querySelectorAll(".movie-card[data-database-movie='true']").forEach(card=>{
+      let names=[];try{names=JSON.parse(card.dataset.genres||"[]")}catch(_){}
+      const colors=names.map(genreColors);if(!colors.length)return;
+      const first=colors[0][0],last=colors[colors.length-1][1];
+      card.style.setProperty("--movie-gradient-a",first);card.style.setProperty("--movie-gradient-b",last);
+      card.style.background=`linear-gradient(145deg,${first}22,${last}18,#090e1d 78%)`;
+      card.style.borderColor=first+"88";card.style.boxShadow=`0 10px 28px ${first}22, inset 0 1px 0 rgba(255,255,255,.08)`;
+    });
+    const publishedItems = publishedDatabaseMovies.map(movie => movieData[movie.title]).filter(Boolean);
+    const qualityDefinitions = [
+      {label:"8K",keys:["8k"],gradient:"linear-gradient(130deg,#0284c7,#fef08a)"},
+      {label:"4K",keys:["4k","2160p"],gradient:"linear-gradient(130deg,#991b1b,#16a34a)"},
+      {label:"2K",keys:["2k","1440p"],gradient:"linear-gradient(130deg,#c084fc,#f97316)"},
+      {label:"1080p HQ",keys:["1080p hq","1080p-hq","1080p high quality"],gradient:"linear-gradient(130deg,#eab308,#2563eb)"},
+      {label:"1080p",keys:["1080p","fhd"],gradient:"linear-gradient(130deg,#f9a8d4,#f8fafc)"},
+      {label:"1080p HEVC",keys:["1080p hevc","1080p x265","1080p h265"],gradient:"linear-gradient(130deg,#166534,#ef4444)"},
+      {label:"720p",keys:["720p","hd"],gradient:"linear-gradient(130deg,#7c3aed,#fb7185)"},
+      {label:"720p HEVC",keys:["720p hevc","720p x265","720p h265"],gradient:"linear-gradient(130deg,#9d174d,#eab308,#111827)"},
+      {label:"720p (10bit)",keys:["720p 10bit","720p 10-bit","720p 10 bit"],gradient:"linear-gradient(130deg,#facc15,#c2410c)"},
+      {label:"480p",keys:["480p","sd"],gradient:"linear-gradient(130deg,#f472b6,#22c55e)"}
+    ];
+    function normalizeQuality(value){return String(value||"").toLowerCase().replace(/[()]/g,"").replace(/[_-]+/g," ").replace(/\s+/g," ").trim()}
+    function openDownloadPage(movie){
+      if(!movie)return;
+      window.rivoraActiveDownloadMovie=movie;
+      const links=Array.isArray(movie.downloadLinks)?movie.downloadLinks:[];
+      const root=document.getElementById("downloadQualityGrid");root.replaceChildren();
+      document.getElementById("downloadPageTitle").textContent=movie.title+" — DOWNLOAD OPTIONS";
+      document.getElementById("downloadPageMovieMeta").textContent=[movie.year,movie.genres].filter(Boolean).join(" • ");
+      qualityDefinitions.forEach(def=>{
+        const matching=links.filter(item=>{
+          const q=normalizeQuality(item?.quality);
+          return def.keys.some(key=>q===key || (key==="1080p" && q.startsWith("1080p") && !q.includes("hevc") && !q.includes("hq")) || (key==="720p" && q.startsWith("720p") && !q.includes("hevc") && !q.includes("10bit") && !q.includes("10 bit")));
+        });
+        matching.forEach((item,index)=>{
+          if(!item || typeof item.download_url!=="string")return;
+          let parsed;try{parsed=new URL(item.download_url)}catch{return}if(parsed.protocol!=="https:")return;
+          const a=document.createElement("a");a.className="download-quality-card";a.href=parsed.href;a.target="_blank";a.rel="noopener noreferrer";a.style.background=def.gradient;
+          const title=document.createElement("strong");title.textContent=def.label;
+          const sub=document.createElement("small");sub.textContent=matching.length>1?"LINK "+(index+1):"OPEN AUTHORISED LINK";
+          a.append(title,sub);root.append(a);
+        });
+      });
+      if(!root.children.length){const empty=document.createElement("p");empty.className="download-empty";empty.textContent="No authorised download links are currently available for this movie.";root.append(empty)}
+      document.querySelectorAll("main > section").forEach(section=>section.hidden=section.id!=="downloadLinksPage");
+      document.getElementById("downloadLinksPage").hidden=false;window.scrollTo({top:0,behavior:"smooth"});
+    }
+    document.getElementById("detailDownloadButton").addEventListener("click",()=>openDownloadPage(window.rivoraActiveDownloadMovie));
+    document.getElementById("downloadPageBack").addEventListener("click",()=>{
+      document.getElementById("downloadLinksPage").hidden=true;document.getElementById("movieDetailsPage").hidden=false;window.scrollTo({top:0,behavior:"smooth"});
+    });
+    const searchPalettes=[["#a8e6ff","#d8b4fe","#ffb7d5","#fff0a6"],["#b7f7d4","#ffe0a3","#b9d8ff","#f5bceb"],["#ffc9b8","#c9c1ff","#b9f0ea","#fff0b8"],["#d7f7a5","#a9e7ff","#ffc7e8","#e8d0ff"]];
+    function refreshSearchPalette(){const colors=searchPalettes[Math.floor(Math.random()*searchPalettes.length)];const root=document.getElementById("movies");["--search-a","--search-b","--search-c","--search-d"].forEach((key,i)=>root.style.setProperty(key,colors[i]));}
+    refreshSearchPalette();
+    function applyGenreGradient(names){const colors=names.map(genreColors);const a=colors.length?colors[0][0]:"#8b5cf6";const b=colors.length>1?colors[1][1]:(colors[0]?.[1]||"#ec4899");const root=document.getElementById("movies");root.style.setProperty("--genre-a",a);root.style.setProperty("--genre-b",b);root.style.backgroundImage=colors.length?`linear-gradient(135deg,${colors.flat().join(",")})`:"";}
+    const genreCounts=new Map();publishedItems.forEach(movie=>(movie.genreList||[]).forEach(name=>genreCounts.set(name,(genreCounts.get(name)||0)+1)));
+    const selectedExploreGenres = new Set();
+    document.getElementById("genreFilters").addEventListener("click", event => {
+      if (!event.target.closest(".filter")) return;
+      selectedExploreGenres.clear();
+      document.querySelectorAll(".rivora-genre-card").forEach(item=>item.setAttribute("aria-pressed","false"));
+      const selected = event.target.closest(".filter");
+      applyGenreGradient(selected && selected.dataset.category !== "All" ? [selected.dataset.category] : []);
+      if (typeof filterDatabaseMovies === "function") filterDatabaseMovies();
+    });
+    const genreRoot=document.getElementById("genreDiscoveryGrid");
+    [...genreCounts.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).forEach(([name,count])=>{
+      const colors=genreColors(name),card=document.createElement("button");card.type="button";card.className="rivora-genre-card";
+      card.style.setProperty("--genre-text-a",colors[0]);card.style.setProperty("--genre-text-b",colors[1]);card.style.setProperty("--genre-stamp-a",colors[1]);card.style.setProperty("--genre-stamp-b",colors[0]);
+      const stamp=document.createElement("span");stamp.className="genre-stamp";stamp.textContent=genreSymbols[name]||"✦";
+      const title=document.createElement("strong");title.textContent=name;
+      const sub=document.createElement("small");sub.textContent=count+" published movie"+(count===1?"":"s");card.append(stamp,title,sub);
+      card.setAttribute("aria-pressed","false");
+      card.addEventListener("click",()=>{if(selectedExploreGenres.has(name)){selectedExploreGenres.delete(name);card.setAttribute("aria-pressed","false")}else{selectedExploreGenres.add(name);card.setAttribute("aria-pressed","true")}applyGenreGradient([...selectedExploreGenres]);if(typeof filterDatabaseMovies==="function")filterDatabaseMovies();document.getElementById("movies").scrollIntoView({behavior:"smooth"});});genreRoot.append(card);
+    });
+    function renderRankCards(rootId,items){const root=document.getElementById(rootId);root.replaceChildren();items.slice(0,10).forEach((movie,index)=>{const card=document.createElement("article");card.className="rivora-rank-card";card.tabIndex=0;card.setAttribute("role","link");const poster=document.createElement("div");poster.className="rivora-rank-poster";if(movie.posterUrl)poster.style.backgroundImage="linear-gradient(0deg,rgba(0,0,0,.58),transparent),url('"+movie.posterUrl.replace(/'/g,"%27")+"')";const rank=document.createElement("span");rank.className="rivora-rank-number";rank.textContent=String(index+1).padStart(2,"0");poster.append(rank);const copy=document.createElement("div");copy.className="rivora-rank-copy";const title=document.createElement("strong");title.textContent=movie.title;const meta=document.createElement("small");meta.textContent=[movie.year,movie.rating?"★ "+movie.rating:"Rating unavailable",movie.genres].filter(Boolean).join(" • ");copy.append(title,meta);card.append(poster,copy);const open=()=>{if(movie.movieId)window.location.href=window.location.pathname+"?movie="+encodeURIComponent(movie.movieId)};card.addEventListener("click",open);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}});root.append(card)});if(!root.children.length){const p=document.createElement("p");p.className="download-empty";p.textContent="Published movies will appear here when available.";root.append(p)}}
+    const topTen=[...publishedItems].sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)||(Number(b.year)||0)-(Number(a.year)||0));
+    const trending=[...publishedItems].sort((a,b)=>{const da=Date.parse(publishedDatabaseMovies.find(x=>x.id===a.movieId)?.created_at||"")||0;const db=Date.parse(publishedDatabaseMovies.find(x=>x.id===b.movieId)?.created_at||"")||0;return db-da||(Number(b.rating)||0)-(Number(a.rating)||0)});
+    renderRankCards("topTenGrid",topTen);renderRankCards("trendingGrid",trending);
+
     clearMovieSkeletons();
 
     // RIVORA V10 — Dynamic Hero Engine. Uses only published movie records already loaded above.
@@ -2057,7 +2202,9 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
         let movieGenres = [];
         try { movieGenres = JSON.parse(card.dataset.genres || "[]"); } catch (_) {}
         const selectedGenre = typeof window.rivoraGetActiveGenre === "function" ? window.rivoraGetActiveGenre() : "All";
-        const matchesGenre = selectedGenre === "All" || movieGenres.includes(selectedGenre);
+        const matchesGenre = selectedExploreGenres.size
+          ? [...selectedExploreGenres].some(name => movieGenres.includes(name))
+          : (selectedGenre === "All" || movieGenres.includes(selectedGenre));
         card.hidden = !(title.includes(query) || text.includes(query)) || !matchesGenre;
       });
 
@@ -2193,7 +2340,7 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
     try{
       const response=await fetch(THEME_API,{
         method:"POST",
-        headers:{"Content-Type":"application/json",apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY},
+        headers:{"Content-Type":"application/json",apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:"Bearer "+SUPABASE_PUBLISHABLE_KEY},
         body:JSON.stringify({action:"list_public_themes"}),
         signal:AbortSignal.timeout(3500)
       });
@@ -2225,6 +2372,22 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
     window.RIVORA_OS={version:"1.1-v3-theme-registry",themeCount:themes.length,themeSource:source?"supabase-registry":"local-fallback",renderer:"Native Canvas 2D atmosphere",getCurrentTheme:()=>current?.name||null,getFavouriteCount:()=>validFavs().length};
   }
   initializeOS();
+})();
+</script>
+<script>
+(function rivoraMovieRequestForm(){
+  const form=document.getElementById("requestMovieForm");if(!form)return;
+  const SUPABASE_PUBLISHABLE_KEY="sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
+  const MOVIE_REQUEST_ENDPOINT="https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/rivora-knowledge-graph";
+  form.addEventListener("submit",async event=>{
+      event.preventDefault();const button=document.getElementById("requestMovieSubmit"),statusNode=document.getElementById("requestMovieStatus");
+      const movieName=document.getElementById("requestMovieName").value.trim(),releaseYear=Number(document.getElementById("requestMovieYear").value);
+      if(!movieName||movieName.length>150||!Number.isInteger(releaseYear)||releaseYear<1880||releaseYear>2100){statusNode.textContent="Please enter a valid movie name and release year.";return}
+      button.disabled=true;statusNode.textContent="Sending your request securely…";
+      try{const response=await fetch(MOVIE_REQUEST_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json",apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:"Bearer "+SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({action:"request_movie",movie_name:movieName,release_year:releaseYear}),cache:"no-store"});const data=await response.json().catch(()=>({}));if(!response.ok||data.success!==true)throw new Error(data.error||"Request could not be submitted. Please try again later.");statusNode.textContent="Request submitted successfully. Thank you for helping shape RIVORA HUB!";form.reset();}
+      catch(error){statusNode.textContent=error.message||"Network error. Please try again."}finally{button.disabled=false}
+  });
+
 })();
 </script>
 </body>
