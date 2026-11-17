@@ -2378,7 +2378,7 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
 (function rivoraMovieRequestForm(){
   const form=document.getElementById("requestMovieForm");if(!form)return;
   const SUPABASE_PUBLISHABLE_KEY="sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
-  const MOVIE_REQUEST_ENDPOINT="https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/rivora-knowledge-graph";
+  const MOVIE_REQUEST_ENDPOINT="https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/knowledge-graph";
   form.addEventListener("submit",async event=>{
       event.preventDefault();const button=document.getElementById("requestMovieSubmit"),statusNode=document.getElementById("requestMovieStatus");
       const movieName=document.getElementById("requestMovieName").value.trim(),releaseYear=Number(document.getElementById("requestMovieYear").value);
