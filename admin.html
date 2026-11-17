@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b18">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RIVX">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/rivx-192.png">
+<link rel="apple-touch-icon" href="./icons/rivx-192.png">
 <title>RIVORA | Admin Intelligence</title>
 <style>
 :root{--bg:#080b18;--panel:#11172b;--panel2:#171f39;--cyan:#42d9ff;--purple:#9255ff;--text:#f5f6ff;--muted:#a5aec7;--border:#28324f;--danger:#ff7185;--ok:#70e6b1}
@@ -17,6 +24,7 @@ button{cursor:pointer;border:0;border-radius:9px;padding:13px 20px;color:white;f
 .status{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.6}.status.error{color:var(--danger)}.status.success{color:var(--ok)}.notice{color:var(--muted);font-size:12px;line-height:1.7;margin-top:17px}.hidden{display:none!important}
 .preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.preview-item{padding:14px;background:var(--panel2);border-radius:9px;overflow-wrap:anywhere;min-width:0}.preview-item small{color:var(--cyan);display:block;margin-bottom:8px}.preview-item p{font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
 .candidate{padding:16px;margin-top:12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px}.candidate p{color:var(--muted);font-size:13px;margin-top:7px;line-height:1.5}.topline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.topline .spacer{flex:1}.pill{font-size:11px;color:var(--ok);border:1px solid #28634e;padding:5px 9px;border-radius:30px}
+.rivx-header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.rivx-header-actions button{margin:0}@media(max-width:520px){header{padding:16px 4%}.rivx-header-actions{width:100%}.rivx-header-actions button{flex:1}}
 footer{padding:25px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--border)}
 @media(max-width:520px){.preview-grid{grid-template-columns:1fr}.panel{padding:18px}}
 .series-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
@@ -33,6 +41,15 @@ footer{padding:25px;text-align:center;color:var(--muted);font-size:12px;border-t
 .field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .field-row input{min-width:0}
 @media(max-width:520px){.link-grid,.field-row{grid-template-columns:1fr}}
+
+.rivora-quality-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.rivora-quality-card{min-width:0;padding:13px;border:1px solid var(--border);border-radius:11px;background:var(--panel2)}
+.rivora-quality-card h4{color:var(--cyan);font-size:14px;margin-bottom:9px}
+.rivora-quality-card input{margin-top:8px;padding:11px;font-size:12px;min-width:0}
+.rivora-legacy-quality{margin-top:14px;padding:12px;border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:13px}
+.rivora-legacy-quality summary{cursor:pointer;color:var(--cyan);font-weight:bold}
+@media(max-width:520px){.rivora-quality-grid{grid-template-columns:1fr}}
+
 textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:white;font:14px Arial,sans-serif;outline:none}textarea:focus,select:focus{border-color:var(--cyan)}.upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.upload-grid>div{min-width:0}.upload-grid input[type=file]{padding:10px;font-size:12px}.upload-panel{border-top:1px solid var(--border);margin-top:18px;padding-top:8px}@media(max-width:520px){.upload-grid{grid-template-columns:1fr}}
 
 .dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
@@ -84,25 +101,115 @@ textarea,select{width:100%;padding:13px;border:1px solid var(--border);border-ra
 @media(max-width:650px){.media-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.media-toolbar{grid-template-columns:1fr 1fr}}
 @media(max-width:380px){.media-grid{grid-template-columns:1fr}.media-toolbar{grid-template-columns:1fr}}
 
+
+.dashboard-quick-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:16px;padding:15px;border:1px solid rgba(179,77,255,.42);border-radius:11px;background:linear-gradient(110deg,rgba(5,31,49,.95),rgba(30,10,55,.82));box-shadow:inset 0 0 18px rgba(83,245,255,.045),0 0 18px rgba(179,77,255,.08)}
+.dashboard-quick-actions strong{display:block;color:#d9a8ff;font-size:12px;letter-spacing:1.2px}
+.dashboard-quick-actions p{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.5}
+.dashboard-add-movie{padding:13px 19px;border:1px solid rgba(83,245,255,.7);background:linear-gradient(100deg,#087d9a,#6122bd);color:#fff;box-shadow:0 0 18px rgba(83,245,255,.18),inset 0 0 12px rgba(255,255,255,.08);white-space:nowrap}
+.dashboard-add-movie:hover{box-shadow:0 0 24px rgba(179,77,255,.35),0 0 18px rgba(83,245,255,.22)!important}
+
 /* RIVORA CYBER-OPS THEME — visual styling only; no external scripts or services. */
 :root{--bg:#030711;--panel:rgba(7,17,34,.94);--panel2:#091b2d;--cyan:#53f5ff;--purple:#b34dff;--text:#e8fbff;--muted:#91b3c2;--border:#16465a;--danger:#ff648d;--ok:#62ffc1}
 html{scroll-behavior:smooth}body{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background-color:var(--bg);background-image:linear-gradient(rgba(50,220,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(50,220,255,.045) 1px,transparent 1px),radial-gradient(ellipse at 15% 0%,rgba(0,220,255,.13),transparent 42%),radial-gradient(ellipse at 90% 25%,rgba(150,40,255,.12),transparent 38%);background-size:34px 34px,34px 34px,auto,auto;background-attachment:fixed}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(90,220,255,.018) 4px);opacity:.5}header,main,footer{position:relative;z-index:1}header{background:rgba(3,10,22,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(83,245,255,.35);box-shadow:0 8px 35px rgba(0,0,0,.35)}.logo{text-shadow:0 0 14px rgba(83,245,255,.7)}.heading small,.heading h1{ text-shadow:0 0 18px rgba(83,245,255,.24)}.heading h1{letter-spacing:-1px}.panel{background:linear-gradient(145deg,rgba(8,22,39,.96),rgba(5,13,28,.96));border:1px solid rgba(83,245,255,.22);border-radius:13px;box-shadow:0 0 0 1px rgba(83,245,255,.035),0 14px 38px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.025);position:relative;overflow:hidden}.panel:before{content:"";position:absolute;left:0;top:0;width:58px;height:2px;background:var(--cyan);box-shadow:0 0 13px var(--cyan)}.panel h2{color:var(--cyan);letter-spacing:.35px}input,textarea,select{background:#061525;border-color:#16465a;color:var(--text);font-family:inherit}input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(83,245,255,.1),0 0 17px rgba(83,245,255,.12)}button{font-family:inherit;letter-spacing:.35px;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 0 17px rgba(83,245,255,.17)}.primary{background:linear-gradient(100deg,#087d9a,#5425a6);border:1px solid rgba(83,245,255,.45);box-shadow:0 0 20px rgba(0,190,255,.12)}.secondary{border-color:rgba(83,245,255,.48);color:var(--cyan)}.pill{color:var(--ok);border-color:rgba(98,255,193,.4);background:rgba(98,255,193,.04)}.dashboard-card,.library-item,.publish-item,.media-card,.episode-card,.candidate{background:linear-gradient(145deg,#0a2033,#071322);border-color:#17485d}.dashboard-card strong{color:var(--cyan);text-shadow:0 0 14px rgba(83,245,255,.24)}.library-detail,.library-detail-cell{background:#04101d}.status{font-family:inherit}.draft-box-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.draft-box-toolbar .status{flex:1;min-width:180px}.draft-box-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:12px}.draft-card-wrap{display:flex;flex-direction:column;gap:7px;min-width:0}.draft-card{width:100%;display:flex;align-items:center;gap:13px;text-align:left;padding:12px;border:1px solid rgba(83,245,255,.25);border-radius:11px;background:linear-gradient(135deg,#0b263b,#071322);color:var(--text);min-width:0}.draft-delete-btn{width:100%;padding:8px 10px;border:1px solid rgba(255,100,141,.48);border-radius:8px;background:rgba(255,55,105,.08);color:#ff8aa8;font-size:11px;font-weight:700}.draft-delete-btn:disabled{opacity:.55;cursor:wait}.draft-card img{width:64px;height:88px;flex:0 0 64px;object-fit:cover;border-radius:6px;background:#020812;border:1px solid rgba(83,245,255,.25)}.draft-card-copy{min-width:0}.draft-card-copy strong{display:block;font-size:13px;line-height:1.5;overflow-wrap:anywhere;color:#e9fcff}.draft-card-copy small{display:block;margin-top:6px;color:var(--muted);font-size:11px;line-height:1.5}.draft-card:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.draft-empty{padding:16px;border:1px dashed #286078;border-radius:10px;color:var(--muted);grid-column:1/-1}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(90,220,255,.018) 4px);opacity:.5}header,main,footer{position:relative;z-index:1}header{background:rgba(3,10,22,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(83,245,255,.35);box-shadow:0 8px 35px rgba(0,0,0,.35)}.logo{text-shadow:0 0 14px rgba(83,245,255,.7)}.heading small,.heading h1{ text-shadow:0 0 18px rgba(83,245,255,.24)}.heading h1{letter-spacing:-1px}.panel{background:linear-gradient(145deg,rgba(8,22,39,.96),rgba(5,13,28,.96));border:1px solid rgba(83,245,255,.22);border-radius:13px;box-shadow:0 0 0 1px rgba(83,245,255,.035),0 14px 38px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.025);position:relative;overflow:hidden}.panel:before{content:"";position:absolute;left:0;top:0;width:58px;height:2px;background:var(--cyan);box-shadow:0 0 13px var(--cyan)}.panel h2{color:var(--cyan);letter-spacing:.35px}input,textarea,select{background:#061525;border-color:#16465a;color:var(--text);font-family:inherit}input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(83,245,255,.1),0 0 17px rgba(83,245,255,.12)}button{font-family:inherit;letter-spacing:.35px;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 0 17px rgba(83,245,255,.17)}.primary{background:linear-gradient(100deg,#087d9a,#5425a6);border:1px solid rgba(83,245,255,.45);box-shadow:0 0 20px rgba(0,190,255,.12)}.secondary{border-color:rgba(83,245,255,.48);color:var(--cyan)}.pill{color:var(--ok);border-color:rgba(98,255,193,.4);background:rgba(98,255,193,.04)}.dashboard-card,.library-item,.publish-item,.media-card,.episode-card,.candidate{background:linear-gradient(145deg,#0a2033,#071322);border-color:#17485d}.dashboard-card strong{color:var(--cyan);text-shadow:0 0 14px rgba(83,245,255,.24)}.library-detail,.library-detail-cell{background:#04101d}.status{font-family:inherit}.draft-box-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.draft-box-toolbar .status{flex:1;min-width:180px}.draft-box-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:12px}.draft-card-wrap{display:flex;flex-direction:column;gap:7px;min-width:0}.draft-card{width:100%;display:flex;align-items:center;gap:13px;text-align:left;padding:12px;border:1px solid rgba(83,245,255,.25);border-radius:11px;background:linear-gradient(135deg,#0b263b,#071322);color:var(--text);min-width:0}.draft-edit-btn{width:100%;padding:9px 10px;border:1px solid rgba(83,245,255,.5);border-radius:8px;background:rgba(20,145,190,.12);color:#7cf5ff;font-size:11px;font-weight:700}.draft-actions{display:grid;grid-template-columns:1fr;gap:7px}.draft-delete-btn{width:100%;padding:8px 10px;border:1px solid rgba(255,100,141,.48);border-radius:8px;background:rgba(255,55,105,.08);color:#ff8aa8;font-size:11px;font-weight:700}.draft-delete-btn:disabled{opacity:.55;cursor:wait}.draft-card img{width:64px;height:88px;flex:0 0 64px;object-fit:cover;border-radius:6px;background:#020812;border:1px solid rgba(83,245,255,.25)}.draft-card-copy{min-width:0}.draft-card-copy strong{display:block;font-size:13px;line-height:1.5;overflow-wrap:anywhere;color:#e9fcff}.draft-card-copy small{display:block;margin-top:6px;color:var(--muted);font-size:11px;line-height:1.5}.draft-card:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.draft-empty{padding:16px;border:1px dashed #286078;border-radius:10px;color:var(--muted);grid-column:1/-1}
 @media(max-width:600px){.draft-box-grid{grid-template-columns:1fr}.draft-card{padding:10px}.draft-card img{width:58px;height:80px;flex-basis:58px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 
 .ai-bot-nav{padding:12px;margin-bottom:18px}.ai-bot-nav .primary{margin:0}.ai-bot-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px;border:1px solid rgba(83,245,255,.2);border-radius:10px;background:#041321}.ai-feed-row{margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}.ai-feed-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:13px}.ai-feed-heading small{color:var(--cyan);letter-spacing:1.5px;font-size:10px}.ai-feed-heading h3{font-size:19px;margin:5px 0}.ai-feed-heading p,.ai-sublist h4{color:var(--muted);font-size:12px}.ai-sublist{margin-top:16px}.ai-sublist h4{margin-bottom:10px;color:var(--cyan)}.ai-movie-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.ai-movie-card{display:flex;gap:11px;padding:11px;border:1px solid rgba(83,245,255,.2);border-radius:10px;background:linear-gradient(140deg,#0a2033,#061321);min-width:0}.ai-movie-poster{width:78px;height:116px;flex:0 0 78px;object-fit:cover;border-radius:6px;background:#020812}.ai-movie-copy{min-width:0;flex:1}.ai-movie-copy h4{font-size:13px;line-height:1.45;overflow-wrap:anywhere}.ai-movie-meta{font-size:10px;color:var(--muted);line-height:1.6;margin-top:5px}.ai-movie-overview{font-size:11px;color:#c1cee0;line-height:1.5;margin-top:7px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.ai-movie-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.ai-movie-actions button{padding:7px 9px;font-size:10px}.ai-detail-box{margin-top:8px;padding:9px;border-radius:7px;background:#03101c;border:1px solid var(--border);font-size:11px;line-height:1.6;color:#d5e5f1;overflow-wrap:anywhere}.ai-empty{grid-column:1/-1;padding:14px;border:1px dashed #286078;border-radius:9px;color:var(--muted);font-size:12px}@media(max-width:600px){.ai-movie-grid{grid-template-columns:1fr}.ai-movie-poster{width:70px;height:105px;flex-basis:70px}.ai-bot-toolbar{align-items:stretch}.ai-bot-toolbar button{width:100%}}
+
+/* RIVORA NEXUS — full admin shell, cyberpunk + underground terminal */
+:root{--bg:#03040b;--panel:#090d1b;--panel2:#0d1428;--cyan:#42f4ff;--purple:#a855f7;--pink:#ed4cff;--text:#eef7ff;--muted:#91a2bd;--border:#202b4a;--ok:#42f5a7}
+body{background-color:#03040b;background-image:radial-gradient(ellipse at 78% 0%,rgba(119,35,205,.19),transparent 42%),radial-gradient(ellipse at 12% 22%,rgba(0,194,255,.12),transparent 38%),linear-gradient(rgba(72,116,190,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(72,116,190,.045) 1px,transparent 1px);background-size:auto,auto,32px 32px,32px 32px;background-attachment:fixed;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(115deg,transparent 0 48%,rgba(160,65,255,.025) 50%,transparent 52%);opacity:.8}
+header{min-height:76px;padding:12px clamp(16px,3vw,34px);position:sticky;top:0;z-index:20;background:rgba(3,6,17,.94);border-bottom:1px solid rgba(66,244,255,.25);backdrop-filter:blur(18px);box-shadow:0 8px 35px #0008}
+.logo{font-size:25px;letter-spacing:4px;color:#e9faff;text-shadow:0 0 13px #38eaff}.logo span{color:var(--pink)}header p{font-size:9px;letter-spacing:2px;color:#8da6c5}
+main{width:auto;max-width:none;margin:0 0 0 252px;padding:28px clamp(16px,3vw,38px) 50px;min-height:calc(100vh - 76px)}
+.nexus-sidebar{position:fixed;z-index:15;left:0;top:76px;bottom:0;width:232px;padding:22px 13px;background:linear-gradient(180deg,rgba(7,12,28,.98),rgba(4,7,17,.98));border-right:1px solid rgba(66,244,255,.2);box-shadow:12px 0 36px #0005;display:flex;flex-direction:column;gap:7px;overflow-y:auto}
+.nexus-sidebar.hidden{display:none!important}.nexus-side-label{padding:5px 12px 12px;color:#607b9d;font-size:9px;letter-spacing:2px}
+.nexus-nav{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:12px 13px;background:transparent;border:1px solid transparent;border-radius:9px;color:#a9bad2;font:600 11px ui-monospace,monospace;letter-spacing:.4px;transition:.18s}
+.nexus-nav span{width:19px;text-align:center;font-size:17px;color:#8f73ff}.nexus-nav:hover,.nexus-nav.active{color:#fff;border-color:rgba(78,225,255,.38);background:linear-gradient(100deg,rgba(0,193,255,.16),rgba(150,55,255,.2));box-shadow:inset 0 0 18px rgba(75,205,255,.07),0 0 16px rgba(145,50,255,.12)}.nexus-nav.active span{color:var(--cyan);text-shadow:0 0 12px var(--cyan)}.nexus-nav i{margin-left:auto;color:#56f6c3;font-style:normal;font-size:8px;border:1px solid #247b70;border-radius:20px;padding:3px 5px}
+.nexus-side-status{margin-top:auto;padding:13px 10px;border:1px solid rgba(66,244,255,.23);border-radius:10px;background:linear-gradient(120deg,#071a2b,#120c2a);display:flex;align-items:center;gap:10px}.nexus-side-status b,.nexus-side-status small{display:block}.nexus-side-status b{font-size:10px;color:#d9faff}.nexus-side-status small{font-size:8px;color:#7e9bb5;margin-top:4px;letter-spacing:1px}.nexus-pulse{width:8px;height:8px;border-radius:50%;background:#39f5a3;box-shadow:0 0 12px #39f5a3;flex:0 0 auto}
+.heading{padding:5px 0 18px;margin-bottom:15px}.heading small{font-size:9px;letter-spacing:2.5px;color:var(--cyan)}.heading h1{font-size:clamp(28px,4vw,43px);letter-spacing:-1.4px;background:linear-gradient(90deg,#e9fcff,#73eaff 45%,#d38cff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}.heading p{max-width:780px;font-size:12px;color:#91a4bd}
+.panel{padding:clamp(16px,2.1vw,25px);margin-bottom:17px;border-radius:13px;background:linear-gradient(145deg,rgba(9,17,36,.97),rgba(5,9,22,.98));border:1px solid rgba(81,126,190,.25);box-shadow:0 12px 34px #0005,inset 0 1px rgba(255,255,255,.025)}.panel:before{width:68px;background:linear-gradient(90deg,var(--cyan),var(--purple));box-shadow:0 0 14px var(--cyan)}.panel h2{font-size:16px;color:#e7faff;letter-spacing:.2px}
+.dashboard-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.dashboard-card{border-radius:11px;background:linear-gradient(145deg,#0c1b32,#090e20);border:1px solid #23385d;position:relative;overflow:hidden}.dashboard-card:after{content:"";position:absolute;right:-22px;bottom:-36px;width:90px;height:90px;border:1px solid rgba(165,78,255,.22);border-radius:50%;box-shadow:0 0 25px rgba(165,78,255,.1)}.dashboard-card strong{font-size:clamp(24px,3vw,34px);text-shadow:0 0 16px rgba(66,244,255,.35)}
+.dashboard-quick-actions{border-color:rgba(177,76,255,.48);background:linear-gradient(105deg,rgba(4,35,52,.96),rgba(29,10,53,.94));padding:18px}.dashboard-add-movie{min-width:154px;padding:14px 20px;border-radius:8px;background:linear-gradient(100deg,#087eaa,#5722bd 65%,#9a29c8);font-size:11px;letter-spacing:1px;box-shadow:0 0 23px rgba(91,82,255,.27),inset 0 0 12px #ffffff18}
+button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size:11px;letter-spacing:.3px}.preview-item,.candidate,.library-item,.publish-item,.media-card,.episode-card{border-radius:10px}
+.nav-view-hidden{display:none!important}#loginPanel{max-width:560px;margin:9vh auto 30px}#loginPanel .primary{min-height:48px}footer{margin-left:232px;border-top-color:rgba(66,244,255,.18);font-size:9px;letter-spacing:1px}
+@media(max-width:760px){header{padding:11px 15px}.nexus-sidebar{top:70px;bottom:auto;width:100%;height:auto;max-height:none;position:sticky;display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:8px;gap:6px;border-right:0;border-bottom:1px solid rgba(66,244,255,.2);background:rgba(4,8,20,.97)}.nexus-side-label,.nexus-side-status{display:none}.nexus-nav{width:auto;min-width:max-content;white-space:nowrap;padding:10px 12px;font-size:10px}.nexus-nav span{font-size:14px}.nexus-nav i{display:none}main{margin:0;padding:19px 12px 36px;min-height:calc(100vh - 120px)}footer{margin-left:0}.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.heading{padding-top:4px}}
+@media(max-width:420px){.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.dashboard-card{padding:12px}.dashboard-card strong{font-size:23px}.dashboard-quick-actions{align-items:stretch}.dashboard-add-movie{width:100%}.field-row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:no-preference){.panel{animation:nexusFade .28s ease both}@keyframes nexusFade{from{opacity:.7;transform:translateY(5px)}to{opacity:1;transform:none}}}
+
+
+/* RIVORA URL SHORTNER V1 + GENRE ENGINE V1 — admin-only management interface */
+.url-short-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.url-short-grid>div{min-width:0}.url-short-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.url-short-actions button{padding:9px 12px;font-size:11px}.url-short-card{padding:15px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,#0a2033,#071322);min-width:0}.url-short-card h3{font-size:14px;overflow-wrap:anywhere}.url-short-card p{font-size:11px;line-height:1.6;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}.url-short-link{color:var(--cyan)}.url-short-state{display:inline-block;margin-top:8px;padding:4px 8px;border:1px solid var(--border);border-radius:20px;font-size:10px}.url-short-state.active{color:var(--ok);border-color:#247b70}.url-short-state.disabled{color:var(--danger);border-color:#71344a}
+@media(max-width:600px){.url-short-grid{grid-template-columns:1fr}}
+
+
+/* AUTO CINEMATIC ASSET STUDIO V1 */
+.asset-studio-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin:14px 0}
+.asset-studio-toolbar label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+.asset-studio-toolbar select{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px}
+.asset-studio-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.asset-slot{min-width:0;padding:11px;border:1px solid rgba(83,245,255,.2);border-radius:10px;background:linear-gradient(145deg,#0a2033,#061321)}
+.asset-slot strong{display:block;font-size:12px;color:#e9fcff;margin-bottom:6px}
+.asset-slot small{display:block;color:var(--muted);font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+.asset-slot .slot-state{display:inline-block;margin-top:8px;padding:4px 7px;border:1px solid var(--border);border-radius:20px;font-size:10px;color:var(--muted)}
+.asset-studio-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.asset-studio-actions button{flex:1;min-width:160px}
+.asset-studio-note{padding:11px;border-left:3px solid var(--cyan);background:#041321;color:var(--muted);font-size:11px;line-height:1.6;margin:12px 0}
+@media(max-width:650px){.asset-studio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.asset-studio-toolbar{grid-template-columns:1fr}}
+
+/* RIVORA LINK HEALTH ADMIN V1 */
+.link-health-toolbar{display:grid;grid-template-columns:minmax(160px,220px) minmax(180px,250px) minmax(0,1fr);gap:14px;align-items:end;margin-top:16px}
+.link-health-toolbar select{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);color:var(--text)}
+.link-health-actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}.link-health-actions button{margin:0;width:auto;min-width:145px;font-size:10px}
+.link-health-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}
+.link-health-list,.link-health-runs{display:grid;gap:10px;margin-top:14px}
+.link-health-card,.link-health-run{padding:14px;border:1px solid rgba(66,244,255,.2);border-radius:10px;background:linear-gradient(145deg,#0a1930,#080d1d);min-width:0}
+.link-health-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.link-health-card h3{font-size:13px;line-height:1.5;overflow-wrap:anywhere;color:#eafaff}.link-health-meta{font-size:10px;line-height:1.7;color:var(--muted);overflow-wrap:anywhere;margin-top:7px}
+.link-health-state{display:inline-block;padding:5px 8px;border:1px solid var(--border);border-radius:30px;font-size:9px;text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
+.link-health-state.reachable{color:var(--ok);border-color:#247b70}.link-health-state.unavailable,.link-health-state.error,.link-health-state.timeout{color:var(--danger);border-color:#71344a}.link-health-state.blocked{color:#ffd27a;border-color:#80632e}.link-health-state.pending,.link-health-state.unsupported{color:#b8c9df}
+.link-health-url{display:block;margin-top:8px;color:var(--cyan);font-size:10px;overflow-wrap:anywhere;word-break:break-all}
+.link-health-edit{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.link-health-edit input{flex:1;min-width:180px;padding:10px;font-size:12px}.link-health-edit button{padding:9px 12px;font-size:10px}
+.link-health-buttons{display:flex;gap:8px;margin-top:10px}.link-health-buttons button{flex:1;padding:9px 12px;font-size:10px}.link-health-delete{border:1px solid #71344a;background:#28101b;color:#ff9bac}
+.link-health-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}.link-health-pagination button{width:auto;margin:0;font-size:10px}.link-health-pagination span{font-size:11px;color:var(--muted)}
+.link-health-subtitle{margin-top:25px;font-size:12px;letter-spacing:1px;color:var(--cyan)}.link-health-run{font-size:10px;line-height:1.7;color:var(--muted)}.link-health-empty{padding:18px;border:1px dashed var(--border);border-radius:9px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:700px){.link-health-toolbar{grid-template-columns:1fr}.link-health-actions{justify-content:stretch}.link-health-actions button{flex:1;min-width:0}.link-health-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
 <header>
-  <div><div class="logo">RIVORA<span>.</span></div><p>CYBER-OPS / MOVIE INTELLIGENCE SYSTEM</p></div>
-  <button class="logout hidden" id="logoutBtn" type="button">LOG OUT</button>
+  <div><div class="logo">RIVORA<span>.</span></div><p>RIVX · SECURE CONTROL SYSTEM</p></div>
+  <div class="rivx-header-actions">
+    <button class="secondary hidden" id="installRivxBtn" type="button">INSTALL RIVX</button>
+    <button class="logout hidden" id="logoutBtn" type="button">LOG OUT</button>
+  </div>
 </header>
+
+<aside class="nexus-sidebar hidden" id="nexusSidebar" aria-label="RIVORA admin navigation">
+  <div class="nexus-side-label">COMMAND MENU</div>
+  <button class="nexus-nav active" data-view="dashboard" type="button"><span>⌂</span> Dashboard</button>
+  <button class="nexus-nav" data-view="requests" type="button"><span>✉</span> Movie Requests</button>
+  <button class="nexus-nav" data-view="ai" type="button"><span>✧</span> AI Movie Intelligence <i>LIVE</i></button>
+  <button class="nexus-nav" data-view="movie" type="button"><span>▣</span> Movie Manager</button>
+  <button class="nexus-nav" data-view="series" type="button"><span>▦</span> Series Manager</button>
+  <button class="nexus-nav" data-view="drafts" type="button"><span>▤</span> Draft Box</button>
+  <button class="nexus-nav" data-view="library" type="button"><span>▧</span> Movie Library</button>
+  <button class="nexus-nav" data-view="publishing" type="button"><span>◈</span> Publishing Control</button>
+  <button class="nexus-nav" data-view="media" type="button"><span>▩</span> Media Assets</button>
+  <button class="nexus-nav" data-view="assetStudio" type="button"><span>✧</span> Auto Cinematic Studio <i>AI</i></button>
+  <button class="nexus-nav" data-view="shortner" type="button"><span>↗</span> URL Shortner</button>
+  <button class="nexus-nav" data-view="linkHealth" type="button"><span>⌁</span> Link Health <i>NEW</i></button>
+  <button class="nexus-nav" data-view="franchise" type="button"><span>◎</span> Franchise Explorer</button>
+  <div class="nexus-side-status"><span class="nexus-pulse"></span><div><b>RIVORA CORE</b><small>ADMIN SESSION ACTIVE</small></div></div>
+</aside>
+
 <main>
-<section class="heading">
-  <small>ADMIN CONTROL CENTER / CYBER-OPS V1.4</small>
+<section class="heading" id="nexusHeading">
+  <small>ADMIN CONTROL CENTER / CYBER-OPS V1.5 · GENRE ENGINE</small>
   <h1>Movie Intelligence</h1>
   <p>Discover movie information, review the returned metadata and approve it manually before any future save operation.</p>
 </section>
@@ -126,6 +233,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
     <div class="dashboard-card"><small>Total Series</small><strong id="statTotalSeries">—</strong></div>
     <div class="dashboard-card"><small>Total Episodes</small><strong id="statTotalEpisodes">—</strong></div>
     <div class="dashboard-card"><small>Storage Used</small><strong id="statStorageUsed">—</strong></div>
+  </div>
+  <div class="dashboard-quick-actions">
+    <div><strong>QUICK ACTION / MOVIE CREATION</strong><p>Search TMDB and auto-fill the available movie metadata before saving.</p></div>
+    <button class="dashboard-add-movie" id="dashboardAddMovieBtn" type="button">＋ ADD MOVIE</button>
   </div>
   <p class="status" id="dashboardStatus" aria-live="polite">Waiting for secure session…</p>
 </section>
@@ -206,6 +317,23 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
   <div class="library-pagination"><button class="secondary" id="mediaAssetPrevBtn" type="button" disabled>← PREVIOUS</button><span class="notice" id="mediaAssetPageText">Page 0 of 0</span><button class="secondary" id="mediaAssetNextBtn" type="button" disabled>NEXT →</button></div>
 </section>
 
+<section class="panel hidden" id="assetStudioPanel">
+  <div class="topline"><h2>04 / AUTO CINEMATIC ASSET STUDIO</h2><span class="spacer"></span><span class="pill">SMART ASSET ENGINE</span></div>
+  <p class="notice">हर मूवी के लिए मौजूदा Image Limit के अनुसार 8 Asset स्लॉट जाँचे जाएँगे। पहले से मौजूद सही इमेज सुरक्षित रहेंगी; केवल खाली या खराब स्लॉट के लिए जनरेशन होगी।</p>
+  <div class="asset-studio-note">8 स्लॉट: 1 Poster, 1 Primary Backdrop, 1 Thumbnail और 5 Screenshots। मौजूदा Image Limit नहीं बढ़ाई जाएगी।</div>
+  <div class="asset-studio-toolbar">
+    <div><label for="assetStudioMovie">मूवी चुनें</label><select id="assetStudioMovie"><option value="">पहले मूवी सूची लोड करें</option></select></div>
+    <button class="secondary" id="assetStudioRefreshBtn" type="button">↻ मूवी लोड करें</button>
+  </div>
+  <p class="status" id="assetStudioStatus" aria-live="polite">सुरक्षित Admin Login के बाद मूवी सूची लोड करें।</p>
+  <div class="asset-studio-grid" id="assetStudioSlots" aria-live="polite"></div>
+  <div class="asset-studio-actions">
+    <button class="primary" id="assetStudioGenerateBtn" type="button" disabled>खाली / खराब इमेज तैयार करें</button>
+    <button class="secondary" id="assetStudioRefreshStatusBtn" type="button" disabled>स्थिति फिर जाँचें</button>
+  </div>
+  <p class="notice">किसी स्लॉट का मैनुअल री-जेनरेशन केवल उसी चुने हुए स्लॉट को बदलेगा। बाकी सही इमेज सुरक्षित रहेंगी।</p>
+</section>
+
 <section class="panel hidden" id="searchPanel">
   <div class="topline"><h2>01 / Movie Search</h2><span class="spacer"></span><span class="pill">AUTHENTICATED</span></div>
   <label for="movieName">Movie Name</label><input id="movieName" type="text" maxlength="150" placeholder="Enter movie name">
@@ -216,7 +344,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
 
 <section class="panel hidden" id="seriesPanel">
   <div class="topline"><h2>02 / Hybrid Series Manager</h2><span class="spacer"></span><span class="pill">LOCAL DRAFT</span></div>
-  <p class="notice">Create a series, generate episodes in bulk, then edit any episode individually. Each episode supports up to 4 authorized URLs per quality. This stage keeps data in page memory only; it does not save to Supabase.</p>
+  <p class="notice">Create a series, generate episodes in bulk, then edit any episode individually. Each episode supports up to 4 authorized URLs per quality. Use Save to Draft to store the series and selected season in Supabase without publishing it.</p>
   <label for="seriesTitle">Series Name</label><input id="seriesTitle" maxlength="150" placeholder="Enter series name">
   <div class="field-row">
     <div><label for="seriesYear">Release Year</label><input id="seriesYear" type="number" min="1880" max="2100" placeholder="e.g. 2024"></div>
@@ -229,10 +357,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
   </div>
   <p class="status" id="seriesStatus" aria-live="polite">Enter series details and generate episodes.</p>
   <div id="episodesEditor"></div>
-  <button class="primary" id="seriesPreviewBtn" type="button">PREVIEW SERIES DRAFT →</button>
-  <button class="primary" id="seriesSaveDraftBtn" type="button">SAVE TO DRAFT</button>
+  <div class="series-toolbar">
+    <button class="primary" id="seriesPreviewBtn" type="button">PREVIEW SERIES DRAFT →</button>
+    <button class="secondary" id="seriesSaveDraftBtn" type="button">SAVE TO DRAFT</button>
+  </div>
   <div id="seriesPreview" class="candidate hidden"></div>
-  <p class="notice">Only use distribution URLs you are authorized to share. Save to Draft stores this series privately with status “draft”; it does not publish it to the public website.</p>
+  <p class="notice">Only use distribution URLs you are authorized to share. Saved series remain Draft and are not published.</p>
 </section>
 
 <section class="panel hidden" id="previewSection">
@@ -252,7 +382,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
   </div>
   <label for="uploadOverview">Overview</label><textarea id="uploadOverview" rows="4" maxlength="10000" placeholder="Movie synopsis..."></textarea>
   <div class="field-row">
-    <div><label for="uploadGenres">Genres (comma separated)</label><input id="uploadGenres" placeholder="Action, Adventure, Fantasy"></div>
+    <div><label for="uploadGenres">Genres (comma separated)</label><input id="uploadGenres" list="rivoraGenreSuggestions" placeholder="Action, Adventure, Fantasy"><datalist id="rivoraGenreSuggestions"><option value="Action"><option value="Adventure"><option value="Animation"><option value="Comedy"><option value="Crime"><option value="Documentary"><option value="Drama"><option value="Fantasy"><option value="Horror"><option value="Mystery"><option value="Romance"><option value="Sci-Fi"><option value="Science Fiction"><option value="Thriller"><option value="War"><option value="Western"></datalist><p class="notice">Genre Engine: names are normalized, duplicates are removed, and public filters are generated from Published movies only.</p></div>
     <div><label for="uploadCast">Cast (comma separated)</label><input id="uploadCast" placeholder="Actor 1, Actor 2"></div>
   </div>
   <div class="field-row">
@@ -277,12 +407,23 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
     </div>
     <p class="notice">Upload files up to 10 MB each, or paste public HTTPS image URLs. You can mix both methods. Use images you own or have permission to use. A URL must point directly to a publicly viewable image.</p>
   </div>
-  <div class="upload-panel">
-    <h3>Authorized Download Links</h3>
-    <label for="downloadLinks">One link per line: quality|HTTPS URL</label>
-    <textarea id="downloadLinks" rows="4" placeholder="720p|https://your-authorized-host.example/file
-1080p|https://your-authorized-host.example/file"></textarea>
-    <p class="notice">Supported qualities: 480p, 720p, 1080p, 2K, 4K. Do not add links to content you are not authorized to distribute.</p>
+  <div class="upload-panel" id="downloadQualityPanel">
+    <h3>Download Quality</h3>
+    <p class="notice">हर Quality के लिए अधिकतम 2 अलग-अलग HTTPS लिंक भरें। खाली बॉक्स सेव नहीं होंगे और Public Website पर केवल उपलब्ध Quality दिखाई देगी।</p>
+    <div class="rivora-quality-grid">
+      <div class="rivora-quality-card"><h4>480p</h4><input id="dlq_480p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_480p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>720p</h4><input id="dlq_720p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_720p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>720p HEVC</h4><input id="dlq_720pHEVC_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_720pHEVC_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p</h4><input id="dlq_1080p_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080p_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p HEVC</h4><input id="dlq_1080pHEVC_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080pHEVC_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p (10bit)</h4><input id="dlq_1080P_10bit_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080P_10bit_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>1080p HQ</h4><input id="dlq_1080pHQ_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_1080pHQ_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>4K</h4><input id="dlq_4k_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_4k_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+      <div class="rivora-quality-card"><h4>8K</h4><input id="dlq_8k_1" type="url" placeholder="Link 1 — HTTPS URL"><input id="dlq_8k_2" type="url" placeholder="Link 2 — HTTPS URL"></div>
+    </div>
+    <details class="rivora-legacy-quality"><summary>Legacy Quality Records (2K / 4K)</summary><label for="legacyDownloadLinks">पुराने 2K और uppercase 4K रिकॉर्ड</label><textarea id="legacyDownloadLinks" rows="2" placeholder="2K|https://authorized-host.example/file"></textarea></details>
+    <textarea id="downloadLinks" class="hidden" aria-hidden="true" tabindex="-1"></textarea>
+    <p class="notice">कुल 9 Qualities और 18 Link Boxes। पुराने 2K और 4K रिकॉर्ड भी सुरक्षित रहेंगे। केवल वही डाउनलोड लिंक जोड़ें जिन्हें साझा करने की स्पष्ट अनुमति आपके पास है।</p>
   </div>
   <div class="field-row" style="margin-top:18px">
     <button class="secondary" id="saveToDraftsBtn" type="button">SAVE TO DRAFTS</button>
@@ -291,6 +432,123 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
   <button class="small-btn hidden" id="cancelMovieEditBtn" type="button" style="width:100%;margin-top:10px">CANCEL EDITING</button>
   <p class="status" id="movieUploadStatus" aria-live="polite">Fill the movie details, then save it to Drafts or publish it.</p>
 </section>
+
+<section class="panel hidden" id="urlShortnerPanel">
+  <div class="topline"><h2>08 / RIVORA URL SHORTNER</h2><span class="spacer"></span><span class="pill">ADMIN CONTROL</span></div>
+  <p class="notice">Create and manage short links. Only an authenticated RIVORA admin session can change records. Public visitors can only use active redirects.</p>
+  <div class="url-short-grid">
+    <div><label for="shortTargetUrl">Destination HTTPS URL</label><input id="shortTargetUrl" type="url" inputmode="url" placeholder="https://example.com/page"></div>
+    <div><label for="shortAlias">Custom Alias (4–20 characters)</label><input id="shortAlias" type="text" minlength="4" maxlength="20" pattern="[a-z0-9][a-z0-9-]{3,19}" placeholder="my-link"></div>
+  </div>
+  <input id="shortEditId" type="hidden">
+  <div class="url-short-actions"><button class="primary" id="shortSaveBtn" type="button">＋ CREATE SHORT URL</button><button class="small-btn" id="shortCancelBtn" type="button" hidden>CANCEL EDIT</button><button class="secondary" id="shortRefreshBtn" type="button">↻ REFRESH HISTORY</button></div>
+  <p class="status" id="shortStatus" aria-live="polite">Waiting for secure admin session…</p>
+  <div class="dashboard-grid"><div class="dashboard-card"><small>Total Short URLs</small><strong id="shortTotalCount">—</strong></div><div class="dashboard-card"><small>Total Redirect Clicks</small><strong id="shortTotalClicks">—</strong></div></div>
+  <div class="library-list" id="shortUrlList" aria-live="polite"></div>
+</section>
+
+
+<section class="panel hidden" id="franchisePanel">
+  <div class="topline"><h2>11 / Franchise Explorer Manager</h2><span class="spacer"></span><span class="pill">SUPABASE · ADMIN API</span></div>
+  <p class="notice">Create franchises, connect existing movies, set viewing/story order and manage character appearances. Changes are saved through the authenticated Admin Edge Function.</p>
+  <div class="franchise-toolbar"><button class="primary" id="franchiseNewBtn" type="button">＋ NEW FRANCHISE</button><button class="secondary" id="franchiseRefreshBtn" type="button">↻ REFRESH</button></div>
+  <p class="status" id="franchiseStatus" aria-live="polite">Waiting for secure admin session…</p>
+  <div id="franchiseList" class="franchise-list"></div>
+  <div id="franchiseEditor" class="franchise-editor hidden">
+    <h3 id="franchiseEditorTitle">Create Franchise</h3>
+    <input id="franchiseId" type="hidden">
+    <div class="franchise-fields">
+      <label>Franchise Name<input id="franchiseName" maxlength="120" placeholder="e.g. The Wizarding World"></label>
+      <label>URL Slug<input id="franchiseSlug" maxlength="120" placeholder="the-wizarding-world"></label>
+      <label>Logo URL (optional)<input id="franchiseLogo" type="url" maxlength="2048" placeholder="https://..."></label>
+      <label>Poster URL (optional)<input id="franchisePoster" type="url" maxlength="2048" placeholder="https://..."></label>
+    </div>
+    <label>Description<textarea id="franchiseDescription" maxlength="12000" rows="3" placeholder="About this franchise…"></textarea></label>
+    <label class="franchise-check"><input id="franchisePublished" type="checkbox"> Publish this franchise</label>
+    <div class="franchise-actions"><button class="primary" id="franchiseSaveBtn" type="button">SAVE FRANCHISE</button><button class="secondary" id="franchiseCancelBtn" type="button">CANCEL</button></div>
+  </div>
+  <div id="franchiseManage" class="franchise-editor hidden">
+    <h3 id="franchiseManageTitle">Manage Franchise</h3>
+    <input id="manageFranchiseId" type="hidden">
+    <div class="franchise-subpanel">
+      <h4>Connect Existing Movie</h4>
+      <div class="franchise-fields">
+        <label>Movie<select id="franchiseMovieSelect"><option value="">Loading movies…</option></select></label>
+        <label>Connection Type<select id="franchiseConnectionType"><option value="main">Main Film</option><option value="sequel">Sequel</option><option value="prequel">Prequel</option><option value="spin_off">Spin-off</option><option value="crossover">Crossover</option></select></label>
+        <label>Viewing Order<input id="franchiseViewingOrder" type="number" min="1" max="999" value="1"></label>
+        <label>Story Order<input id="franchiseStoryOrder" type="number" min="1" max="999" value="1"></label>
+      </div>
+      <label>Notes (optional)<input id="franchiseMovieNotes" maxlength="2000" placeholder="Connection details"></label>
+      <button class="primary" id="franchiseAddMovieBtn" type="button">＋ CONNECT MOVIE</button>
+      <div id="franchiseLinkedMovies" class="franchise-record-list"></div>
+    </div>
+    <div class="franchise-subpanel">
+      <h4>Characters</h4>
+      <div class="franchise-fields">
+        <label>Character Name<input id="franchiseCharacterName" maxlength="120" placeholder="Character name"></label>
+        <label>Alias (optional)<input id="franchiseCharacterAlias" maxlength="120" placeholder="Alias"></label>
+        <label>Image URL (optional)<input id="franchiseCharacterImage" type="url" maxlength="2048" placeholder="https://..."></label>
+      </div>
+      <label>Description (optional)<textarea id="franchiseCharacterDescription" maxlength="4000" rows="2"></textarea></label>
+      <button class="primary" id="franchiseAddCharacterBtn" type="button">＋ ADD CHARACTER</button>
+      <div id="franchiseCharacters" class="franchise-record-list"></div>
+    </div>
+    <div class="franchise-subpanel">
+      <h4>Character → Movie Connection</h4>
+      <div class="franchise-fields">
+        <label>Character<select id="franchiseCharacterSelect"><option value="">Select character</option></select></label>
+        <label>Movie<select id="franchiseCharacterMovieSelect"><option value="">Select movie</option></select></label>
+        <label>Role<select id="franchiseCharacterRole"><option value="protagonist">Protagonist</option><option value="antagonist">Antagonist</option><option value="supporting" selected>Supporting</option><option value="cameo">Cameo</option></select></label>
+      </div>
+      <label>Relationship Note (optional)<input id="franchiseCharacterMovieNote" maxlength="2000" placeholder="How the character appears in this movie"></label>
+      <button class="primary" id="franchiseConnectCharacterBtn" type="button">CONNECT CHARACTER TO MOVIE</button>
+      <div id="franchiseCharacterConnections" class="franchise-record-list"></div>
+    </div>
+    <button class="secondary" id="franchiseManageCloseBtn" type="button">CLOSE MANAGER</button>
+  </div>
+</section>
+<style>
+.franchise-toolbar,.franchise-actions{display:flex;gap:9px;flex-wrap:wrap;margin:13px 0}
+.franchise-list,.franchise-record-list{display:grid;gap:10px;margin-top:12px}
+.franchise-item,.franchise-record{padding:13px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);min-width:0}
+.franchise-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.franchise-item h3,.franchise-editor h3{font-size:15px;color:var(--cyan)}
+.franchise-item p,.franchise-record p{font-size:11px;color:var(--muted);line-height:1.55;margin-top:5px;overflow-wrap:anywhere}
+.franchise-item-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.franchise-item-actions button,.franchise-record button{padding:8px 10px;font-size:11px}
+.franchise-editor{margin-top:16px;padding:15px;border:1px solid rgba(83,245,255,.3);border-radius:11px;background:#041321}
+.franchise-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.franchise-fields label,.franchise-editor>label{display:block;font-size:11px;color:var(--muted)}
+.franchise-fields input,.franchise-fields select,.franchise-editor input:not([type=checkbox]),.franchise-editor textarea{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);color:var(--text);min-width:0}
+.franchise-editor textarea{width:100%;margin:6px 0 12px}
+.franchise-check{display:flex!important;align-items:center;gap:8px;margin:12px 0}
+.franchise-subpanel{padding:13px;margin:14px 0;border:1px solid var(--border);border-radius:9px}
+.franchise-subpanel h4{color:var(--cyan);font-size:13px}
+.franchise-empty{padding:14px;border:1px dashed var(--border);border-radius:9px;color:var(--muted);font-size:12px}
+@media(max-width:520px){.franchise-fields{grid-template-columns:1fr}.franchise-actions button{flex:1}}
+</style>
+
+<section class="panel hidden" id="linkHealthPanel">
+  <div class="topline"><h2>12 / DOWNLOAD LINK HEALTH</h2><span class="spacer"></span><span class="pill">ADMIN ONLY</span></div>
+  <p class="notice">A link status is confirmed only after two consecutive matching checks. The latest raw probe and stable Link ID are shown separately so temporary scanner/network errors do not immediately flip a confirmed result. Blocked responses are not proof that a link is dead. Editing or deleting affects only the selected download link.</p>
+  <div class="link-health-toolbar">
+    <div><label for="linkHealthStatusFilter">Filter status</label><select id="linkHealthStatusFilter"><option value="">All statuses</option><option value="pending">Pending</option><option value="reachable">Reachable</option><option value="unavailable">Unavailable</option><option value="blocked">Blocked</option><option value="timeout">Timeout</option><option value="error">Error</option><option value="unsupported">Unsupported</option></select></div>
+    <div><label for="linkHealthMovieSelect">Scan one movie</label><select id="linkHealthMovieSelect"><option value="">Choose a movie…</option></select></div>
+    <div class="link-health-actions"><button class="secondary" id="linkHealthMovieScanBtn" type="button">▶ SCAN SELECTED MOVIE</button><button class="secondary" id="linkHealthRefreshBtn" type="button">↻ REFRESH REPORT</button><button class="primary" id="linkHealthScanBtn" type="button">▶ SCAN ALL MOVIES</button></div>
+  </div>
+  <p class="status" id="linkHealthStatus" aria-live="polite">Link Health report loads after secure admin login.</p>
+  <div class="link-health-stats" id="linkHealthStats">
+    <div class="dashboard-card"><small>Loaded links</small><strong id="lhTotal">—</strong></div>
+    <div class="dashboard-card"><small>Confirmed Reachable</small><strong id="lhReachable">—</strong></div>
+    <div class="dashboard-card"><small>Confirmed Unavailable</small><strong id="lhUnavailable">—</strong></div>
+    <div class="dashboard-card"><small>Confirmed Blocked</small><strong id="lhBlocked">—</strong></div>
+  </div>
+  <div class="link-health-list" id="linkHealthList" aria-live="polite"></div>
+  <div class="link-health-pagination"><button class="secondary" id="linkHealthPrevBtn" type="button">← PREVIOUS</button><span id="linkHealthPageLabel">Page 1</span><button class="secondary" id="linkHealthNextBtn" type="button">NEXT →</button></div>
+  <h3 class="link-health-subtitle">RECENT SCAN HISTORY</h3>
+  <div id="linkHealthRuns" class="link-health-runs"></div>
+</section>
+
 </main>
 <footer>RIVORA ADMIN INTELLIGENCE · ONE WORLD. ENDLESS CINEMA.</footer>
 
@@ -299,7 +557,7 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
 
 // Public project configuration only. Never put service_role or sb_secret keys here.
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
-const ADMIN_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/knowledge-graph";
+const ADMIN_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/RIVORA_Admin_Edge_Function_v2-ts";
 
 let adminSessionToken = null;
 const $ = id => document.getElementById(id);
@@ -343,12 +601,18 @@ async function postJson(url, body, token = null, needsPublicKey = false) {
   if (!response.ok) {
     if (response.status === 403 && data && typeof data.reason === "string") return data;
     const reason = data?.error || data?.message || data?.reason || `Request failed (HTTP ${response.status}).`;
-
-const detail = body?.action === "save_movie" && typeof data?.details === "string"
-  ? ` | Details: ${data.details}`
-  : "";
-
-throw new Error(String(reason) + detail);
+    const details = [];
+    if (body?.action === "save_movie" && typeof data?.details === "string") details.push(data.details);
+    if (Array.isArray(data?.outcomes)) {
+      for (const item of data.outcomes) {
+        if (item && item.status === "failed") {
+          const key = typeof item.asset_key === "string" ? item.asset_key : "unknown_asset";
+          const message = typeof item.message === "string" ? item.message : "No failure detail returned";
+          details.push(`${key}: ${message}`);
+        }
+      }
+    }
+    throw new Error(`${String(reason)}${details.length ? "\n" + details.join("\n") : ""}`);
   }
   return data;
 }
@@ -365,8 +629,12 @@ function clearSessionUI(message = "You are logged out.") {
   $("movieLibraryPanel").classList.add("hidden");
   $("publishingPanel").classList.add("hidden");
   $("mediaAssetPanel").classList.add("hidden");
+  $("assetStudioPanel").classList.add("hidden");
+  $("urlShortnerPanel").classList.add("hidden");
   $("seriesPanel").classList.add("hidden");
   $("movieUploadPanel").classList.add("hidden");
+  $("franchisePanel")?.classList.add("hidden");
+  $("linkHealthPanel")?.classList.add("hidden");
   $("previewSection").classList.add("hidden");
   $("logoutBtn").classList.add("hidden");
   $("adminPin").value = "";
@@ -383,6 +651,71 @@ function formatStorage(bytes) {
   while (size >= 1024 && unit < units.length - 1) { size /= 1024; unit++; }
   return `${size.toFixed(1)} ${units[unit]}`;
 }
+
+async function loadMovieRequests() {
+  if (!adminSessionToken) return;
+  setStatus("movieRequestsStatus", "Loading public movie requests…");
+  const button = $("movieRequestsRefreshBtn");
+  if (button) button.disabled = true;
+  try {
+    const result = await postJson(ADMIN_URL, { action: "list_movie_requests", limit: 200 }, adminSessionToken, true);
+    if (result.success !== true) throw new Error(result.error || "Requests unavailable.");
+    const root = $("movieRequestsList");
+    root.replaceChildren();
+    const rows = Array.isArray(result.requests) ? result.requests : [];
+    $("movieRequestCount").textContent = `${rows.length} / ${Number(result.total ?? rows.length)} REQUESTS`;
+    if (!rows.length) {
+      const empty = document.createElement("p");
+      empty.className = "notice";
+      empty.textContent = "No movie requests have been submitted yet.";
+      root.append(empty);
+    }
+    rows.forEach(request => {
+      const card = document.createElement("article");
+      card.className = "library-item";
+      const title = document.createElement("h3");
+      title.textContent = request.movie_name || "Untitled request";
+      const meta = document.createElement("p");
+      meta.textContent = `Release year: ${request.release_year || "—"} · Submitted: ${request.created_at ? new Date(request.created_at).toLocaleString() : "—"}`;
+      const controls = document.createElement("div");
+      controls.className = "media-card-actions";
+      const status = document.createElement("select");
+      status.setAttribute("aria-label", `Status for ${request.movie_name || "movie request"}`);
+      [["pending", "Pending"], ["reviewed", "Reviewed"], ["completed", "Completed"], ["rejected", "Rejected"]].forEach(([value, label]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        status.append(option);
+      });
+      status.value = request.status || "pending";
+      const save = document.createElement("button");
+      save.type = "button";
+      save.className = "secondary";
+      save.textContent = "SAVE STATUS";
+      save.addEventListener("click", async () => {
+        save.disabled = true;
+        try {
+          const updated = await postJson(ADMIN_URL, { action: "update_movie_request_status", request_id: request.id, status: status.value }, adminSessionToken, true);
+          if (updated.success !== true) throw new Error(updated.error || "Request status could not be updated.");
+          setStatus("movieRequestsStatus", `Updated: ${request.movie_name || "movie request"}`, "success");
+        } catch (error) {
+          setStatus("movieRequestsStatus", error.message || "Could not update request.", "error");
+        } finally {
+          save.disabled = false;
+        }
+      });
+      controls.append(status, save);
+      card.append(title, meta, controls);
+      root.append(card);
+    });
+    setStatus("movieRequestsStatus", `Loaded ${rows.length} request(s).`, "success");
+  } catch (error) {
+    setStatus("movieRequestsStatus", error.message || "Could not load movie requests.", "error");
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+$("movieRequestsRefreshBtn").addEventListener("click", loadMovieRequests);
 
 async function loadDashboard() {
   if (!adminSessionToken) return;
@@ -413,42 +746,6 @@ async function loadDashboard() {
 }
 
 $("dashboardRefreshBtn").addEventListener("click", loadDashboard);
-
-async function loadMovieRequests() {
-  if (!adminSessionToken) return;
-  setStatus("movieRequestsStatus", "Loading public movie requests…");
-  const button = $("movieRequestsRefreshBtn"); if (button) button.disabled = true;
-  try {
-    const result = await postJson(ADMIN_URL, { action: "list_movie_requests", limit: 200 }, adminSessionToken, true);
-    if (result.success !== true) throw new Error(result.error || "Requests unavailable.");
-    const root = $("movieRequestsList"); root.replaceChildren();
-    const rows = Array.isArray(result.requests) ? result.requests : [];
-    $("movieRequestCount").textContent = `${rows.length} / ${Number(result.total ?? rows.length)} REQUESTS`;
-    if (!rows.length) {
-      const empty = document.createElement("p"); empty.className = "notice"; empty.textContent = "No movie requests have been submitted yet."; root.append(empty);
-    }
-    rows.forEach(request => {
-      const card = document.createElement("article"); card.className = "library-item";
-      const title = document.createElement("h3"); title.textContent = request.movie_name || "Untitled request";
-      const meta = document.createElement("p"); meta.textContent = `Release year: ${request.release_year || "—"} · Submitted: ${request.created_at ? new Date(request.created_at).toLocaleString() : "—"}`;
-      const controls = document.createElement("div"); controls.className = "media-card-actions";
-      const status = document.createElement("select"); status.setAttribute("aria-label", `Status for ${request.movie_name || "movie request"}`);
-      [["pending","Pending"],["reviewed","Reviewed"],["completed","Completed"],["rejected","Rejected"]].forEach(([value,label])=>{const option=document.createElement("option");option.value=value;option.textContent=label;status.append(option)});
-      status.value = request.status || "pending";
-      const save = document.createElement("button"); save.type = "button"; save.className = "secondary"; save.textContent = "SAVE STATUS";
-      save.addEventListener("click", async () => {
-        save.disabled = true;
-        try { await postJson(ADMIN_URL, { action: "update_movie_request_status", request_id: request.id, status: status.value }, adminSessionToken, true); setStatus("movieRequestsStatus", `Updated: ${request.movie_name}`, "success"); }
-        catch (error) { setStatus("movieRequestsStatus", error.message || "Could not update request.", "error"); }
-        finally { save.disabled = false; }
-      });
-      controls.append(status, save); card.append(title, meta, controls); root.append(card);
-    });
-    setStatus("movieRequestsStatus", `Loaded ${rows.length} request(s).`, "success");
-  } catch (error) { setStatus("movieRequestsStatus", error.message || "Could not load movie requests.", "error"); }
-  finally { if (button) button.disabled = false; }
-}
-$("movieRequestsRefreshBtn").addEventListener("click", loadMovieRequests);
 
 // MOVIE LIBRARY MANAGER — all data requests use the authenticated Edge Function.
 const LIBRARY_PAGE_SIZE = 10;
@@ -664,11 +961,19 @@ Tap to open saved details and edit`));
     card.addEventListener("click", () => loadDraftIntoForm(movie, draftBoxImages, draftBoxLinks));
     wrap.append(card);
 
+    const actions = libraryElement("div", "draft-actions");
+    const editBtn = libraryElement("button", "draft-edit-btn", "✎ EDIT DRAFT");
+    editBtn.type = "button";
+    editBtn.setAttribute("aria-label", `Edit draft ${movie.title || "Untitled movie"}`);
+    editBtn.addEventListener("click", () => loadDraftIntoForm(movie, draftBoxImages, draftBoxLinks));
+    actions.append(editBtn);
+
     const deleteBtn = libraryElement("button", "draft-delete-btn", "✕ PERMANENTLY DELETE");
     deleteBtn.type = "button";
     deleteBtn.setAttribute("aria-label", `Permanently delete draft ${movie.title || "Untitled movie"}`);
     deleteBtn.addEventListener("click", () => permanentlyDeleteDraft(movie, deleteBtn));
-    wrap.append(deleteBtn);
+    actions.append(deleteBtn);
+    wrap.append(actions);
     list.append(wrap);
   }
 }
@@ -944,8 +1249,152 @@ async function loadAIMovieIntelligence() {
     $("aiBotUpdatedAt").textContent=`Last updated: ${new Date().toLocaleString()} · Source: TMDB`; setStatus("aiBotStatus","All three intelligence rows refreshed successfully.","success");
   } catch(error){setStatus("aiBotStatus",error.message||"Could not refresh movie intelligence.","error");} finally{btn.disabled=false;}
 }
-$("aiBotTabBtn").addEventListener("click",()=>$("aiMovieBotPanel").scrollIntoView({behavior:"smooth",block:"start"}));
+$("aiBotTabBtn").addEventListener("click",()=>{
+  if (typeof window.rivoraNexusShowView === "function") window.rivoraNexusShowView("ai");
+  else {
+    $("aiMovieBotPanel").classList.remove("hidden","nav-view-hidden");
+    $("aiMovieBotPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+});
 $("aiBotRefreshBtn").addEventListener("click",loadAIMovieIntelligence);
+
+// RIVORA URL SHORTNER — management calls use the existing in-memory admin session.
+const SHORTNER_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/rivora-url-shortner";
+const SHORTNER_BASE = SHORTNER_URL + "/";
+let shortUrlRows = [];
+async function shortnerRequest(body) {
+  if (!adminSessionToken) throw new Error("Admin session missing. Please log in again.");
+  const response = await fetch(SHORTNER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_PUBLISHABLE_KEY,
+      "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+      "x-rivora-admin-session": adminSessionToken
+    },
+    body: JSON.stringify(body),
+    cache: "no-store"
+  });
+  const raw = await response.text();
+  let data;
+  try { data = raw ? JSON.parse(raw) : {}; }
+  catch { throw new Error(`Shortener returned invalid response (HTTP ${response.status}).`); }
+  if (!response.ok) throw new Error(data.error || `Shortener request failed (HTTP ${response.status}).`);
+  return data;
+}
+function shortNode(tag, cls, value) {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (value !== undefined && value !== null) node.textContent = String(value);
+  return node;
+}
+function resetShortForm() {
+  $("shortEditId").value = "";
+  $("shortTargetUrl").value = "";
+  $("shortAlias").value = "";
+  $("shortSaveBtn").textContent = "＋ CREATE SHORT URL";
+  $("shortCancelBtn").hidden = true;
+}
+function renderShortUrls() {
+  const list = $("shortUrlList");
+  list.replaceChildren();
+  $("shortTotalCount").textContent = shortUrlRows.length.toLocaleString();
+  $("shortTotalClicks").textContent = shortUrlRows.reduce((sum, row) => sum + Number(row.click_count || 0), 0).toLocaleString();
+  if (!shortUrlRows.length) {
+    list.append(shortNode("p", "notice", "No short URLs yet. Create your first short link above."));
+    return;
+  }
+  for (const row of shortUrlRows) {
+    const card = shortNode("article", "url-short-card");
+    card.append(shortNode("h3", "", row.slug));
+    const shortLink = SHORTNER_BASE + encodeURIComponent(row.slug);
+    const link = shortNode("p", "url-short-link", shortLink);
+    card.append(link);
+    card.append(shortNode("p", "", `Destination: ${row.target_url}`));
+    card.append(shortNode("p", "", `Clicks: ${Number(row.click_count || 0).toLocaleString()} · Created: ${row.created_at ? new Date(row.created_at).toLocaleString() : "Unknown"}`));
+    if (row.last_clicked_at) card.append(shortNode("p", "", `Last clicked: ${new Date(row.last_clicked_at).toLocaleString()}`));
+    card.append(shortNode("span", `url-short-state ${row.is_active ? "active" : "disabled"}`, row.is_active ? "ACTIVE" : "DISABLED"));
+    const actions = shortNode("div", "url-short-actions");
+    const addButton = (label, cls, handler) => {
+      const button = shortNode("button", cls, label);
+      button.type = "button";
+      button.addEventListener("click", handler);
+      actions.append(button);
+    };
+    addButton("COPY LINK", "secondary", async () => {
+      try { await navigator.clipboard.writeText(shortLink); setStatus("shortStatus", `Copied ${shortLink}`, "success"); }
+      catch { setStatus("shortStatus", "Clipboard access blocked. Select and copy the link manually.", "error"); }
+    });
+    addButton("EDIT", "small-btn", () => {
+      $("shortEditId").value = row.id;
+      $("shortTargetUrl").value = row.target_url;
+      $("shortAlias").value = row.slug;
+      $("shortSaveBtn").textContent = "SAVE URL CHANGES";
+      $("shortCancelBtn").hidden = false;
+      $("shortTargetUrl").scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    addButton(row.is_active ? "DISABLE" : "ENABLE", "small-btn", async () => {
+      if (!window.confirm(`${row.is_active ? "Disable" : "Enable"} short link “${row.slug}”?`)) return;
+      try {
+        await shortnerRequest({ action: "set_active", id: row.id, is_active: !row.is_active });
+        setStatus("shortStatus", `Link ${row.slug} updated.`, "success");
+        await loadShortUrls();
+      } catch (error) { setStatus("shortStatus", error.message, "error"); }
+    });
+    addButton("DELETE", "library-danger", async () => {
+      if (!window.confirm(`Permanently delete short link “${row.slug}”? This cannot be undone.`)) return;
+      try {
+        await shortnerRequest({ action: "delete", id: row.id });
+        setStatus("shortStatus", `Link ${row.slug} deleted.`, "success");
+        await loadShortUrls();
+      } catch (error) { setStatus("shortStatus", error.message, "error"); }
+    });
+    card.append(actions);
+    list.append(card);
+  }
+}
+async function loadShortUrls() {
+  if (!adminSessionToken) return;
+  const refresh = $("shortRefreshBtn");
+  refresh.disabled = true;
+  setStatus("shortStatus", "Loading URL history securely…");
+  try {
+    const result = await shortnerRequest({ action: "list" });
+    if (result.success !== true || !Array.isArray(result.urls)) throw new Error(result.error || "URL history response was incomplete.");
+    shortUrlRows = result.urls;
+    renderShortUrls();
+    setStatus("shortStatus", `${shortUrlRows.length} short URL(s) loaded.`, "success");
+  } catch (error) {
+    setStatus("shortStatus", error.message || "Could not load short URL history.", "error");
+  } finally { refresh.disabled = false; }
+}
+$("shortSaveBtn").addEventListener("click", async () => {
+  const id = $("shortEditId").value;
+  const slug = $("shortAlias").value.trim().toLowerCase();
+  const target_url = $("shortTargetUrl").value.trim();
+  if (!/^[a-z0-9][a-z0-9-]{3,19}$/.test(slug)) {
+    setStatus("shortStatus", "Alias must be 4–20 characters: lowercase letters, numbers and hyphens only.", "error"); return;
+  }
+  try {
+    const parsed = new URL(target_url);
+    if (parsed.protocol !== "https:" || parsed.username || parsed.password) throw new Error("Enter a valid HTTPS destination URL without embedded credentials.");
+  } catch (error) {
+    setStatus("shortStatus", error.message || "Enter a valid HTTPS destination URL.", "error"); return;
+  }
+  const button = $("shortSaveBtn"); button.disabled = true;
+  try {
+    const result = await shortnerRequest(id
+      ? { action: "update", id, slug, target_url }
+      : { action: "create", slug, target_url });
+    if (result.success !== true) throw new Error(result.error || "Could not save short URL.");
+    resetShortForm();
+    setStatus("shortStatus", id ? "Short URL updated successfully." : "Short URL created successfully.", "success");
+    await loadShortUrls();
+  } catch (error) { setStatus("shortStatus", error.message || "Could not save short URL.", "error"); }
+  finally { button.disabled = false; }
+});
+$("shortCancelBtn").addEventListener("click", resetShortForm);
+$("shortRefreshBtn").addEventListener("click", loadShortUrls);
 
 $("loginBtn").addEventListener("click", async () => {
   const pin = $("adminPin").value.trim();
@@ -990,9 +1439,19 @@ $("loginBtn").addEventListener("click", async () => {
     loadPublishingQueue();
     $("mediaAssetPanel").classList.remove("hidden");
     loadMediaAssets(0);
+    $("assetStudioPanel").classList.remove("hidden");
+    loadAssetStudioMovies();
+    $("urlShortnerPanel").classList.remove("hidden");
     $("seriesPanel").classList.remove("hidden");
     $("movieUploadPanel").classList.remove("hidden");
+    $("franchisePanel")?.classList.remove("hidden");
+    $("linkHealthPanel")?.classList.remove("hidden");
     $("logoutBtn").classList.remove("hidden");
+    // Reveal navigation only after the server confirms the asynchronous login.
+    $("nexusSidebar")?.classList.remove("hidden");
+    if (typeof window.rivoraNexusShowView === "function") {
+      window.rivoraNexusShowView("dashboard");
+    }
     setStatus("searchStatus",
       `Secure session active${result.expires_at ? ". Expires: " + new Date(result.expires_at).toLocaleString() : "."}`,
       "success"
@@ -1081,6 +1540,18 @@ function renderMetadata(data) {
   summary.append(title, detail);
   $("previewSection").classList.remove("hidden");
 }
+
+$("dashboardAddMovieBtn").addEventListener("click", () => {
+  if (!adminSessionToken) {
+    setStatus("dashboardStatus", "Secure admin login is required before adding a movie.", "error");
+    return;
+  }
+  // Keep the existing TMDB-backed search and upload workflow intact.
+  $("searchPanel").classList.remove("hidden");
+  $("searchPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("movieName").focus({ preventScroll: true });
+  setStatus("searchStatus", "Enter a movie title (and optional year). TMDB will fill the available metadata for review; nothing is saved automatically.", "success");
+});
 
 $("searchBtn").addEventListener("click", async () => {
   if (!adminSessionToken) {
@@ -1192,8 +1663,27 @@ async function uploadImageFile(file) {
 }
 
 function splitList(value) { return value.split(",").map(v => v.trim()).filter(Boolean); }
+function normalizeGenreList(value) {
+  const aliases = new Map([["sci-fi", "Sci-Fi"], ["sci fi", "Sci-Fi"], ["science fiction", "Sci-Fi"], ["rom-com", "Romance"], ["rom com", "Romance"]]);
+  const seen = new Set();
+  return splitList(value).map(raw => {
+    const clean = raw.replace(/\s+/g, " ").trim();
+    const key = clean.toLocaleLowerCase();
+    if (!clean) return "";
+    if (aliases.has(key)) return aliases.get(key);
+    return clean.split(/([\s-]+)/).map(part => /^[\s-]+$/.test(part) ? part :
+      part.charAt(0).toLocaleUpperCase() + part.slice(1).toLocaleLowerCase()).join("");
+  }).filter(name => {
+    const key = name.toLocaleLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key); return true;
+  }).slice(0, 40);
+}
 
 let editingDraftId = null;
+// Preserve database row IDs while a saved Draft is being edited.
+let editingDraftImageRows = [];
+let editingDraftDownloadRows = [];
 
 function setMovieFormMode(movie = null) {
   editingDraftId = movie?.id || null;
@@ -1202,7 +1692,7 @@ function setMovieFormMode(movie = null) {
     : "New movie · Choose how to save it after reviewing all details.";
   $("cancelMovieEditBtn").classList.toggle("hidden", !movie);
   $("saveToDraftsBtn").textContent = movie ? "UPDATE TO DRAFT" : "SAVE TO DRAFTS";
-  $("publishToPublicBtn").textContent = "PUBLISH TO PUBLIC";
+  $("publishToPublicBtn").textContent = movie ? "UPDATE & PUBLISH" : "PUBLISH TO PUBLIC";
 }
 
 function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = libraryLinks) {
@@ -1212,6 +1702,8 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   }
   const imageRows = sourceImages.filter(row => row.movie_id === movie.id);
   const links = sourceLinks.filter(row => row.movie_id === movie.id);
+  editingDraftImageRows = imageRows.map(row => ({ ...row }));
+  editingDraftDownloadRows = links.map(row => ({ ...row }));
   $("uploadTitle").value = movie.title || "";
   $("uploadYear").value = movie.release_year || "";
   $("uploadRuntime").value = movie.runtime || "";
@@ -1225,15 +1717,71 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   $("backdropUrl").value = libraryImageUrl(movie.backdrop_path);
   $("thumbnailUrls").value = imageRows.filter(row => row.image_type === "thumbnail").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
   $("screenshotUrls").value = imageRows.filter(row => row.image_type === "screenshot").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
-  $("downloadLinks").value = links.map(link => `${link.quality}|${link.download_url}`).join("\n");
+  loadDownloadQualityFields(links);
   ["posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   setMovieFormMode(movie);
   setStatus("movieUploadStatus", `Draft loaded: ${movie.title}. Review or edit the details, then Update Draft or Update & Publish.`, "success");
+  if (typeof window.rivoraNexusShowView === "function") {
+    window.rivoraNexusShowView("movie");
+  }
+  $("movieUploadPanel").classList.remove("hidden", "nav-view-hidden");
   $("movieUploadPanel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+const RIVORA_QUALITY_FIELDS = [
+  { quality: "480p", ids: ["dlq_480p_1", "dlq_480p_2"] },
+  { quality: "720p", ids: ["dlq_720p_1", "dlq_720p_2"] },
+  { quality: "720pHEVC", ids: ["dlq_720pHEVC_1", "dlq_720pHEVC_2"] },
+  { quality: "1080p", ids: ["dlq_1080p_1", "dlq_1080p_2"] },
+  { quality: "1080pHEVC", ids: ["dlq_1080pHEVC_1", "dlq_1080pHEVC_2"] },
+  { quality: "1080P(10bit)", ids: ["dlq_1080P_10bit_1", "dlq_1080P_10bit_2"] },
+  { quality: "1080p HQ", ids: ["dlq_1080pHQ_1", "dlq_1080pHQ_2"] },
+  { quality: "4k", ids: ["dlq_4k_1", "dlq_4k_2"] },
+  { quality: "8k", ids: ["dlq_8k_1", "dlq_8k_2"] }
+];
+
+function loadDownloadQualityFields(linkRows) {
+  const rows = Array.isArray(linkRows) ? linkRows : [];
+  const grouped = new Map();
+  const legacy = [];
+  for (const row of rows) {
+    const quality = String(row?.quality || "").trim();
+    const url = String(row?.download_url || "").trim();
+    if (!quality || !url) continue;
+    if (quality === "2K" || quality === "4K") { legacy.push(`${quality}|${url}`); continue; }
+    const field = RIVORA_QUALITY_FIELDS.find(item => item.quality === quality);
+    if (!field) { legacy.push(`${quality}|${url}`); continue; }
+    if (!grouped.has(quality)) grouped.set(quality, []);
+    grouped.get(quality).push(url);
+  }
+  for (const field of RIVORA_QUALITY_FIELDS) {
+    field.ids.forEach((id, index) => { $(id).value = grouped.get(field.quality)?.[index] || ""; });
+  }
+  $("legacyDownloadLinks").value = legacy.join("\n");
+  syncDownloadQualityFields();
+}
+
+function syncDownloadQualityFields() {
+  const lines = [];
+  for (const field of RIVORA_QUALITY_FIELDS) {
+    for (const id of field.ids) {
+      const value = $(id).value.trim();
+      if (value) lines.push(`${field.quality}|${value}`);
+    }
+  }
+  const legacyLines = $("legacyDownloadLinks").value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  $("downloadLinks").value = [...lines, ...legacyLines].join("\n");
+}
+
+for (const field of RIVORA_QUALITY_FIELDS) {
+  for (const id of field.ids) $(id).addEventListener("input", syncDownloadQualityFields);
+}
+$("legacyDownloadLinks").addEventListener("input", syncDownloadQualityFields);
+
 function resetMovieForm() {
-  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "legacyDownloadLinks", ...RIVORA_QUALITY_FIELDS.flatMap(field => field.ids), "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  editingDraftImageRows = [];
+  editingDraftDownloadRows = [];
   setMovieFormMode(null);
   setStatus("movieUploadStatus", "Form reset. You can add a new movie.");
 }
@@ -1253,32 +1801,57 @@ async function submitMovieWithStatus(targetStatus) {
   if (rating !== null && (!Number.isFinite(rating) || rating < 0 || rating > 10)) {
     setStatus("movieUploadStatus", "Rating must be between 0 and 10.", "error"); return;
   }
-  const downloadLinks = [];
-  const rawLinks = $("downloadLinks").value.split("\n").map(v => v.trim()).filter(Boolean);
+
+  syncDownloadQualityFields();
+  const supportedQualities = [
+    "480p", "720p", "720pHEVC", "1080p", "1080pHEVC",
+    "1080P(10bit)", "1080p HQ", "4k", "8k", "2K", "4K"
+  ];
+  const newQualityLabels = [
+    "480p", "720p", "720pHEVC", "1080p", "1080pHEVC",
+    "1080P(10bit)", "1080p HQ", "4k", "8k"
+  ];
+  const parsedLinks = [];
+  const rawLinks = $("downloadLinks").value.split(/\r?\n/).map(v => v.trim()).filter(Boolean);
+  const qualityCounts = new Map();
   for (const line of rawLinks) {
     const splitAt = line.indexOf("|");
     if (splitAt < 1) { setStatus("movieUploadStatus", `Invalid download link line: ${line}`, "error"); return; }
     const quality = line.slice(0, splitAt).trim();
     const download_url = line.slice(splitAt + 1).trim();
-    try { if (!new URL(download_url) || new URL(download_url).protocol !== "https:") throw new Error(); }
-    catch { setStatus("movieUploadStatus", `Only valid HTTPS links are accepted: ${download_url}`, "error"); return; }
-    if (!["480p", "720p", "1080p", "2K", "4K"].includes(quality)) { setStatus("movieUploadStatus", `Unsupported quality: ${quality}`, "error"); return; }
-    downloadLinks.push({ quality, download_url });
+    if (!supportedQualities.includes(quality)) {
+      setStatus("movieUploadStatus", `Unsupported quality: ${quality}`, "error"); return;
+    }
+    try {
+      const parsed = new URL(download_url);
+      if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) throw new Error();
+    } catch {
+      setStatus("movieUploadStatus", `Only valid HTTPS links are accepted: ${download_url}`, "error"); return;
+    }
+    qualityCounts.set(quality, (qualityCounts.get(quality) || 0) + 1);
+    if (newQualityLabels.includes(quality) && qualityCounts.get(quality) > 2) {
+      setStatus("movieUploadStatus", `Maximum 2 download links allowed for ${quality}.`, "error"); return;
+    }
+    parsedLinks.push({ quality, download_url });
   }
-  if (downloadLinks.length > 20) { setStatus("movieUploadStatus", "Maximum 20 download links allowed.", "error"); return; }
+  if (parsedLinks.length > 20) {
+    setStatus("movieUploadStatus", "Maximum 20 download links allowed by the current database function.", "error"); return;
+  }
 
   if (targetStatus === "published" && !window.confirm(`Publish “${title}” to the public RIVORA website now?`)) return;
   const buttons = [$("saveToDraftsBtn"), $("publishToPublicBtn")];
   buttons.forEach(button => button.disabled = true);
-  const images = []; let posterPath = null; let backdropPath = null;
+
   try {
     setStatus("movieUploadStatus", "Uploading poster and backdrop securely...");
     const posterFile = $("posterFile").files[0];
     const backdropFile = $("backdropFile").files[0];
-    if (posterFile) posterPath = await uploadImageFile(posterFile);
-    else posterPath = validatePublicImageUrl($("posterUrl").value, "Poster");
-    if (backdropFile) backdropPath = await uploadImageFile(backdropFile);
-    else backdropPath = validatePublicImageUrl($("backdropUrl").value, "Backdrop");
+    const posterPath = posterFile
+      ? await uploadImageFile(posterFile)
+      : validatePublicImageUrl($("posterUrl").value, "Poster");
+    const backdropPath = backdropFile
+      ? await uploadImageFile(backdropFile)
+      : validatePublicImageUrl($("backdropUrl").value, "Backdrop");
 
     const thumbnailFiles = Array.from($("thumbnailFiles").files);
     const screenshotFiles = Array.from($("screenshotFiles").files);
@@ -1293,21 +1866,82 @@ async function submitMovieWithStatus(targetStatus) {
     });
     const thumbnailUrls = parseImageUrls("thumbnailUrls", "Thumbnail");
     const screenshotUrls = parseImageUrls("screenshotUrls", "Screenshot");
-    if (thumbnailFiles.length + screenshotFiles.length + thumbnailUrls.length + screenshotUrls.length > 30) {
-      throw new Error("Maximum 30 thumbnails and screenshots combined (uploads + URLs).");
+    const thumbnailTotal = thumbnailFiles.length + thumbnailUrls.length;
+    const screenshotTotal = screenshotFiles.length + screenshotUrls.length;
+    if (thumbnailTotal > 1) throw new Error("इस मूवी के लिए केवल 1 Thumbnail स्लॉट उपलब्ध है।");
+    if (screenshotTotal > 5) throw new Error("इस मूवी के लिए अधिकतम 5 Screenshot स्लॉट उपलब्ध हैं।");
+
+    const images = [];
+    const usedImageIds = new Set();
+    const oldRows = Array.isArray(editingDraftImageRows) ? editingDraftImageRows : [];
+    const oldThumbnail = oldRows.filter(row => row.image_type === "thumbnail").sort((a,b) => Number(a.display_order)-Number(b.display_order));
+    const oldScreenshots = oldRows.filter(row => row.image_type === "screenshot").sort((a,b) => Number(a.display_order)-Number(b.display_order));
+    const oldHiddenRows = oldRows.filter(row => !["thumbnail", "screenshot"].includes(row.image_type));
+
+    const originalPathFor = (row, shownValue) => {
+      if (!row || !shownValue) return shownValue;
+      const displayed = libraryImageUrl(row.image_path);
+      return displayed === shownValue ? row.image_path : shownValue;
+    };
+    const appendImageSlot = async (file, url, type, order, oldRow) => {
+      let imagePath = null;
+      if (file) {
+        setStatus("movieUploadStatus", `${type === "thumbnail" ? "Thumbnail" : `Screenshot ${order - 2}`} अपलोड हो रहा है…`);
+        imagePath = await uploadImageFile(file);
+      } else if (url) {
+        imagePath = originalPathFor(oldRow, url);
+      }
+      if (!imagePath) return;
+      const row = { image_path: imagePath, image_type: type, display_order: order };
+      if (oldRow?.id) { row.id = oldRow.id; usedImageIds.add(oldRow.id); }
+      images.push(row);
+    };
+
+    if (thumbnailFiles[0] || thumbnailUrls[0]) {
+      await appendImageSlot(thumbnailFiles[0] || null, thumbnailUrls[0] || null, "thumbnail", 1, oldThumbnail[0] || null);
     }
-    let order = 0;
-    for (const file of thumbnailFiles) {
-      setStatus("movieUploadStatus", `Uploading thumbnail file ${order + 1}/${thumbnailFiles.length}...`);
-      images.push({ image_path: await uploadImageFile(file), image_type: "thumbnail", display_order: order++ });
+    for (let i = 0; i < screenshotTotal; i++) {
+      const file = screenshotFiles[i] || null;
+      const url = screenshotUrls[i - screenshotFiles.length] || null;
+      await appendImageSlot(file, url, "screenshot", i + 3, oldScreenshots[i] || null);
     }
-    for (const url of thumbnailUrls) images.push({ image_path: url, image_type: "thumbnail", display_order: order++ });
-    order = 0;
-    for (const file of screenshotFiles) {
-      setStatus("movieUploadStatus", `Uploading screenshot file ${order + 1}/${screenshotFiles.length}...`);
-      images.push({ image_path: await uploadImageFile(file), image_type: "screenshot", display_order: order++ });
+
+    // Preserve non-editor image rows (e.g. backdrop records) without changing their IDs.
+    for (const row of oldHiddenRows) {
+      if (!row?.id) continue;
+      images.push({
+        id: row.id,
+        image_path: row.image_path,
+        image_type: row.image_type,
+        display_order: Number(row.display_order)
+      });
+      usedImageIds.add(row.id);
     }
-    for (const url of screenshotUrls) images.push({ image_path: url, image_type: "screenshot", display_order: order++ });
+
+    // Only explicitly removed image rows are sent as deletions.
+    for (const row of oldRows) {
+      if (row?.id && !usedImageIds.has(row.id)) images.push({ id: row.id, _delete: true });
+    }
+
+    // Match download links by exact content first, then by same quality, then same prior position.
+    // This keeps the database row ID stable when a URL is edited or lines are reordered.
+    const oldLinks = Array.isArray(editingDraftDownloadRows) ? editingDraftDownloadRows : [];
+    const usedLinkIds = new Set();
+    const downloadLinks = parsedLinks.map((entry, index) => {
+      let match = oldLinks.find(row => row?.id && !usedLinkIds.has(row.id) && row.quality === entry.quality && row.download_url === entry.download_url);
+      if (!match) match = oldLinks.find(row => row?.id && !usedLinkIds.has(row.id) && row.quality === entry.quality);
+      if (!match && oldLinks[index]?.id && !usedLinkIds.has(oldLinks[index].id)) match = oldLinks[index];
+      // If that positional row was already matched by an exact/same-quality entry,
+      // reuse another unmatched old row before creating a new row. This keeps the
+      // RPC operation array within the database's 20-item limit.
+      if (!match) match = oldLinks.find(row => row?.id && !usedLinkIds.has(row.id));
+      if (match?.id) usedLinkIds.add(match.id);
+      return { ...(match?.id ? { id: match.id } : {}), ...entry };
+    });
+    // A removed line is an explicit deletion; all other saved links retain their IDs.
+    for (const row of oldLinks) {
+      if (row?.id && !usedLinkIds.has(row.id)) downloadLinks.push({ id: row.id, _delete: true });
+    }
 
     const payload = {
       action: editingDraftId ? "update_movie" : "save_movie",
@@ -1315,13 +1949,15 @@ async function submitMovieWithStatus(targetStatus) {
       title, release_year: year,
       overview: $("uploadOverview").value.trim(),
       runtime: $("uploadRuntime").value.trim() || null,
-      genres: splitList($("uploadGenres").value),
+      genres: normalizeGenreList($("uploadGenres").value),
       cast_members: splitList($("uploadCast").value),
       rating, tmdb_id: $("uploadTmdb").value.trim() || null,
       trailer_url: $("uploadTrailer").value.trim() || null,
       status: targetStatus,
-      poster_path: posterPath, backdrop_path: backdropPath, images, download_links: downloadLinks
+      poster_path: posterPath, backdrop_path: backdropPath,
+      images, download_links: downloadLinks
     };
+
     setStatus("movieUploadStatus", targetStatus === "published" ? "Saving details and publishing to the public website..." : "Saving complete movie details to Draft Store...");
     const saved = await postJson(ADMIN_URL, payload, adminSessionToken, true);
     if (saved.success !== true) {
@@ -1330,7 +1966,7 @@ async function submitMovieWithStatus(targetStatus) {
       throw new Error((saved.error || "Movie save failed.") + detail + partial);
     }
     const verb = saved.status === "published" ? "published to the public website" : "saved to Draft Store";
-    setStatus("movieUploadStatus", `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.length}.`, "success");
+    setStatus("movieUploadStatus", `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.filter(row => !row._delete).length} · Links saved: ${downloadLinks.filter(row => !row._delete).length}.`, "success");
     resetMovieForm();
     await loadMovieLibrary(0);
     await loadDraftBox();
@@ -1339,13 +1975,146 @@ async function submitMovieWithStatus(targetStatus) {
     await loadMediaAssets(0);
   } catch (error) {
     setStatus("movieUploadStatus", error.message || "Upload/save failed.", "error");
-  } finally { buttons.forEach(button => button.disabled = false); }
+  } finally {
+    buttons.forEach(button => button.disabled = false);
+  }
 }
-
 $("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
 $("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("published"));
 
-// Hybrid Series Manager v1.2 — local preview only; no database writes are enabled.
+// AUTO CINEMATIC ASSET STUDIO — Admin V18 front-end integration.
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const ASSET_STUDIO_SLOTS = [
+  {key:"poster", label:"Poster", source:"movies.poster_path"},
+  {key:"backdrop_primary", label:"Primary Backdrop", source:"movies.backdrop_path"},
+  {key:"thumbnail", label:"Thumbnail", type:"thumbnail", order:1},
+  {key:"screenshot_1", label:"Screenshot 1", type:"screenshot", order:3},
+  {key:"screenshot_2", label:"Screenshot 2", type:"screenshot", order:4},
+  {key:"screenshot_3", label:"Screenshot 3", type:"screenshot", order:5},
+  {key:"screenshot_4", label:"Screenshot 4", type:"screenshot", order:6},
+  {key:"screenshot_5", label:"Screenshot 5", type:"screenshot", order:7}
+];
+let assetStudioMovies = [];
+let assetStudioSelectedMovie = null;
+
+function getAssetStudioSlotPath(movie, rows, slot) {
+  if (slot.key === "poster") return movie.poster_path || null;
+  if (slot.key === "backdrop_primary") return movie.backdrop_path || null;
+  const row = rows.find(item => item.image_type === slot.type && Number(item.display_order) === slot.order);
+  return row?.image_path || null;
+}
+
+function renderAssetStudioSlots() {
+  const root = $("assetStudioSlots");
+  const movie = assetStudioSelectedMovie;
+  if (!movie) { root.innerHTML = ""; return; }
+  const rows = Array.isArray(movie.__assetImages) ? movie.__assetImages : [];
+  const jobs = Array.isArray(movie.__assetJobs) ? movie.__assetJobs : [];
+  root.innerHTML = ASSET_STUDIO_SLOTS.map(slot => {
+    const path = getAssetStudioSlotPath(movie, rows, slot);
+    const job = jobs.find(item => item.asset_key === slot.key);
+    const jobState = job?.status === "completed" ? "Completed" : job?.status === "processing" ? "Processing" : job?.status === "pending" ? "Pending" : job?.status === "failed" ? `Failed: ${job.last_error || "Generation failed"}` : "";
+    const label = jobState || (path ? "मौजूद इमेज" : "खाली स्लॉट");
+    return `<div class="asset-slot"><strong>${slot.label}</strong><small>${path ? escapeHtml(String(path)) : "इस स्लॉट में अभी इमेज दर्ज नहीं है।"}</small><span class="slot-state">${escapeHtml(label)}</span><button class="secondary asset-slot-regenerate" type="button" data-asset-key="${slot.key}" style="width:100%;margin-top:9px;padding:7px;font-size:10px">${path ? "इस इमेज को फिर बनाएँ" : "यह स्लॉट बनाएँ"}</button></div>`;
+  }).join("");
+}
+
+async function loadAssetStudioMovies() {
+  if (!adminSessionToken) return;
+  const btn = $("assetStudioRefreshBtn");
+  btn.disabled = true;
+  setStatus("assetStudioStatus", "मूवी सूची सुरक्षित रूप से लोड हो रही है…");
+  try {
+    const result = await postJson(ADMIN_URL, {
+      action:"list_movies", limit:100, offset:0, status:"all",
+      sort_by:"created_at", sort_order:"desc"
+    }, adminSessionToken, true);
+    if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "मूवी सूची नहीं मिली।");
+    const rows = Array.isArray(result.images) ? result.images : [];
+    const jobs = Array.isArray(result.asset_jobs) ? result.asset_jobs : [];
+    assetStudioMovies = result.movies.map(movie => ({
+      ...movie,
+      __assetImages: rows.filter(row => String(row.movie_id) === String(movie.id)),
+      __assetJobs: jobs.filter(job => String(job.movie_id) === String(movie.id))
+    }));
+    const select = $("assetStudioMovie");
+    const previous = select.value;
+    select.innerHTML = '<option value="">मूवी चुनें…</option>' + assetStudioMovies.map(movie =>
+      `<option value="${escapeHtml(String(movie.id))}">${escapeHtml(movie.title || "बिना नाम की मूवी")} · ${escapeHtml(movie.status || "unknown")}</option>`
+    ).join("");
+    if (assetStudioMovies.some(movie => String(movie.id) === previous)) select.value = previous;
+    assetStudioSelectedMovie = assetStudioMovies.find(movie => String(movie.id) === select.value) || null;
+    $("assetStudioGenerateBtn").disabled = !assetStudioSelectedMovie;
+    $("assetStudioRefreshStatusBtn").disabled = !assetStudioSelectedMovie;
+    renderAssetStudioSlots();
+    setStatus("assetStudioStatus", `${assetStudioMovies.length} मूवी लोड हुईं। किसी मूवी को चुनकर उसके 8 Asset स्लॉट देखें।`, "success");
+  } catch (error) {
+    setStatus("assetStudioStatus", error.message || "मूवी सूची लोड नहीं हुई।", "error");
+  } finally { btn.disabled = false; }
+}
+
+$("assetStudioMovie").addEventListener("change", () => {
+  assetStudioSelectedMovie = assetStudioMovies.find(movie => String(movie.id) === $("assetStudioMovie").value) || null;
+  $("assetStudioGenerateBtn").disabled = !assetStudioSelectedMovie;
+  $("assetStudioRefreshStatusBtn").disabled = !assetStudioSelectedMovie;
+  renderAssetStudioSlots();
+});
+$("assetStudioRefreshBtn").addEventListener("click", loadAssetStudioMovies);
+$("assetStudioRefreshStatusBtn").addEventListener("click", loadAssetStudioMovies);
+$("assetStudioGenerateBtn").addEventListener("click", async () => {
+  if (!adminSessionToken || !assetStudioSelectedMovie) return;
+  if (!window.confirm(`“${assetStudioSelectedMovie.title}” के केवल खाली या खराब इमेज स्लॉट तैयार करें? मौजूदा सही इमेज सुरक्षित रहेंगी।`)) return;
+  const button = $("assetStudioGenerateBtn");
+  button.disabled = true;
+  setStatus("assetStudioStatus", "खाली / खराब स्लॉट की जाँच और जनरेशन अनुरोध भेजा जा रहा है…");
+  try {
+    const result = await postJson(ADMIN_URL, {action:"asset_studio_generate_missing", movie_id:assetStudioSelectedMovie.id}, adminSessionToken, true);
+    if (result.success !== true) {
+      const failedDetails = Array.isArray(result.outcomes)
+        ? result.outcomes.filter(item => item?.status === "failed").map(item => `${item.asset_key || "asset"}: ${item.message || "Generation failed"}`)
+        : [];
+      throw new Error([result.error || result.message || "जनरेशन अनुरोध पूरा नहीं हुआ।", ...failedDetails].join("\n"));
+    }
+    const successMessage = result.message || "जनरेशन प्रक्रिया पूरी हुई।";
+    await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", successMessage, Number(result.failed) > 0 ? "error" : "success");
+  } catch (error) {
+    const failureMessage = error.message || "जनरेशन अनुरोध विफल हुआ।";
+    await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", failureMessage, "error");
+  } finally { button.disabled = !assetStudioSelectedMovie; }
+});
+
+$("assetStudioSlots").addEventListener("click", async event => {
+  const button = event.target.closest(".asset-slot-regenerate");
+  if (!button || !adminSessionToken || !assetStudioSelectedMovie) return;
+  const assetKey = button.dataset.assetKey;
+  const slot = ASSET_STUDIO_SLOTS.find(item => item.key === assetKey);
+  if (!slot || !window.confirm(`“${assetStudioSelectedMovie.title}” की ${slot.label} इमेज दोबारा बनानी है? यह केवल इसी चुने हुए स्लॉट को बदलेगा।`)) return;
+  button.disabled = true;
+  try {
+    const result = await postJson(ADMIN_URL, {
+      action:"asset_studio_regenerate_asset",
+      movie_id:assetStudioSelectedMovie.id,
+      asset_key:assetKey
+    }, adminSessionToken, true);
+    if (result.success !== true) {
+      const failedDetails = Array.isArray(result.outcomes)
+        ? result.outcomes.filter(item => item?.status === "failed").map(item => `${item.asset_key || assetKey}: ${item.message || "Generation failed"}`)
+        : [];
+      throw new Error([result.error || result.message || "चुना हुआ स्लॉट अपडेट नहीं हुआ।", ...failedDetails].join("\n"));
+    }
+    const successMessage = result.message || `${slot.label} की प्रक्रिया पूरी हुई।`;
+    await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", successMessage, Number(result.failed) > 0 ? "error" : "success");
+  } catch (error) {
+    const failureMessage = error.message || "चुना हुआ स्लॉट अपडेट नहीं हुआ।";
+    await loadAssetStudioMovies();
+    setStatus("assetStudioStatus", failureMessage, "error");
+  } finally { button.disabled = false; }
+});
+
+// Hybrid Series Manager — preview plus authenticated Save to Draft; no publish action.
 const SERIES_QUALITIES = ["480p", "720p", "1080p", "2K", "4K"];
 let seriesEpisodes = [];
 
@@ -1560,8 +2329,6 @@ $("seriesPreviewBtn").addEventListener("click", () => {
   setStatus("seriesStatus", "Series draft validated successfully. It is still only in this page's memory.", "success");
 });
 
-// Save the Series Manager content to the private Supabase Draft store.
-let savedSeriesId = null;
 $("seriesSaveDraftBtn").addEventListener("click", async () => {
   const button = $("seriesSaveDraftBtn");
   const title = $("seriesTitle").value.trim();
@@ -1573,8 +2340,8 @@ $("seriesSaveDraftBtn").addEventListener("click", async () => {
     clearSessionUI("Admin session expired. Please log in again.");
     return;
   }
-  if (!title || title.length > 150) {
-    setStatus("seriesStatus", "Enter a valid series name (maximum 150 characters).", "error");
+  if (!title) {
+    setStatus("seriesStatus", "Enter a series name.", "error");
     return;
   }
   if (!Number.isInteger(year) || year < 1880 || year > new Date().getFullYear() + 5) {
@@ -1585,8 +2352,8 @@ $("seriesSaveDraftBtn").addEventListener("click", async () => {
     setStatus("seriesStatus", "Season number must be between 1 and 100.", "error");
     return;
   }
-  if (!seriesEpisodes.length || seriesEpisodes.length > 100) {
-    setStatus("seriesStatus", "Generate between 1 and 100 episodes first.", "error");
+  if (!seriesEpisodes.length) {
+    setStatus("seriesStatus", "Generate episodes first.", "error");
     return;
   }
 
@@ -1607,13 +2374,15 @@ $("seriesSaveDraftBtn").addEventListener("click", async () => {
 
     const downloadLinks = {};
     for (const quality of SERIES_QUALITIES) {
-      const values = (ep.links[quality] || []).map(value => String(value || "").trim()).filter(Boolean);
+      const values = (Array.isArray(ep.links?.[quality]) ? ep.links[quality] : []).map(value => String(value || "").trim()).filter(Boolean);
       if (values.length > 4) {
-        setStatus("seriesStatus", `Episode ${episodeNumber}: maximum four ${quality} links are allowed.`, "error");
+        setStatus("seriesStatus", `Episode ${episodeNumber}: maximum 4 ${quality} links are allowed.`, "error");
         return;
       }
-      for (const url of values) {
-        if (!validHttpUrl(url) || !url.startsWith("https://")) {
+      for (const value of values) {
+        try {
+          if (new URL(value).protocol !== "https:") throw new Error();
+        } catch {
           setStatus("seriesStatus", `Episode ${episodeNumber}: ${quality} links must be valid HTTPS URLs.`, "error");
           return;
         }
@@ -1628,32 +2397,37 @@ $("seriesSaveDraftBtn").addEventListener("click", async () => {
     });
   }
 
-  if (!confirm("Save this series and its selected season as a private Draft? It will not be published to the public website.")) return;
-
-  const originalText = button.textContent;
   button.disabled = true;
   button.textContent = "SAVING DRAFT…";
-  setStatus("seriesStatus", "Saving series and episodes as a private Draft…");
+  setStatus("seriesStatus", "Saving series and selected season as Draft…");
   try {
     const result = await postJson(ADMIN_URL, {
       action: "save_series",
-      series_id: savedSeriesId,
       title,
       release_year: year,
       season_number: season,
       season_title: seasonTitle,
       episodes
     }, adminSessionToken, true);
-    if (result.success !== true || !result.series_id) {
-      throw new Error(result.error || "Series Draft could not be saved.");
+    if (result.success !== true || !result.series_id) throw new Error(result.error || "Series draft could not be saved.");
+    const preview = $("seriesPreview");
+    const savedNoteText = `Saved to Draft successfully · ${result.episodes_saved ?? episodes.length} episode(s) · Series ID: ${result.series_id}. Not published.`;
+    const existingNote = Array.from(preview.querySelectorAll("p")).find(item => item.textContent.startsWith("Preview only."));
+    if (existingNote) {
+      existingNote.textContent = savedNoteText;
+    } else {
+      const note = document.createElement("p");
+      note.style.marginTop = "12px";
+      note.textContent = savedNoteText;
+      preview.append(note);
     }
-    savedSeriesId = result.series_id;
-    setStatus("seriesStatus", `Series saved successfully as Draft. ${result.episodes_saved || episodes.length} episode(s) saved. It is not published.`, "success");
+    preview.classList.remove("hidden");
+    setStatus("seriesStatus", `Saved to Draft successfully. ${result.episodes_saved ?? episodes.length} episode(s) stored. Nothing was published.`, "success");
   } catch (error) {
-    setStatus("seriesStatus", error.message || "Could not save Series Draft.", "error");
+    setStatus("seriesStatus", error.message || "Could not save series draft.", "error");
   } finally {
     button.disabled = false;
-    button.textContent = originalText;
+    button.textContent = "SAVE TO DRAFT";
   }
 });
 
@@ -1814,5 +2588,482 @@ window.addEventListener("pageshow", () => {
   }
 })();
 </script>
+
+<script>
+// RIVORA NEXUS navigation: changes presentation only; existing workflows and APIs remain intact.
+(function(){
+ const sidebar=document.getElementById('nexusSidebar');
+ const heading=document.getElementById('nexusHeading');
+ const views={
+  dashboard:['dashboardPanel','aiBotNav'],
+  requests:['movieRequestsPanel'],
+  ai:['aiMovieBotPanel'],
+  movie:['searchPanel','previewSection','movieUploadPanel'],
+  series:['seriesPanel'],
+  drafts:['draftBoxPanel'],
+  library:['movieLibraryPanel'],
+  publishing:['publishingPanel'],
+  media:['mediaAssetPanel'],
+  assetStudio:['assetStudioPanel'],
+  shortner:['urlShortnerPanel'],
+  franchise:['franchisePanel'],
+  linkHealth:['linkHealthPanel']
+ };
+ const allPanels=Object.values(views).flat();
+ function showView(name){
+  if(!views[name]) return;
+  allPanels.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('nav-view-hidden',!views[name].includes(id));});
+  if(heading) heading.classList.toggle('nav-view-hidden',name!=='dashboard');
+  sidebar?.querySelectorAll('.nexus-nav').forEach(btn=>btn.classList.toggle('active',btn.dataset.view===name));
+  document.body.dataset.activeView=name;
+  if(name==='requests' && typeof loadMovieRequests==='function') loadMovieRequests();
+  if(name==='ai' && typeof loadAIMovieIntelligence==='function' && !document.getElementById('aiTrendingList')?.children.length) loadAIMovieIntelligence();
+  if(name==='shortner' && typeof loadShortUrls==='function') loadShortUrls();
+  window.scrollTo({top:0,behavior:'smooth'});
+ }
+ sidebar?.querySelectorAll('.nexus-nav').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
+ window.rivoraNexusShowView=showView;
+ const add=document.getElementById('dashboardAddMovieBtn');
+ add?.addEventListener('click',()=>{showView('movie');document.getElementById('movieName')?.focus({preventScroll:true});});
+ const logout=document.getElementById('logoutBtn');
+ logout?.addEventListener('click',()=>{
+   setTimeout(()=>{
+     sidebar?.classList.add('hidden');
+     allPanels.forEach(id=>document.getElementById(id)?.classList.add('nav-view-hidden'));
+     if(heading) heading.classList.remove('nav-view-hidden');
+   },0);
+ });
+ // Initial unauthenticated state: keep the secure login visible, hide all admin views.
+ allPanels.forEach(id=>document.getElementById(id)?.classList.add('nav-view-hidden'));
+ if(heading) heading.classList.remove('nav-view-hidden');
+})();
+</script>
+
+
+<script>
+// FRANCHISE EXPLORER ADMIN — all mutations go through the session-protected Edge Function.
+(() => {
+  const $f = id => document.getElementById(id);
+  let franchises = [], franchiseMovies = [], franchiseConnections = [], franchiseRows = [];
+  const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  const api = async (action, payload={}) => {
+    if (!adminSessionToken) throw new Error("Admin session expired. Please log in again.");
+    return postJson(ADMIN_URL, {action, ...payload}, adminSessionToken, true);
+  };
+  const safeSlug = value => value.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,120);
+  const showBox = (id, visible) => $f(id)?.classList.toggle("hidden", !visible);
+  const record = (title, subtitle, buttons=[]) => {
+    const el=document.createElement("article"); el.className="franchise-record";
+    const h=document.createElement("strong"); h.textContent=title;
+    const p=document.createElement("p"); p.textContent=subtitle;
+    el.append(h,p);
+    if(buttons.length){const row=document.createElement("div");row.className="franchise-item-actions";buttons.forEach(b=>row.append(b));el.append(row);}
+    return el;
+  };
+  const actionButton=(label,fn, danger=false)=>{const b=document.createElement("button");b.type="button";b.className=danger?"library-danger":"secondary";b.textContent=label;b.addEventListener("click",fn);return b;};
+  async function loadFranchiseMovies(){
+    franchiseRows=[]; let offset=0;
+    while(offset<1000){
+      const r=await api("list_movies",{limit:100,offset,status:"all",sort_by:"title",sort_order:"asc"});
+      const rows=r.movies||[]; franchiseRows.push(...rows); offset+=rows.length;
+      if(rows.length<100)break;
+    }
+    const fill=(id,placeholder)=>{const select=$f(id);select.replaceChildren(new Option(placeholder,""));franchiseRows.forEach(m=>select.add(new Option(`${m.title||"Untitled"} (${m.release_year||"Year unknown"}) · ${m.status||"unknown"}`,String(m.id))));};
+    fill("franchiseMovieSelect","Select existing movie");fill("franchiseCharacterMovieSelect","Select movie");
+  }
+  async function loadFranchises(){
+    setStatus("franchiseStatus","Loading franchises…");
+    const r=await api("franchise_admin_list"); franchises=r.franchises||[];
+    const host=$f("franchiseList");host.replaceChildren();
+    if(!franchises.length){const empty=document.createElement("div");empty.className="franchise-empty";empty.textContent="No franchises yet. Create your first franchise.";host.append(empty);}
+    franchises.forEach(f=>{
+      const card=document.createElement("article");card.className="franchise-item";
+      const head=document.createElement("div");head.className="franchise-item-head";
+      const copy=document.createElement("div");const h=document.createElement("h3");h.textContent=f.name;
+      const p=document.createElement("p");p.textContent=`/${f.slug} · ${(f.rivora_franchise_movies||[]).length} linked movie(s) · ${(f.rivora_franchise_characters||[]).length} character(s) · ${f.is_published?"Published":"Draft"}`;
+      copy.append(h,p);head.append(copy);card.append(head);
+      const actions=document.createElement("div");actions.className="franchise-item-actions";
+      actions.append(actionButton("EDIT",()=>editFranchise(f)),actionButton("MANAGE MOVIES & CHARACTERS",()=>openManager(f)));
+      actions.append(actionButton("DELETE",()=>deleteFranchise(f),true));card.append(actions);host.append(card);
+    });
+    setStatus("franchiseStatus",`${franchises.length} franchise(s) loaded.`, "success");
+  }
+  function resetFranchiseForm(){
+    ["franchiseId","franchiseName","franchiseSlug","franchiseLogo","franchisePoster","franchiseDescription"].forEach(id=>$f(id).value="");
+    $f("franchisePublished").checked=false;$f("franchiseEditorTitle").textContent="Create Franchise";showBox("franchiseEditor",true);
+  }
+  function editFranchise(f){
+    $f("franchiseId").value=f.id;$f("franchiseName").value=f.name||"";$f("franchiseSlug").value=f.slug||"";
+    $f("franchiseLogo").value=f.logo_url||"";$f("franchisePoster").value=f.poster_url||"";
+    $f("franchiseDescription").value=f.description||"";$f("franchisePublished").checked=!!f.is_published;
+    $f("franchiseEditorTitle").textContent="Edit Franchise";showBox("franchiseEditor",true);showBox("franchiseManage",false);
+    $f("franchiseEditor").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  async function deleteFranchise(f){
+    if(!confirm(`Delete franchise "${f.name}"? Its franchise links and characters will also be removed. Existing movies will NOT be deleted.`))return;
+    try{await api("franchise_admin_delete",{id:f.id});await loadFranchises();setStatus("franchiseStatus","Franchise deleted. Existing movie records are unchanged.","success");}
+    catch(e){setStatus("franchiseStatus",e.message,"error");}
+  }
+  async function openManager(f){
+    try{
+      $f("manageFranchiseId").value=f.id;$f("franchiseManageTitle").textContent=`Manage: ${f.name}`;
+      showBox("franchiseEditor",false);showBox("franchiseManage",true);
+      await Promise.all([loadFranchiseMovies(),renderFranchiseDetails(f)]);
+      $f("franchiseManage").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){setStatus("franchiseStatus",e.message,"error");}
+  }
+  async function renderFranchiseDetails(f){
+    const links=f.rivora_franchise_movies||[], chars=f.rivora_franchise_characters||[];
+    const host=$f("franchiseLinkedMovies");host.replaceChildren();
+    links.sort((a,b)=>a.viewing_order-b.viewing_order).forEach(link=>{
+      const movie=franchiseRows.find(m=>String(m.id)===String(link.movie_id));
+      const node=record(movie?.title||`Movie ID ${link.movie_id}`,`${link.connection_type} · Viewing ${link.viewing_order} · Story ${link.story_order}${link.notes?" · "+link.notes:""}`,[actionButton("REMOVE",async()=>{try{await api("franchise_movie_delete",{id:link.id});await loadFranchises();const fresh=franchises.find(x=>x.id===f.id);await openManager(fresh);}catch(e){setStatus("franchiseStatus",e.message,"error");}},true)]);
+      host.append(node);
+    });
+    if(!links.length){const x=document.createElement("p");x.className="franchise-empty";x.textContent="No movies linked yet.";host.append(x);}
+    const cHost=$f("franchiseCharacters");cHost.replaceChildren();
+    const cSelect=$f("franchiseCharacterSelect");cSelect.replaceChildren(new Option("Select character",""));
+    chars.forEach(c=>{
+      cSelect.add(new Option(c.name,c.id));
+      cHost.append(record(c.name,`${c.alias||"No alias"}${c.description?" · "+c.description:""}`,[actionButton("DELETE",async()=>{try{await api("franchise_character_delete",{id:c.id});await loadFranchises();await openManager(franchises.find(x=>x.id===f.id));}catch(e){setStatus("franchiseStatus",e.message,"error");}},true)]));
+    });
+    if(!chars.length){const x=document.createElement("p");x.className="franchise-empty";x.textContent="No characters added yet.";cHost.append(x);}
+    const connHost=$f("franchiseCharacterConnections");connHost.replaceChildren();
+    try{
+      const rows=await api("franchise_admin_list");const current=(rows.franchises||[]).find(x=>x.id===f.id);
+      const allChars=current?.rivora_franchise_characters||[];
+      const movieLinks=current?.rivora_franchise_movies||[];
+      // Character-movie relationships are loaded from the dedicated table through the Edge Function list response when included.
+      if(!allChars.length||!movieLinks.length){const x=document.createElement("p");x.className="franchise-empty";x.textContent="Add a character and connect it to a movie above.";connHost.append(x);}
+      else {const x=document.createElement("p");x.className="franchise-empty";x.textContent="Use the connection form above to add character appearances. Existing connections remain saved.";connHost.append(x);}
+    }catch(_){}
+  }
+  $f("franchiseNewBtn").addEventListener("click",resetFranchiseForm);
+  $f("franchiseRefreshBtn").addEventListener("click",()=>loadFranchises().catch(e=>setStatus("franchiseStatus",e.message,"error")));
+  $f("franchiseCancelBtn").addEventListener("click",()=>showBox("franchiseEditor",false));
+  $f("franchiseManageCloseBtn").addEventListener("click",()=>showBox("franchiseManage",false));
+  $f("franchiseName").addEventListener("input",()=>{if(!$f("franchiseId").value)$f("franchiseSlug").value=safeSlug($f("franchiseName").value);});
+  $f("franchiseSaveBtn").addEventListener("click",async()=>{
+    const name=$f("franchiseName").value.trim(),slug=safeSlug($f("franchiseSlug").value);
+    if(!name||!slug){setStatus("franchiseStatus","Enter a franchise name and valid slug.","error");return;}
+    try{await api("franchise_admin_save",{id:$f("franchiseId").value||undefined,name,slug,description:$f("franchiseDescription").value.trim(),logo_url:$f("franchiseLogo").value.trim(),poster_url:$f("franchisePoster").value.trim(),is_published:$f("franchisePublished").checked});showBox("franchiseEditor",false);await loadFranchises();}
+    catch(e){setStatus("franchiseStatus",e.message,"error");}
+  });
+  $f("franchiseAddMovieBtn").addEventListener("click",async()=>{
+    const fid=$f("manageFranchiseId").value,mid=$f("franchiseMovieSelect").value;
+    const viewing=Number($f("franchiseViewingOrder").value),story=Number($f("franchiseStoryOrder").value);
+    if(!fid||!mid||!Number.isInteger(viewing)||viewing<1||!Number.isInteger(story)||story<1){setStatus("franchiseStatus","Select a movie and enter valid order numbers.","error");return;}
+    try{await api("franchise_movie_save",{franchise_id:fid,movie_id:mid,connection_type:$f("franchiseConnectionType").value,viewing_order:viewing,story_order:story,notes:$f("franchiseMovieNotes").value.trim()});await loadFranchises();await openManager(franchises.find(x=>x.id===fid));setStatus("franchiseStatus","Movie connected to franchise.","success");}
+    catch(e){setStatus("franchiseStatus",e.message,"error");}
+  });
+  $f("franchiseAddCharacterBtn").addEventListener("click",async()=>{
+    const fid=$f("manageFranchiseId").value,name=$f("franchiseCharacterName").value.trim();
+    if(!fid||!name){setStatus("franchiseStatus","Enter a character name.","error");return;}
+    try{await api("franchise_character_save",{franchise_id:fid,name,alias:$f("franchiseCharacterAlias").value.trim(),image_url:$f("franchiseCharacterImage").value.trim(),description:$f("franchiseCharacterDescription").value.trim()});["franchiseCharacterName","franchiseCharacterAlias","franchiseCharacterImage","franchiseCharacterDescription"].forEach(id=>$f(id).value="");await loadFranchises();await openManager(franchises.find(x=>x.id===fid));}
+    catch(e){setStatus("franchiseStatus",e.message,"error");}
+  });
+  $f("franchiseConnectCharacterBtn").addEventListener("click",async()=>{
+    const character_id=$f("franchiseCharacterSelect").value,movie_id=$f("franchiseCharacterMovieSelect").value;
+    if(!character_id||!movie_id){setStatus("franchiseStatus","Select both a character and a movie.","error");return;}
+    try{await api("franchise_character_movie_save",{character_id,movie_id,character_role:$f("franchiseCharacterRole").value,relationship_note:$f("franchiseCharacterMovieNote").value.trim()});setStatus("franchiseStatus","Character-to-movie connection saved.","success");$f("franchiseCharacterMovieNote").value="";}
+    catch(e){setStatus("franchiseStatus",e.message,"error");}
+  });
+  window.rivoraLoadFranchiseExplorer=async()=>{if(!adminSessionToken)return;await loadFranchiseMovies();await loadFranchises();};
+  document.querySelector('[data-view="franchise"]')?.addEventListener("click",()=>{if(adminSessionToken)window.rivoraLoadFranchiseExplorer().catch(e=>setStatus("franchiseStatus",e.message,"error"));});
+})();
+</script>
+
+<script>
+// RIVX PWA installation. This does not alter Admin PIN/session handling.
+(() => {
+  let installPrompt = null;
+  const installButton = document.getElementById("installRivxBtn");
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (installButton && !isStandalone) {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      installPrompt = event;
+      installButton.classList.remove("hidden");
+    });
+    installButton.addEventListener("click", async () => {
+      if (!installPrompt) return;
+      installButton.disabled = true;
+      try {
+        await installPrompt.prompt();
+        await installPrompt.userChoice;
+      } finally {
+        installPrompt = null;
+        installButton.classList.add("hidden");
+        installButton.disabled = false;
+      }
+    });
+    window.addEventListener("appinstalled", () => installButton.classList.add("hidden"));
+  }
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+        .catch((error) => console.warn("RIVX service worker registration failed:", error));
+    });
+  }
+})();
+</script>
+<script>
+// RIVORA LINK HEALTH ADMIN V1 — uses the existing authenticated Admin Edge Function.
+(() => {
+  const PAGE_SIZE = 50;
+  let page = 0;
+  let total = 0;
+  let currentRows = [];
+  let scanRuns = [];
+  let scanMovies = [];
+  let busy = false;
+  let scanAbortRequested = false;
+
+  const el = (id) => document.getElementById(id);
+  const escText = (value) => String(value ?? "");
+  const fmtDate = (value) => value ? new Date(value).toLocaleString() : "Not checked yet";
+  const fmtMs = (value) => Number.isFinite(Number(value)) ? `${Number(value)} ms` : "—";
+
+  async function linkHealthRequest(action, extra = {}) {
+    if (!adminSessionToken) throw new Error("Admin session expired. Please log in again.");
+    return await postJson(ADMIN_URL, { action, ...extra }, adminSessionToken, true);
+  }
+
+  function emptyNode(message) {
+    const node = document.createElement("div");
+    node.className = "link-health-empty";
+    node.textContent = message;
+    return node;
+  }
+
+  function renderStats(rows) {
+    const counts = { reachable: 0, unavailable: 0, blocked: 0 };
+    rows.forEach((row) => { if (Object.hasOwn(counts, row.status)) counts[row.status]++; });
+    el("lhTotal").textContent = String(total);
+    el("lhReachable").textContent = String(counts.reachable);
+    el("lhUnavailable").textContent = String(counts.unavailable);
+    el("lhBlocked").textContent = String(counts.blocked);
+  }
+
+  function renderRuns() {
+    const host = el("linkHealthRuns");
+    host.replaceChildren();
+    if (!scanRuns.length) { host.append(emptyNode("No scan history available yet.")); return; }
+    scanRuns.forEach((run) => {
+      const card = document.createElement("div");
+      card.className = "link-health-run";
+      const line = document.createElement("strong");
+      line.textContent = `${String(run.trigger_source || "scan").toUpperCase()} · ${String(run.status || "unknown").toUpperCase()}`;
+      const details = document.createElement("div");
+      details.textContent = `Started: ${fmtDate(run.started_at)} · Finished: ${fmtDate(run.finished_at)} · Scanned: ${Number(run.scanned_count || 0)} · Reachable: ${Number(run.reachable_count || 0)} · Unavailable: ${Number(run.unavailable_count || 0)} · Blocked: ${Number(run.blocked_count || 0)} · Errors: ${Number(run.error_count || 0)}${run.summary ? ` · ${run.summary}` : ""}`;
+      card.append(line, details);
+      host.append(card);
+    });
+  }
+
+  function renderRows() {
+    const host = el("linkHealthList");
+    host.replaceChildren();
+    if (!currentRows.length) {
+      host.append(emptyNode("No Link Health records found for this page or filter."));
+      return;
+    }
+
+    currentRows.forEach((row) => {
+      const card = document.createElement("article");
+      card.className = "link-health-card";
+      const head = document.createElement("div");
+      head.className = "link-health-card-head";
+      const title = document.createElement("h3");
+      title.textContent = row.movie?.title || `Movie ${row.movie_id}`;
+      const state = document.createElement("span");
+      state.className = `link-health-state ${String(row.status || "pending")}`;
+      state.textContent = String(row.status || "pending");
+      head.append(title, state);
+
+      const meta = document.createElement("div");
+      meta.className = "link-health-meta";
+      meta.textContent = `Link ID: ${String(row.download_link_id || row.id || "unknown").slice(0, 8)} · Quality: ${row.download_link?.quality || "Unknown"} · Latest result: ${row.last_check_status || row.status || "pending"}${row.candidate_status ? ` · Recheck ${Number(row.candidate_count || 0)}/2` : ""} · HTTP: ${row.http_status ?? "—"} · Response: ${fmtMs(row.response_time_ms)} · Consecutive failures: ${Number(row.consecutive_failures || 0)} · Last checked: ${fmtDate(row.checked_at)} · Next check: ${fmtDate(row.next_check_at)}`;
+
+      const url = document.createElement("div");
+      url.className = "link-health-url";
+      url.textContent = row.download_link?.download_url || row.checked_url || "Download URL unavailable";
+
+      const buttons = document.createElement("div");
+      buttons.className = "link-health-buttons";
+      const movieScanBtn = document.createElement("button");
+      movieScanBtn.type = "button";
+      movieScanBtn.className = "secondary";
+      movieScanBtn.textContent = "SCAN MOVIE LINKS";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "secondary";
+      editBtn.textContent = "EDIT LINK";
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "link-health-delete";
+      deleteBtn.textContent = "DELETE LINK";
+      buttons.append(movieScanBtn, editBtn, deleteBtn);
+      movieScanBtn.addEventListener("click", () => {
+        const picker = el("linkHealthMovieSelect");
+        if (picker) picker.value = row.movie_id || "";
+        runBatchedScan("movie", row.movie_id || "");
+      });
+
+      const editArea = document.createElement("div");
+      editArea.className = "link-health-edit hidden";
+      const input = document.createElement("input");
+      input.type = "url";
+      input.inputMode = "url";
+      input.autocomplete = "url";
+      input.placeholder = "https://authorized-host.example/file";
+      input.value = row.download_link?.download_url || row.checked_url || "";
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "primary";
+      saveBtn.textContent = "SAVE URL";
+      saveBtn.style.width = "auto";
+      saveBtn.style.marginTop = "0";
+      const cancelBtn = document.createElement("button");
+      cancelBtn.type = "button";
+      cancelBtn.className = "secondary";
+      cancelBtn.textContent = "CANCEL";
+      editArea.append(input, saveBtn, cancelBtn);
+
+      editBtn.addEventListener("click", () => editArea.classList.toggle("hidden"));
+      cancelBtn.addEventListener("click", () => editArea.classList.add("hidden"));
+      saveBtn.addEventListener("click", async () => {
+        const download_url = input.value.trim();
+        if (!/^https:\/\//i.test(download_url)) { setStatus("linkHealthStatus", "Enter a valid HTTPS download URL.", "error"); return; }
+        saveBtn.disabled = true;
+        try {
+          const result = await linkHealthRequest("update_download_link", { download_link_id: row.download_link_id, download_url });
+          if (result.success !== true) throw new Error(result.error || "Selected link could not be updated.");
+          setStatus("linkHealthStatus", result.warning || "Selected download link updated. Its health status has been reset to pending.", "success");
+          await loadReport();
+        } catch (error) { setStatus("linkHealthStatus", error.message || "Update failed.", "error"); }
+        finally { saveBtn.disabled = false; }
+      });
+
+      deleteBtn.addEventListener("click", async () => {
+        const label = row.movie?.title || "this movie";
+        if (!confirm(`Delete only this ${row.download_link?.quality || "download"} link from ${label}? The movie itself will remain published.`)) return;
+        deleteBtn.disabled = true;
+        try {
+          const result = await linkHealthRequest("delete_download_link", { download_link_id: row.download_link_id });
+          if (result.success !== true) throw new Error(result.error || "Selected link could not be deleted.");
+          setStatus("linkHealthStatus", "Selected download link deleted. The movie record and its other links were not selected for deletion.", "success");
+          await loadReport();
+        } catch (error) { setStatus("linkHealthStatus", error.message || "Delete failed.", "error"); }
+        finally { deleteBtn.disabled = false; }
+      });
+
+      card.append(head, meta, url, movieScanBtn, buttons, editArea);
+      host.append(card);
+    });
+  }
+
+  async function loadMovieChoices() {
+    const select = el("linkHealthMovieSelect");
+    if (!select) return;
+    const result = await linkHealthRequest("get_link_health_movies");
+    if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "Could not load movie choices.");
+    scanMovies = result.movies;
+    const previous = select.value;
+    select.replaceChildren(new Option("Choose a movie…", ""));
+    scanMovies.forEach((movie) => select.add(new Option(String(movie.title || "Untitled movie"), String(movie.id))));
+    if (scanMovies.some((movie) => movie.id === previous)) select.value = previous;
+  }
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  async function runBatchedScan(mode, movieId = "") {
+    if (!adminSessionToken || busy) return;
+    busy = true;
+    scanAbortRequested = false;
+    const allBtn = el("linkHealthScanBtn");
+    const movieBtn = el("linkHealthMovieScanBtn");
+    const refreshBtn = el("linkHealthRefreshBtn");
+    [allBtn, movieBtn, refreshBtn].forEach((button) => { if (button) button.disabled = true; });
+    let totalScanned = 0, totalReachable = 0, totalUnavailable = 0, totalBlocked = 0, totalErrors = 0;
+    let loops = 0;
+    try {
+      while (!scanAbortRequested) {
+        loops++;
+        if (loops > 100) throw new Error("Safety stop: scan exceeded 100 batches. Refresh the report and try again later.");
+        setStatus("linkHealthStatus", `${mode === "movie" ? "Selected movie" : "All movies"} · Batch ${loops} running · Total scanned so far: ${totalScanned}`);
+        const result = mode === "movie"
+          ? await linkHealthRequest("check_movie_links", { movie_id: movieId })
+          : await linkHealthRequest("run_link_health_scan");
+        if (result.success !== true) throw new Error(result.error || "Link Health scan failed.");
+        totalScanned += Number(result.scanned_count || 0);
+        totalReachable += Number(result.reachable_count || 0);
+        totalUnavailable += Number(result.unavailable_count || 0);
+        totalBlocked += Number(result.blocked_count || 0);
+        totalErrors += Number(result.error_count || 0);
+        await loadReport();
+        if (!result.partial) break;
+        const retryMs = result.rate_limited ? Math.max(5000, Math.min(300000, Number(result.retry_after_ms || 60000))) : 1200;
+        if (result.rate_limited) {
+          setStatus("linkHealthStatus", `Rate limit reached. Scanner is paused for ${Math.ceil(retryMs / 1000)} seconds; it will resume automatically. No link is being marked unavailable because of this cooldown.`, "error");
+        } else {
+          setStatus("linkHealthStatus", `Batch ${loops} complete · ${Number(result.remaining_count || 0)} links remain. Continuing automatically…`);
+        }
+        await wait(retryMs);
+      }
+      setStatus("linkHealthStatus", `${mode === "movie" ? "Movie scan" : "Full scan"} completed · Scanned: ${totalScanned} · Reachable: ${totalReachable} · Unavailable: ${totalUnavailable} · Blocked: ${totalBlocked} · Errors: ${totalErrors}.`, "success");
+    } catch (error) {
+      setStatus("linkHealthStatus", error.message || "Manual scan failed.", "error");
+    } finally {
+      busy = false;
+      [allBtn, movieBtn, refreshBtn].forEach((button) => { if (button) button.disabled = false; });
+      await loadReport();
+    }
+  }
+
+  async function loadReport() {
+    if (!adminSessionToken || busy) return;
+    busy = true;
+    el("linkHealthRefreshBtn").disabled = true;
+    setStatus("linkHealthStatus", "Loading Link Health report…");
+    try {
+      const status = el("linkHealthStatusFilter").value;
+      const result = await linkHealthRequest("get_link_health_report", { page, page_size: PAGE_SIZE, ...(status ? { status } : {}) });
+      if (result.success !== true || !Array.isArray(result.rows)) throw new Error(result.error || "Link Health report response was incomplete.");
+      currentRows = result.rows;
+      total = Number(result.total || 0);
+      scanRuns = Array.isArray(result.scan_runs) ? result.scan_runs : [];
+      renderStats(currentRows);
+      renderRows();
+      renderRuns();
+      el("linkHealthPageLabel").textContent = `Page ${page + 1} · ${total} total links`;
+      el("linkHealthPrevBtn").disabled = page <= 0;
+      el("linkHealthNextBtn").disabled = (page + 1) * PAGE_SIZE >= total;
+      await loadMovieChoices();
+      setStatus("linkHealthStatus", `Report updated ${new Date().toLocaleTimeString()}. Showing ${currentRows.length} link records.`, "success");
+    } catch (error) {
+      setStatus("linkHealthStatus", error.message || "Could not load Link Health report.", "error");
+      el("linkHealthList").replaceChildren(emptyNode("Report unavailable. Confirm Link Health SQL-1 has been executed and the Edge Function is deployed."));
+    } finally {
+      busy = false;
+      el("linkHealthRefreshBtn").disabled = false;
+    }
+  }
+
+  el("linkHealthScanBtn").addEventListener("click", () => runBatchedScan("all"));
+  el("linkHealthMovieScanBtn").addEventListener("click", () => {
+    const movieId = el("linkHealthMovieSelect").value;
+    if (!movieId) { setStatus("linkHealthStatus", "Select a movie before starting its scan.", "error"); return; }
+    runBatchedScan("movie", movieId);
+  });
+
+  el("linkHealthRefreshBtn").addEventListener("click", loadReport);
+  el("linkHealthStatusFilter").addEventListener("change", () => { page = 0; loadReport(); });
+  el("linkHealthPrevBtn").addEventListener("click", () => { if (page > 0) { page--; loadReport(); } });
+  el("linkHealthNextBtn").addEventListener("click", () => { if ((page + 1) * PAGE_SIZE < total) { page++; loadReport(); } });
+  document.querySelector('[data-view="linkHealth"]')?.addEventListener("click", () => { if (adminSessionToken) loadReport(); });
+})();
+</script>
+
 </body>
 </html>
