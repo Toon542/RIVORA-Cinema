@@ -161,7 +161,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 @media(max-width:650px){.asset-studio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.asset-studio-toolbar{grid-template-columns:1fr}}
 
 /* RIVORA LINK HEALTH ADMIN V1 */
-.link-health-toolbar{display:grid;grid-template-columns:minmax(160px,240px) minmax(0,1fr);gap:14px;align-items:end;margin-top:16px}
+.link-health-toolbar{display:grid;grid-template-columns:minmax(160px,220px) minmax(180px,250px) minmax(0,1fr);gap:14px;align-items:end;margin-top:16px}
 .link-health-toolbar select{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);color:var(--text)}
 .link-health-actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}.link-health-actions button{margin:0;width:auto;min-width:145px;font-size:10px}
 .link-health-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}
@@ -522,7 +522,8 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
   <p class="notice">A link status is confirmed only after two consecutive matching checks. The latest raw probe and stable Link ID are shown separately so temporary scanner/network errors do not immediately flip a confirmed result. Blocked responses are not proof that a link is dead. Editing or deleting affects only the selected download link.</p>
   <div class="link-health-toolbar">
     <div><label for="linkHealthStatusFilter">Filter status</label><select id="linkHealthStatusFilter"><option value="">All statuses</option><option value="pending">Pending</option><option value="reachable">Reachable</option><option value="unavailable">Unavailable</option><option value="blocked">Blocked</option><option value="timeout">Timeout</option><option value="error">Error</option><option value="unsupported">Unsupported</option></select></div>
-    <div class="link-health-actions"><button class="secondary" id="linkHealthRefreshBtn" type="button">↻ REFRESH REPORT</button><button class="primary" id="linkHealthScanBtn" type="button">▶ RUN MANUAL SCAN</button></div>
+    <div><label for="linkHealthMovieSelect">Scan one movie</label><select id="linkHealthMovieSelect"><option value="">Choose a movie…</option></select></div>
+    <div class="link-health-actions"><button class="secondary" id="linkHealthMovieScanBtn" type="button">▶ SCAN SELECTED MOVIE</button><button class="secondary" id="linkHealthRefreshBtn" type="button">↻ REFRESH REPORT</button><button class="primary" id="linkHealthScanBtn" type="button">▶ SCAN ALL MOVIES</button></div>
   </div>
   <p class="status" id="linkHealthStatus" aria-live="polite">Link Health report loads after secure admin login.</p>
   <div class="link-health-stats" id="linkHealthStats">
@@ -2631,7 +2632,9 @@ window.addEventListener("pageshow", () => {
   let total = 0;
   let currentRows = [];
   let scanRuns = [];
+  let scanMovies = [];
   let busy = false;
+  let scanAbortRequested = false;
 
   const el = (id) => document.getElementById(id);
   const escText = (value) => String(value ?? "");
@@ -2717,18 +2720,11 @@ window.addEventListener("pageshow", () => {
       deleteBtn.type = "button";
       deleteBtn.className = "link-health-delete";
       deleteBtn.textContent = "DELETE LINK";
-      buttons.append(editBtn, deleteBtn);
-      movieScanBtn.addEventListener("click", async () => {
-        if (!row.movie_id) return;
-        movieScanBtn.disabled = true;
-        setStatus("linkHealthStatus", `Checking links for ${row.movie?.title || "selected movie"}…`);
-        try {
-          const result = await linkHealthRequest("check_movie_links", { movie_id: row.movie_id });
-          if (result.success !== true) throw new Error(result.error || "Movie link scan failed.");
-          setStatus("linkHealthStatus", `Movie scan completed · Scanned: ${Number(result.scanned_count || 0)} · Reachable: ${Number(result.reachable_count || 0)} · Unavailable: ${Number(result.unavailable_count || 0)} · Blocked: ${Number(result.blocked_count || 0)} · Errors: ${Number(result.error_count || 0)}.`, "success");
-          await loadReport();
-        } catch (error) { setStatus("linkHealthStatus", error.message || "Movie link scan failed.", "error"); }
-        finally { movieScanBtn.disabled = false; }
+      buttons.append(movieScanBtn, editBtn, deleteBtn);
+      movieScanBtn.addEventListener("click", () => {
+        const picker = el("linkHealthMovieSelect");
+        if (picker) picker.value = row.movie_id || "";
+        runBatchedScan("movie", row.movie_id || "");
       });
 
       const editArea = document.createElement("div");
@@ -2784,6 +2780,64 @@ window.addEventListener("pageshow", () => {
     });
   }
 
+  async function loadMovieChoices() {
+    const select = el("linkHealthMovieSelect");
+    if (!select) return;
+    const result = await linkHealthRequest("get_link_health_movies");
+    if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "Could not load movie choices.");
+    scanMovies = result.movies;
+    const previous = select.value;
+    select.replaceChildren(new Option("Choose a movie…", ""));
+    scanMovies.forEach((movie) => select.add(new Option(String(movie.title || "Untitled movie"), String(movie.id))));
+    if (scanMovies.some((movie) => movie.id === previous)) select.value = previous;
+  }
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  async function runBatchedScan(mode, movieId = "") {
+    if (!adminSessionToken || busy) return;
+    busy = true;
+    scanAbortRequested = false;
+    const allBtn = el("linkHealthScanBtn");
+    const movieBtn = el("linkHealthMovieScanBtn");
+    const refreshBtn = el("linkHealthRefreshBtn");
+    [allBtn, movieBtn, refreshBtn].forEach((button) => { if (button) button.disabled = true; });
+    let totalScanned = 0, totalReachable = 0, totalUnavailable = 0, totalBlocked = 0, totalErrors = 0;
+    let loops = 0;
+    try {
+      while (!scanAbortRequested) {
+        loops++;
+        if (loops > 100) throw new Error("Safety stop: scan exceeded 100 batches. Refresh the report and try again later.");
+        setStatus("linkHealthStatus", `${mode === "movie" ? "Selected movie" : "All movies"} · Batch ${loops} running · Total scanned so far: ${totalScanned}`);
+        const result = mode === "movie"
+          ? await linkHealthRequest("check_movie_links", { movie_id: movieId })
+          : await linkHealthRequest("run_link_health_scan");
+        if (result.success !== true) throw new Error(result.error || "Link Health scan failed.");
+        totalScanned += Number(result.scanned_count || 0);
+        totalReachable += Number(result.reachable_count || 0);
+        totalUnavailable += Number(result.unavailable_count || 0);
+        totalBlocked += Number(result.blocked_count || 0);
+        totalErrors += Number(result.error_count || 0);
+        await loadReport();
+        if (!result.partial) break;
+        const retryMs = result.rate_limited ? Math.max(5000, Math.min(300000, Number(result.retry_after_ms || 60000))) : 1200;
+        if (result.rate_limited) {
+          setStatus("linkHealthStatus", `Rate limit reached. Scanner is paused for ${Math.ceil(retryMs / 1000)} seconds; it will resume automatically. No link is being marked unavailable because of this cooldown.`, "error");
+        } else {
+          setStatus("linkHealthStatus", `Batch ${loops} complete · ${Number(result.remaining_count || 0)} links remain. Continuing automatically…`);
+        }
+        await wait(retryMs);
+      }
+      setStatus("linkHealthStatus", `${mode === "movie" ? "Movie scan" : "Full scan"} completed · Scanned: ${totalScanned} · Reachable: ${totalReachable} · Unavailable: ${totalUnavailable} · Blocked: ${totalBlocked} · Errors: ${totalErrors}.`, "success");
+    } catch (error) {
+      setStatus("linkHealthStatus", error.message || "Manual scan failed.", "error");
+    } finally {
+      busy = false;
+      [allBtn, movieBtn, refreshBtn].forEach((button) => { if (button) button.disabled = false; });
+      await loadReport();
+    }
+  }
+
   async function loadReport() {
     if (!adminSessionToken || busy) return;
     busy = true;
@@ -2802,6 +2856,7 @@ window.addEventListener("pageshow", () => {
       el("linkHealthPageLabel").textContent = `Page ${page + 1} · ${total} total links`;
       el("linkHealthPrevBtn").disabled = page <= 0;
       el("linkHealthNextBtn").disabled = (page + 1) * PAGE_SIZE >= total;
+      await loadMovieChoices();
       setStatus("linkHealthStatus", `Report updated ${new Date().toLocaleTimeString()}. Showing ${currentRows.length} link records.`, "success");
     } catch (error) {
       setStatus("linkHealthStatus", error.message || "Could not load Link Health report.", "error");
@@ -2812,28 +2867,14 @@ window.addEventListener("pageshow", () => {
     }
   }
 
-  async function runManualScan() {
-    if (!adminSessionToken || busy) return;
-    busy = true;
-    const btn = el("linkHealthScanBtn");
-    btn.disabled = true;
-    setStatus("linkHealthStatus", "Starting manual scan. The scanner processes a limited batch per run; repeat scans can process remaining queued links.");
-    try {
-      const result = await linkHealthRequest("run_link_health_scan");
-      if (result.success !== true) throw new Error(result.error || "Manual scan failed.");
-      setStatus("linkHealthStatus", `Scan completed · Scanned: ${Number(result.scanned_count || 0)} · Reachable: ${Number(result.reachable_count || 0)} · Unavailable: ${Number(result.unavailable_count || 0)} · Blocked: ${Number(result.blocked_count || 0)} · Errors: ${Number(result.error_count || 0)}.`, "success");
-      busy = false;
-      await loadReport();
-    } catch (error) {
-      setStatus("linkHealthStatus", error.message || "Manual scan failed.", "error");
-    } finally {
-      busy = false;
-      btn.disabled = false;
-    }
-  }
+  el("linkHealthScanBtn").addEventListener("click", () => runBatchedScan("all"));
+  el("linkHealthMovieScanBtn").addEventListener("click", () => {
+    const movieId = el("linkHealthMovieSelect").value;
+    if (!movieId) { setStatus("linkHealthStatus", "Select a movie before starting its scan.", "error"); return; }
+    runBatchedScan("movie", movieId);
+  });
 
   el("linkHealthRefreshBtn").addEventListener("click", loadReport);
-  el("linkHealthScanBtn").addEventListener("click", runManualScan);
   el("linkHealthStatusFilter").addEventListener("change", () => { page = 0; loadReport(); });
   el("linkHealthPrevBtn").addEventListener("click", () => { if (page > 0) { page--; loadReport(); } });
   el("linkHealthNextBtn").addEventListener("click", () => { if ((page + 1) * PAGE_SIZE < total) { page++; loadReport(); } });
