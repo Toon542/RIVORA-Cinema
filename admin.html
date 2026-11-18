@@ -268,6 +268,8 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   <p class="notice">All saved draft movies appear here. Tap any movie card to load its saved details, images and authorized links into the editor below.</p>
   <div class="draft-box-toolbar"><p class="status" id="draftBoxStatus" aria-live="polite">Draft Box will load after secure login.</p><button class="secondary" id="draftBoxRefreshBtn" type="button">↻ REFRESH DRAFTS</button></div>
   <div class="draft-box-grid" id="draftBoxList" aria-live="polite"></div>
+  <div class="topline" style="margin-top:22px"><h3>Series Drafts</h3><span class="spacer"></span><span class="pill">NOT PUBLISHED</span></div>
+  <div class="library-list" id="seriesDraftList" aria-live="polite"></div>
 </section>
 
 <section class="panel hidden" id="movieLibraryPanel">
@@ -557,7 +559,7 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
 
 // Public project configuration only. Never put service_role or sb_secret keys here.
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
-const ADMIN_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/RIVORA_Admin_Edge_Function_v2-ts";
+const ADMIN_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/knowledge-graph";
 
 let adminSessionToken = null;
 const $ = id => document.getElementById(id);
@@ -933,6 +935,27 @@ $("libraryNextBtn").addEventListener("click", () => loadMovieLibrary(libraryOffs
 let draftBoxRows = [];
 let draftBoxImages = [];
 let draftBoxLinks = [];
+let seriesDraftRows = [];
+let seriesDraftEpisodes = [];
+function renderSeriesDraftBox() {
+  const root = $("seriesDraftList");
+  if (!root) return;
+  root.replaceChildren();
+  if (!seriesDraftRows.length) {
+    root.append(libraryElement("p", "notice", "No saved series drafts yet. Use Series Manager → SAVE TO DRAFT."));
+    return;
+  }
+  for (const series of seriesDraftRows) {
+    const card = libraryElement("article", "library-item");
+    const title = libraryElement("h3", "", series.title || "Untitled series");
+    const episodes = seriesDraftEpisodes.filter(item => item.series_id === series.id);
+    const seasons = [...new Set(episodes.map(item => Number(item.season_number)).filter(Number.isFinite))].sort((a,b) => a-b);
+    const seasonLabel = seasons.length ? seasons.map(number => `Season ${number}`).join(" · ") : "No season details";
+    const meta = libraryElement("p", "", `${series.release_year || "Year unknown"} · ${seasonLabel} · ${episodes.length} episode(s) · DRAFT`);
+    card.append(title, meta);
+    root.append(card);
+  }
+}
 function renderDraftBox() {
   const list = $("draftBoxList");
   list.replaceChildren();
@@ -1015,11 +1038,16 @@ async function loadDraftBox() {
     draftBoxRows = result.drafts;
     draftBoxImages = Array.isArray(result.images) ? result.images : [];
     draftBoxLinks = Array.isArray(result.download_links) ? result.download_links : [];
+    seriesDraftRows = Array.isArray(result.series_drafts) ? result.series_drafts : [];
+    seriesDraftEpisodes = Array.isArray(result.series_episodes) ? result.series_episodes : [];
     renderDraftBox();
-    setStatus("draftBoxStatus", `${draftBoxRows.length} saved draft movie(s) · private and not visible on the public website.`, "success");
+    renderSeriesDraftBox();
+    setStatus("draftBoxStatus", `${draftBoxRows.length} movie draft(s) · ${seriesDraftRows.length} series draft(s) · private and not visible on the public website.`, "success");
   } catch (error) {
     draftBoxRows = []; draftBoxImages = []; draftBoxLinks = [];
+    seriesDraftRows = []; seriesDraftEpisodes = [];
     renderDraftBox();
+    renderSeriesDraftBox();
     setStatus("draftBoxStatus", error.message || "Could not load Draft Box.", "error");
   } finally { refresh.disabled = false; }
 }
@@ -2422,7 +2450,8 @@ $("seriesSaveDraftBtn").addEventListener("click", async () => {
       preview.append(note);
     }
     preview.classList.remove("hidden");
-    setStatus("seriesStatus", `Saved to Draft successfully. ${result.episodes_saved ?? episodes.length} episode(s) stored. Nothing was published.`, "success");
+    await loadDraftBox();
+    setStatus("seriesStatus", `Saved to Draft successfully. ${result.episodes_saved ?? episodes.length} episode(s) stored. Draft Box refreshed. Nothing was published.`, "success");
   } catch (error) {
     setStatus("seriesStatus", error.message || "Could not save series draft.", "error");
   } finally {
