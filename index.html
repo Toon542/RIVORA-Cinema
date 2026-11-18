@@ -524,6 +524,17 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
   header nav a,header nav .nav-button{font-size:11px!important}
 }
 @media(prefers-reduced-motion:reduce){.logo,.logo-main,.logo-hub{animation:none!important}}
+
+    .rivora-series-section{padding:48px 6%;background:radial-gradient(ellipse at 15% 0%,rgba(236,72,153,.10),transparent 42%),radial-gradient(ellipse at 90% 70%,rgba(139,92,246,.12),transparent 45%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .rivora-series-heading{max-width:1180px;margin:0 auto 22px}.rivora-series-heading span{color:var(--cyan);font-size:10px;font-weight:800;letter-spacing:3px}.rivora-series-heading h2{font-size:clamp(26px,4vw,38px);margin:9px 0}.rivora-series-heading p{color:var(--muted);font-size:13px;line-height:1.6}
+    .rivora-series-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+    .rivora-series-card{overflow:hidden;border:1px solid rgba(139,92,246,.35);border-radius:15px;background:linear-gradient(145deg,#11172b,#0a1020);box-shadow:0 12px 30px rgba(0,0,0,.22);transition:transform .2s,border-color .2s}.rivora-series-card:hover{transform:translateY(-4px);border-color:var(--cyan)}
+    .rivora-series-art{height:220px;display:grid;place-items:center;text-align:center;padding:18px;background:radial-gradient(circle at 30% 20%,rgba(236,72,153,.38),transparent 45%),linear-gradient(135deg,#25123d,#101b38 58%,#4a1d52);color:#fff}.rivora-series-art strong{font-size:20px;line-height:1.25;text-shadow:0 3px 14px #000;overflow-wrap:anywhere}.rivora-series-art span{display:block;margin-top:10px;color:#f7c5e1;font-size:10px;letter-spacing:2px}
+    .rivora-series-copy{padding:14px}.rivora-series-copy h3{font-size:15px;line-height:1.4;overflow-wrap:anywhere}.rivora-series-copy p{margin-top:6px;color:var(--muted);font-size:11px}.rivora-series-open{width:100%;margin-top:12px;padding:10px;border:1px solid rgba(83,245,255,.45);border-radius:8px;background:linear-gradient(100deg,rgba(8,125,154,.65),rgba(84,37,166,.75));color:white;font-weight:800;font-size:11px}
+    .rivora-series-empty{max-width:1180px;margin:0 auto;color:var(--muted);font-size:13px;padding:16px;border:1px dashed var(--border);border-radius:10px}
+    .series-detail-modal{position:fixed;inset:0;z-index:10020;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(10px)}.series-detail-modal.open{display:flex}.series-detail-panel{width:min(760px,100%);max-height:88vh;overflow:auto;padding:22px;border:1px solid rgba(83,245,255,.35);border-radius:16px;background:#091322;color:var(--text);box-shadow:0 20px 70px rgba(0,0,0,.5)}.series-detail-close{float:right;border:1px solid var(--border);border-radius:50%;width:34px;height:34px;background:transparent;color:white;font-size:20px}.series-detail-panel h2{margin:12px 0 6px;font-size:clamp(22px,4vw,32px)}.series-detail-meta{color:var(--cyan);font-size:12px;margin-bottom:18px}.series-season-block{margin-top:16px;padding:14px;border:1px solid var(--border);border-radius:11px;background:#0d1a2c}.series-season-block h3{font-size:15px;color:#e7d6ff;margin-bottom:10px}.series-episode-row{padding:11px 0;border-top:1px solid rgba(255,255,255,.08)}.series-episode-row:first-of-type{border-top:0}.series-episode-row strong{font-size:13px}.series-episode-row p{color:var(--muted);font-size:12px;line-height:1.5;margin-top:5px}.series-link-group{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.series-link-group a{display:inline-block;padding:7px 9px;border:1px solid rgba(83,245,255,.3);border-radius:7px;color:#83f4ff;text-decoration:none;font-size:10px}
+    @media(max-width:600px){.rivora-series-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rivora-series-art{height:175px}.rivora-series-copy{padding:11px}.series-detail-panel{padding:16px}}
+
 </style>
 
 </head>
@@ -567,6 +578,7 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
     <nav aria-label="Main navigation">
       <a href="./">Home</a>
       <a href="#movies">Explore</a>
+      <a href="#seriesLibrarySection">Series</a>
       <a href="#genreDiscoverySection">Genres</a>
       <a href="#topTenSection">Top 10</a>
       <a href="#trendingSection">Trending</a>
@@ -713,6 +725,11 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
       </div>
     </section>
 
+    <section class="rivora-series-section" id="seriesLibrarySection" aria-labelledby="seriesLibraryTitle">
+      <div class="rivora-series-heading"><span>RIVORA SERIES UNIVERSE</span><h2 id="seriesLibraryTitle">EXPLORE SERIES</h2><p>Discover published series, seasons and episodes from the RIVORA catalogue.</p></div>
+      <div class="rivora-series-grid" id="publicSeriesGrid"><p class="rivora-series-empty" id="publicSeriesStatus">Loading published series…</p></div>
+    </section>
+
     <section class="rivora-discovery-section" id="genreDiscoverySection" aria-labelledby="genreDiscoveryTitle">
       <div class="rivora-section-heading"><span>EXPLORE BY MOOD & CATEGORY</span><h2 id="genreDiscoveryTitle">GENRE DISCOVERY</h2><p>Choose a genre to explore the published movie library.</p></div>
       <div class="rivora-genre-grid" id="genreDiscoveryGrid"></div>
@@ -743,6 +760,16 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
       <p class="about-copy">A global entertainment discovery platform. Explore cinema across languages, cultures and genres. More stories. More discoveries. One universe.</p>
     </section>
   </main>
+
+  <div class="series-detail-modal" id="seriesDetailModal" role="dialog" aria-modal="true" aria-labelledby="seriesDetailTitle" aria-hidden="true">
+    <div class="series-detail-panel">
+      <button class="series-detail-close" id="seriesDetailClose" type="button" aria-label="Close series details">×</button>
+      <div class="modal-label">RIVORA SERIES EXPERIENCE</div>
+      <h2 id="seriesDetailTitle">Series title</h2>
+      <p class="series-detail-meta" id="seriesDetailMeta"></p>
+      <div id="seriesDetailEpisodes"></div>
+    </div>
+  </div>
 
   <footer>
     <strong>RIVORA.</strong>
@@ -2390,5 +2417,71 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
 
 })();
 </script>
+
+<script>
+(async function loadPublishedRivoraSeries(){
+  "use strict";
+  const SUPABASE_URL="https://vvzjecoegcpzmlhqjwpu.supabase.co";
+  const SUPABASE_KEY="sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
+  const grid=document.getElementById("publicSeriesGrid");
+  const status=document.getElementById("publicSeriesStatus");
+  const modal=document.getElementById("seriesDetailModal");
+  const close=document.getElementById("seriesDetailClose");
+  if(!grid||!status||!modal||!close)return;
+  let seriesRows=[];
+  let episodeRows=[];
+  const headers={apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY};
+  function safeHttps(value){try{const url=new URL(String(value||""));return url.protocol==="https:"&&!url.username&&!url.password?url.href:null;}catch(_){return null;}}
+  function openDetails(series){
+    document.getElementById("seriesDetailTitle").textContent=series.title||"Untitled Series";
+    const episodes=episodeRows.filter(item=>item.series_id===series.id);
+    const seasonNumbers=[...new Set(episodes.map(item=>Number(item.season_number)))].sort((a,b)=>a-b);
+    document.getElementById("seriesDetailMeta").textContent=(series.release_year||"Year unavailable")+" · "+seasonNumbers.length+" season(s) · "+episodes.length+" episode(s)";
+    const root=document.getElementById("seriesDetailEpisodes");root.replaceChildren();
+    seasonNumbers.forEach(number=>{
+      const seasonEpisodes=episodes.filter(item=>Number(item.season_number)===number).sort((a,b)=>Number(a.episode_number)-Number(b.episode_number));
+      const block=document.createElement("section");block.className="series-season-block";
+      const heading=document.createElement("h3");const seasonTitle=seasonEpisodes.find(item=>item.season_title)?.season_title;heading.textContent=seasonTitle||("Season "+number);block.append(heading);
+      seasonEpisodes.forEach(episode=>{
+        const row=document.createElement("article");row.className="series-episode-row";
+        const title=document.createElement("strong");title.textContent="Episode "+episode.episode_number+" · "+(episode.title||"Untitled episode");row.append(title);
+        if(episode.overview){const overview=document.createElement("p");overview.textContent=episode.overview;row.append(overview);}
+        const links=episode.download_links&&typeof episode.download_links==="object"?episode.download_links:{};
+        Object.entries(links).forEach(([quality,values])=>{
+          if(!Array.isArray(values))return;
+          const group=document.createElement("div");group.className="series-link-group";
+          values.forEach((value,index)=>{const href=safeHttps(value);if(!href)return;const anchor=document.createElement("a");anchor.href=href;anchor.target="_blank";anchor.rel="noopener noreferrer";anchor.textContent=quality+" · Link "+(index+1);group.append(anchor);});
+          if(group.childElementCount)row.append(group);
+        });
+        block.append(row);
+      });
+      root.append(block);
+    });
+    modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.classList.add("modal-open");close.focus();
+  }
+  function closeDetails(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");}
+  close.addEventListener("click",closeDetails);
+  modal.addEventListener("click",event=>{if(event.target===modal)closeDetails();});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&modal.classList.contains("open"))closeDetails();});
+  try{
+    const response=await fetch(SUPABASE_URL+"/rest/v1/rivora_series?select=id,title,release_year,status,created_at&status=eq.published&order=created_at.desc",{headers,cache:"no-store"});
+    if(!response.ok)throw new Error("Series catalogue response: "+response.status);
+    seriesRows=await response.json();
+    if(!Array.isArray(seriesRows)||!seriesRows.length){status.textContent="No published series are available yet.";return;}
+    const ids=seriesRows.map(item=>item.id).filter(Boolean);
+    if(ids.length){const episodeResponse=await fetch(SUPABASE_URL+"/rest/v1/rivora_episodes?select=id,series_id,season_number,season_title,episode_number,title,overview,download_links&series_id=in."+encodeURIComponent("("+ids.join(",")+")")+"&order=season_number.asc,episode_number.asc",{headers,cache:"no-store"});if(!episodeResponse.ok)throw new Error("Published episodes could not be loaded: "+episodeResponse.status);episodeRows=await episodeResponse.json();}
+    grid.replaceChildren();
+    seriesRows.forEach(series=>{
+      const episodes=episodeRows.filter(item=>item.series_id===series.id);
+      const seasons=[...new Set(episodes.map(item=>Number(item.season_number)))];
+      const card=document.createElement("article");card.className="rivora-series-card";
+      const art=document.createElement("div");art.className="rivora-series-art";
+      const artCopy=document.createElement("div");const titleArt=document.createElement("strong");titleArt.textContent=series.title||"Untitled Series";const stamp=document.createElement("span");stamp.textContent="RIVORA ORIGINAL CATALOGUE";artCopy.append(titleArt,stamp);art.append(artCopy);
+      const copy=document.createElement("div");copy.className="rivora-series-copy";const title=document.createElement("h3");title.textContent=series.title||"Untitled Series";const meta=document.createElement("p");meta.textContent=(series.release_year||"Year unavailable")+" · "+seasons.length+" season(s) · "+episodes.length+" episode(s)";const button=document.createElement("button");button.type="button";button.className="rivora-series-open";button.textContent="VIEW EPISODES →";button.addEventListener("click",()=>openDetails(series));copy.append(title,meta,button);card.append(art,copy);grid.append(card);
+    });
+  }catch(error){console.error("RIVORA published series error:",error);status.textContent="Published series could not be loaded. Please refresh later.";}
+})();
+</script>
+
 </body>
 </html>
