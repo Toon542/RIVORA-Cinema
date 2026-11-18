@@ -735,6 +735,237 @@ button:focus-visible,a:focus-visible,input:focus-visible{
 }
 </style>
 
+
+<style id="rivora-design-system-effects-v3">
+/* RIVORA HUB — Obsidian Luxe + Chroma Flux Design System V3 */
+:root{
+  --rivora-bg:#0A0A0F;
+  --rivora-obsidian:#1A1025;
+  --rivora-purple-dark:#2E153B;
+  --rivora-pink:#EC4899;
+  --rivora-rose:#F472B6;
+  --rivora-gold:#F59E0B;
+  --rivora-golden:#FBBF24;
+  --rivora-violet:#8B5CF6;
+  --rivora-glass:rgba(26,16,37,.72);
+  --rivora-glass-strong:rgba(10,10,15,.88);
+  --rivora-border:rgba(244,114,182,.30);
+  --rivora-gradient-pink-gold:linear-gradient(105deg,#EC4899 0%,#F472B6 48%,#F59E0B 100%);
+  --rivora-gradient-violet-pink-gold:linear-gradient(105deg,#8B5CF6 0%,#EC4899 52%,#FBBF24 100%);
+  --rivora-gradient-purple-gold:linear-gradient(105deg,#2E153B 0%,#8B5CF6 52%,#F59E0B 100%);
+  --rivora-ambient-shadow:0 14px 38px rgba(139,92,246,.13),0 0 24px rgba(236,72,153,.10),0 0 18px rgba(245,158,11,.07);
+}
+
+/* Deep obsidian canvas + subtle ambient edge illumination */
+html,body{background-color:var(--rivora-bg)!important}
+body{
+  position:relative;
+  isolation:isolate;
+  color:#FFF8FF;
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(ellipse at 0% 12%,rgba(236,72,153,.14),transparent 31%),
+    radial-gradient(ellipse at 100% 20%,rgba(139,92,246,.16),transparent 34%),
+    radial-gradient(ellipse at 82% 100%,rgba(245,158,11,.085),transparent 34%),
+    linear-gradient(145deg,#0A0A0F 0%,#1A1025 52%,#0A0A0F 100%)!important;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 2% 48%,rgba(236,72,153,.075),transparent 27%),
+    radial-gradient(ellipse at 98% 58%,rgba(245,158,11,.065),transparent 25%);
+  opacity:.9;
+}
+
+/* Glass-like surfaces, thin chromatic borders and ambient shadows */
+.hero,.surprise-shell,.movie-card,.popular-genres-panel,.quick-actions-panel,
+.quick-access-panel,.time-vault-panel,.rivora-os-panel,.rivora-discovery-section,
+.rivora-ranking-section,.rivora-request-section,.rivora-series-card,
+.detail-hero,.detail-block,.modal-content,.series-detail-panel,
+.series-season-block,.rivora-request-card,.kg-panel{
+  background-color:var(--rivora-glass)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(125%);
+  backdrop-filter:blur(16px) saturate(125%);
+  border:1px solid var(--rivora-border)!important;
+  box-shadow:var(--rivora-ambient-shadow);
+}
+.hero,.surprise-shell,.popular-genres-panel,.quick-actions-panel,
+.quick-access-panel,.time-vault-panel,.rivora-os-panel,
+.rivora-discovery-section,.rivora-ranking-section,.rivora-series-card,
+.detail-hero,.modal-content,.series-detail-panel{
+  position:relative;
+}
+.hero::after,.surprise-shell::after,.popular-genres-panel::after,
+.quick-actions-panel::after,.quick-access-panel::after,.time-vault-panel::after,
+.rivora-os-panel::after,.rivora-discovery-section::after,
+.rivora-ranking-section::after,.rivora-series-card::after,
+.detail-hero::after,.modal-content::after,.series-detail-panel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
+  pointer-events:none;
+  background:linear-gradient(125deg,rgba(236,72,153,.48),rgba(139,92,246,.22) 48%,rgba(245,158,11,.42));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:.48;
+}
+
+/* Chroma Flux buttons — pink/rose/gold gradient with a soft neon aura */
+.primary-button,.surprise-button,.time-vault-button,
+.search-box button,.quick-action-primary,.rivora-series-open,
+.gallery-view-button[aria-pressed="true"],.download-link{
+  background:var(--rivora-gradient-pink-gold)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.25)!important;
+  box-shadow:0 5px 18px rgba(236,72,153,.23),0 0 20px rgba(245,158,11,.13);
+  font-weight:750;
+  transition:transform .22s ease,box-shadow .22s ease,filter .22s ease;
+}
+.secondary-button,.nav-button,.quick-action,.watchlist-button,
+.gallery-view-button,.filter,.modal-close,.hero-arrow,.hero-pause{
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background-color .22s ease,color .22s ease;
+}
+.primary-button:hover,.surprise-button:hover,.time-vault-button:hover,
+.search-box button:hover,.quick-action-primary:hover,.rivora-series-open:hover,
+.gallery-view-button[aria-pressed="true"]:hover,.download-link:hover{
+  transform:translateY(-2px);
+  filter:saturate(1.14) brightness(1.08);
+  box-shadow:0 9px 26px rgba(236,72,153,.34),0 0 28px rgba(245,158,11,.22);
+}
+.secondary-button,.quick-action,.watchlist-button,.gallery-view-button,
+.hero-arrow,.hero-pause,.modal-close{
+  background:linear-gradient(135deg,rgba(46,21,59,.78),rgba(26,16,37,.88))!important;
+  color:#FFF8FF!important;
+  border:1px solid rgba(244,114,182,.34)!important;
+}
+.secondary-button:hover,.quick-action:hover,.watchlist-button:hover,
+.gallery-view-button:hover,.hero-arrow:hover,.hero-pause:hover,.modal-close:hover{
+  transform:translateY(-2px);
+  border-color:var(--rivora-golden)!important;
+  box-shadow:0 0 18px rgba(139,92,246,.20),0 0 16px rgba(236,72,153,.16);
+}
+
+/* Cinematic poster cards: rounded edges, clean clipping and lift on hover */
+.movie-card,.rivora-series-card,.popular-genre{
+  overflow:hidden;
+  border-radius:16px!important;
+  transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease;
+}
+.movie-card:hover,.rivora-series-card:hover,.popular-genre:hover{
+  transform:translateY(-5px);
+  border-color:rgba(251,191,36,.72)!important;
+  box-shadow:0 16px 34px rgba(139,92,246,.20),0 0 24px rgba(236,72,153,.18),0 0 18px rgba(245,158,11,.10)!important;
+}
+.movie-card img,.popular-genre img,.rivora-series-card img{
+  transition:transform .35s ease,filter .35s ease;
+}
+.movie-card:hover img,.popular-genre:hover img,.rivora-series-card:hover img{
+  transform:scale(1.035);
+  filter:saturate(1.08) contrast(1.03);
+}
+
+/* Typography: modern, bold headings and restrained readable secondary text */
+h1,h2,h3,h4,.section-heading,.rivora-section-heading,
+.side-panel-heading,.rivora-series-heading{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+  letter-spacing:-.025em;
+}
+h1,h2,.section-heading h2,.rivora-section-heading h2{
+  font-weight:800;
+}
+.section-heading h2,.rivora-section-heading h2,.side-panel-heading,
+.rivora-series-heading{
+  color:#FFF8FF;
+}
+.hero h1,.brand-name b,.footer-brand strong{
+  background:var(--rivora-gradient-violet-pink-gold)!important;
+  background-clip:text!important;
+  -webkit-background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+}
+
+/* Neon outline / duotone treatment for inline icons and icon buttons */
+button svg,a svg,.nav-button svg,.quick-action svg,.footer-social svg{
+  transition:filter .2s ease,transform .2s ease;
+}
+button:hover svg,a:hover svg,.nav-button:hover svg,.quick-action:hover svg{
+  filter:drop-shadow(0 0 4px rgba(236,72,153,.75)) drop-shadow(0 0 6px rgba(245,158,11,.45));
+}
+svg{
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.hero-controls svg,.quick-action svg,.footer-social svg{
+  filter:drop-shadow(0 0 3px rgba(139,92,246,.42));
+}
+
+/* Gradient dividers and section separators */
+hr,.section-divider,.rivora-divider{
+  height:1px;
+  border:0!important;
+  background:linear-gradient(90deg,transparent,rgba(236,72,153,.62),rgba(139,92,246,.48),rgba(245,158,11,.58),transparent)!important;
+  box-shadow:0 0 9px rgba(236,72,153,.12);
+}
+.section-heading::after,.rivora-section-heading::after{
+  background:var(--rivora-gradient-violet-pink-gold)!important;
+}
+
+/* Search and filter controls */
+.search-box input,.header-search input,input[type="search"]{
+  background:rgba(10,10,15,.72)!important;
+  color:#FFF8FF!important;
+  border:1px solid rgba(244,114,182,.30)!important;
+}
+.search-box input:focus,.header-search input:focus,input[type="search"]:focus{
+  border-color:var(--rivora-golden)!important;
+  box-shadow:0 0 0 3px rgba(139,92,246,.16),0 0 18px rgba(236,72,153,.14)!important;
+  outline:none;
+}
+.filter.active,.filter:hover{
+  background:var(--rivora-gradient-violet-pink-gold)!important;
+  color:#fff!important;
+  border-color:rgba(251,191,36,.62)!important;
+}
+
+/* Footer and brand finishing */
+.rivora-footer,footer{
+  background:linear-gradient(110deg,rgba(10,10,15,.98),rgba(26,16,37,.96),rgba(10,10,15,.98))!important;
+  border-top:1px solid rgba(244,114,182,.24);
+  box-shadow:0 -12px 36px rgba(139,92,246,.07);
+}
+.footer-links a:hover,.footer-social a:hover{
+  color:var(--rivora-golden)!important;
+  filter:drop-shadow(0 0 7px rgba(236,72,153,.55));
+}
+
+/* Accessible focus and motion preferences */
+:focus-visible{
+  outline:2px solid var(--rivora-golden)!important;
+  outline-offset:3px;
+}
+@media(hover:none){
+  .movie-card:hover,.rivora-series-card:hover,.popular-genre:hover,
+  .primary-button:hover,.surprise-button:hover,.time-vault-button:hover{
+    transform:none;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
+
 </head>
 <body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="18.1">
 
