@@ -575,6 +575,166 @@ header nav a,header nav .nav-button{white-space:nowrap!important}
 
 </style>
 
+
+<style id="rivora-colour-palette-gradient-v2">
+/* RIVORA HUB — Official Obsidian Luxe + Chroma Flux Colour System */
+:root{
+  --bg:#0A0A0F;
+  --panel:#1A1025;
+  --panel-light:#2E153B;
+
+  --deep-black:#0A0A0F;
+  --obsidian:#1A1025;
+  --purple-dark:#2E153B;
+
+  --pink:#EC4899;
+  --rose-pink:#F472B6;
+  --gold:#F59E0B;
+  --golden-yellow:#FBBF24;
+  --violet:#8B5CF6;
+
+  /* Legacy aliases retained so existing components keep working */
+  --cyan:#EC4899;
+  --purple:#8B5CF6;
+  --rivora-pink:#EC4899;
+  --rivora-rose:#F472B6;
+  --rivora-gold:#F59E0B;
+  --rivora-golden:#FBBF24;
+  --rivora-violet:#8B5CF6;
+
+  --text:#FFF8FF;
+  --muted:#C8BBD1;
+  --border:rgba(244,114,182,.28);
+  --danger:#FF6B80;
+  --rivora-glass:rgba(26,16,37,.78);
+
+  --gradient-pink-gold:linear-gradient(105deg,#EC4899 0%,#F472B6 48%,#F59E0B 100%);
+  --gradient-violet-pink-yellow:linear-gradient(105deg,#8B5CF6 0%,#EC4899 52%,#FBBF24 100%);
+  --gradient-purple-violet-gold:linear-gradient(105deg,#2E153B 0%,#8B5CF6 52%,#F59E0B 100%);
+  --gradient-signature:linear-gradient(105deg,#EC4899 0%,#F472B6 34%,#8B5CF6 68%,#FBBF24 100%);
+  --rivora-glow:0 18px 55px rgba(139,92,246,.16),0 0 28px rgba(236,72,153,.10),0 0 16px rgba(245,158,11,.06);
+}
+
+html,body{background-color:var(--bg);color:var(--text)}
+body{
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(139,92,246,.15),transparent 34%),
+    radial-gradient(ellipse at 92% 14%,rgba(236,72,153,.13),transparent 32%),
+    radial-gradient(ellipse at 52% 100%,rgba(245,158,11,.055),transparent 42%),
+    linear-gradient(145deg,#0A0A0F 0%,#1A1025 54%,#0A0A0F 100%)!important;
+  color:var(--text)!important;
+}
+
+/* Existing brand masthead and navigation */
+.brand-masthead{
+  background:linear-gradient(110deg,#0A0A0F 0%,#1A1025 52%,#0A0A0F 100%)!important;
+  border-color:rgba(245,158,11,.42)!important;
+}
+.brand-trails{
+  background:
+    radial-gradient(ellipse at 16% 90%,rgba(236,72,153,.34),transparent 36%),
+    radial-gradient(ellipse at 78% 8%,rgba(245,158,11,.24),transparent 35%),
+    linear-gradient(120deg,transparent 30%,rgba(139,92,246,.18) 48%,rgba(236,72,153,.22) 58%,rgba(245,158,11,.15) 72%,transparent 88%)!important;
+}
+.brand-mark,.brand-name b,.rivora-os-logo,.logo-main{
+  background-image:var(--gradient-signature)!important;
+  background-clip:text!important;
+  -webkit-background-clip:text!important;
+}
+.brand-name b{color:transparent!important;-webkit-text-fill-color:transparent!important}
+.palette-strip{
+  background:linear-gradient(100deg,rgba(26,16,37,.96),rgba(10,10,15,.98),rgba(46,21,59,.92))!important;
+  border-color:rgba(236,72,153,.55)!important;
+  box-shadow:0 0 20px rgba(236,72,153,.13),0 0 18px rgba(245,158,11,.10)!important;
+}
+.palette-gradient:first-of-type i{background:var(--gradient-pink-gold)!important}
+.palette-gradient:last-of-type i{background:var(--gradient-purple-violet-gold)!important}
+header{
+  background:rgba(10,10,15,.88)!important;
+  border-color:rgba(244,114,182,.24)!important;
+}
+header nav a:hover,header nav .nav-button:hover{color:var(--golden-yellow)!important}
+nav a,nav .nav-button{color:#F8EAF4}
+
+/* Hero, buttons and section headings */
+.hero{
+  background:linear-gradient(125deg,#1A1025 0%,#2E153B 48%,#0A0A0F 100%)!important;
+  border-color:rgba(236,72,153,.24)!important;
+}
+.hero::before{
+  background:
+    linear-gradient(90deg,rgba(10,10,15,.96) 0%,rgba(26,16,37,.82) 42%,rgba(26,16,37,.22) 78%,rgba(10,10,15,.30) 100%),
+    linear-gradient(0deg,rgba(10,10,15,.96),transparent 48%,rgba(10,10,15,.12))!important;
+}
+.hero h1,#detailTitle{
+  background:var(--gradient-signature)!important;
+  background-clip:text!important;
+  -webkit-background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+}
+.hero .eyebrow,.surprise-kicker,.modal-label{color:var(--golden-yellow)!important}
+.primary-button,.secondary-button,.search-box button,.surprise-button,.download-link{
+  background:var(--gradient-pink-gold)!important;
+  border-color:rgba(255,255,255,.22)!important;
+  color:#fff!important;
+}
+.section-heading h2::before{
+  background:var(--gradient-violet-pink-yellow)!important;
+}
+.filter.active,.filter:hover,.gallery-view-button[aria-pressed="true"]{
+  background:var(--gradient-violet-pink-yellow)!important;
+  border-color:rgba(251,191,36,.7)!important;
+}
+.search-box input:focus{border-color:var(--golden-yellow)!important}
+
+/* Movie cards, panels, dialogs and footer */
+.movie-card,.detail-hero,.detail-block,.dna-profile-block,.knowledge-graph-block,
+.modal-content,.series-detail-panel{
+  background:linear-gradient(145deg,rgba(46,21,59,.90),rgba(26,16,37,.96) 55%,rgba(10,10,15,.98))!important;
+  border-color:rgba(244,114,182,.28)!important;
+  box-shadow:var(--rivora-glow)!important;
+}
+.movie-card:hover,.rivora-series-card:hover{border-color:var(--golden-yellow)!important}
+.movie-info{background:linear-gradient(180deg,rgba(26,16,37,.94),rgba(10,10,15,.99))!important}
+.surprise-shell{
+  background:linear-gradient(110deg,rgba(46,21,59,.94),rgba(26,16,37,.94) 55%,rgba(74,30,65,.76))!important;
+  border-color:rgba(244,114,182,.38)!important;
+}
+footer{
+  background:linear-gradient(110deg,#0A0A0F,#1A1025 55%,#0A0A0F)!important;
+  border-color:rgba(245,158,11,.30)!important;
+}
+footer strong{background:var(--gradient-signature)!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important}
+
+/* Series surfaces: replace legacy cyan accents with the brand palette */
+.rivora-series-section{background:radial-gradient(ellipse at 15% 0%,rgba(236,72,153,.10),transparent 42%),radial-gradient(ellipse at 90% 70%,rgba(139,92,246,.12),transparent 45%),linear-gradient(135deg,#0A0A0F,#1A1025)!important}
+.rivora-series-heading span,.rivora-series-meta,.series-detail-meta{color:var(--rose-pink)!important}
+.rivora-series-card,.series-detail-panel,.series-season-block{
+  background:linear-gradient(145deg,#2E153B,#1A1025 60%,#0A0A0F)!important;
+  border-color:rgba(244,114,182,.30)!important;
+}
+.rivora-series-card:hover{border-color:var(--gold)!important}
+.rivora-series-art{
+  background:radial-gradient(circle at 30% 20%,rgba(236,72,153,.36),transparent 45%),linear-gradient(135deg,#2E153B,#1A1025 58%,#8B5CF6)!important;
+}
+.rivora-series-open,.series-link-group a{
+  border-color:rgba(244,114,182,.42)!important;
+  background:var(--gradient-violet-pink-yellow)!important;
+  color:#fff!important;
+}
+.series-season-block h3{color:var(--golden-yellow)!important}
+.detail-chip{border-color:rgba(245,158,11,.38)!important;background:rgba(245,158,11,.10)!important}
+
+/* Consistent keyboard focus and reduced-motion support */
+button:focus-visible,a:focus-visible,input:focus-visible{
+  outline:2px solid var(--golden-yellow)!important;
+  outline-offset:3px;
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
 </head>
 <body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="18.1">
 
