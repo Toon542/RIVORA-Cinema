@@ -966,6 +966,292 @@ hr,.section-divider,.rivora-divider{
 }
 </style>
 
+
+<style id="rivora-neon-cinema-experience-v4">
+/* RIVORA HUB — Neon Luxe Navigation + Premium Cinematic Discovery V4 */
+
+/* 01 — Header: luminous premium navigation */
+header{
+  position:sticky!important;
+  top:0;
+  z-index:1000;
+  background:linear-gradient(105deg,rgba(10,10,15,.96),rgba(26,16,37,.94) 52%,rgba(10,10,15,.97))!important;
+  border:1px solid rgba(244,114,182,.30)!important;
+  border-bottom-color:rgba(245,158,11,.38)!important;
+  border-radius:0 0 17px 17px;
+  box-shadow:0 8px 30px rgba(139,92,246,.13),0 0 20px rgba(236,72,153,.09);
+  -webkit-backdrop-filter:blur(18px) saturate(135%);
+  backdrop-filter:blur(18px) saturate(135%);
+}
+header .logo{
+  filter:drop-shadow(0 0 9px rgba(236,72,153,.26));
+}
+header nav a,header nav .nav-button{
+  position:relative;
+  color:#F8EAF4!important;
+  transition:color .2s ease,text-shadow .2s ease;
+}
+header nav a:hover,header nav .nav-button:hover{
+  color:#FBBF24!important;
+  text-shadow:0 0 10px rgba(236,72,153,.68),0 0 16px rgba(139,92,246,.40);
+}
+header nav a::after{
+  content:"";
+  position:absolute;
+  left:0;right:100%;bottom:-7px;height:2px;
+  background:linear-gradient(90deg,#EC4899,#8B5CF6,#FBBF24);
+  box-shadow:0 0 9px rgba(236,72,153,.65);
+  transition:right .22s ease;
+}
+header nav a:hover::after{right:0}
+.header-search,.header-notice,.header-profile{
+  border-color:rgba(244,114,182,.40)!important;
+  box-shadow:inset 0 0 12px rgba(139,92,246,.08),0 0 12px rgba(236,72,153,.08);
+}
+.header-search button{
+  background:linear-gradient(105deg,#EC4899,#F472B6,#F59E0B)!important;
+}
+
+/* 02 — Hero: premium cinematic focus */
+.hero{
+  min-height:clamp(360px,39vw,560px);
+  border:1px solid rgba(244,114,182,.40)!important;
+  border-radius:20px!important;
+  overflow:hidden;
+  background-color:#0A0A0F!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.34),0 0 28px rgba(139,92,246,.15),0 0 22px rgba(236,72,153,.12),0 0 16px rgba(245,158,11,.08)!important;
+}
+.hero::before{
+  background:
+    linear-gradient(90deg,rgba(10,10,15,.96) 0%,rgba(26,16,37,.78) 40%,rgba(26,16,37,.20) 78%,rgba(10,10,15,.22) 100%),
+    linear-gradient(0deg,rgba(10,10,15,.86),transparent 48%)!important;
+}
+.hero-content{max-width:min(620px,72%)}
+.hero .eyebrow{color:#FBBF24!important;letter-spacing:.20em}
+.hero h1{
+  font-weight:900!important;
+  text-shadow:0 8px 32px rgba(10,10,15,.55);
+}
+.hero-meta span,.hero-meta .meta-chip{
+  border-color:rgba(244,114,182,.30)!important;
+  background:rgba(10,10,15,.56)!important;
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+}
+.hero-controls .hero-arrow,.hero-controls .hero-pause{
+  border-color:rgba(244,114,182,.48)!important;
+  background:rgba(26,16,37,.72)!important;
+  box-shadow:0 0 14px rgba(139,92,246,.16);
+}
+
+/* 03 — Discovery Engine: glowing dark glass panel */
+.surprise-section{
+  background:
+    radial-gradient(ellipse at 0% 50%,rgba(236,72,153,.12),transparent 36%),
+    radial-gradient(ellipse at 100% 50%,rgba(245,158,11,.10),transparent 34%),
+    transparent!important;
+}
+.surprise-shell{
+  border:1px solid rgba(244,114,182,.42)!important;
+  background:linear-gradient(115deg,rgba(26,16,37,.94),rgba(46,21,59,.91) 54%,rgba(10,10,15,.96))!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.28),0 0 26px rgba(236,72,153,.14),0 0 25px rgba(139,92,246,.13),0 0 18px rgba(245,158,11,.08)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(130%);
+  backdrop-filter:blur(18px) saturate(130%);
+}
+.surprise-kicker{color:#FBBF24!important}
+.surprise-shell h2{color:#FFF8FF!important}
+.surprise-button{
+  background:linear-gradient(105deg,#EC4899 0%,#F472B6 48%,#F59E0B 100%)!important;
+  box-shadow:0 8px 24px rgba(236,72,153,.25),0 0 18px rgba(245,158,11,.14)!important;
+}
+
+/* 04 — Explore Cinema: premium obsidian panel */
+#movies.section{
+  position:relative;
+  isolation:isolate;
+  margin:22px auto!important;
+  max-width:1460px;
+  padding:clamp(24px,3vw,42px)!important;
+  border:1px solid rgba(244,114,182,.34)!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(ellipse at 0% 0%,rgba(139,92,246,.12),transparent 38%),
+    radial-gradient(ellipse at 100% 100%,rgba(236,72,153,.09),transparent 36%),
+    linear-gradient(145deg,rgba(26,16,37,.97),rgba(10,10,15,.98) 58%,rgba(46,21,59,.92))!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.30),0 0 28px rgba(139,92,246,.10),0 0 20px rgba(236,72,153,.08)!important;
+}
+#movies .section-heading h2{
+  color:#FFF8FF!important;
+  font-weight:850!important;
+}
+#movies .section-heading h2::before{
+  background:linear-gradient(180deg,#8B5CF6,#EC4899,#FBBF24)!important;
+  box-shadow:0 0 13px rgba(236,72,153,.48);
+}
+#movies .search-box input{
+  color:#FFF8FF!important;
+  background:rgba(10,10,15,.78)!important;
+  border:1px solid rgba(244,114,182,.38)!important;
+  border-radius:12px!important;
+}
+#movies .search-box input:focus{
+  border-color:#FBBF24!important;
+  box-shadow:0 0 0 3px rgba(139,92,246,.16),0 0 18px rgba(236,72,153,.14)!important;
+}
+#movies .search-box button{
+  background:linear-gradient(105deg,#EC4899,#F472B6,#F59E0B)!important;
+  border-radius:10px!important;
+}
+
+/* 05 — Genre filters: gradient accent chips */
+#genreFilters .filter{
+  color:#EEDFEB!important;
+  border:1px solid rgba(244,114,182,.25)!important;
+  border-radius:999px!important;
+  background:rgba(26,16,37,.74)!important;
+  padding:9px 16px;
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+#genreFilters .filter:hover{
+  color:#fff!important;
+  border-color:rgba(251,191,36,.65)!important;
+  background:linear-gradient(110deg,rgba(139,92,246,.30),rgba(236,72,153,.24),rgba(245,158,11,.18))!important;
+  box-shadow:0 0 15px rgba(236,72,153,.14);
+  transform:translateY(-1px);
+}
+#genreFilters .filter.active{
+  color:#fff!important;
+  border-color:rgba(251,191,36,.68)!important;
+  background:linear-gradient(105deg,#8B5CF6 0%,#EC4899 54%,#FBBF24 100%)!important;
+  box-shadow:0 5px 17px rgba(139,92,246,.20),0 0 14px rgba(236,72,153,.18);
+}
+
+/* 06 — View modes: dark glass controls */
+#movies .gallery-toolbar{
+  padding:12px 14px;
+  border:1px solid rgba(244,114,182,.20);
+  border-radius:14px;
+  background:rgba(10,10,15,.46);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+}
+#movies .gallery-view-button{
+  color:#EADDED!important;
+  border:1px solid rgba(244,114,182,.28)!important;
+  border-radius:9px!important;
+  background:linear-gradient(135deg,rgba(46,21,59,.74),rgba(10,10,15,.82))!important;
+}
+#movies .gallery-view-button:hover{
+  color:#fff!important;
+  border-color:#FBBF24!important;
+  box-shadow:0 0 13px rgba(139,92,246,.20);
+}
+#movies .gallery-view-button[aria-pressed="true"]{
+  color:#fff!important;
+  border-color:rgba(251,191,36,.70)!important;
+  background:linear-gradient(105deg,#8B5CF6,#EC4899,#F59E0B)!important;
+  box-shadow:0 0 15px rgba(236,72,153,.19);
+}
+
+/* 07 — Neon edge cinematic poster cards */
+#movieGrid .movie-card{
+  overflow:hidden!important;
+  border:1px solid rgba(244,114,182,.32)!important;
+  border-radius:15px!important;
+  background:linear-gradient(145deg,rgba(46,21,59,.96),rgba(10,10,15,.98))!important;
+  box-shadow:0 9px 24px rgba(0,0,0,.25),0 0 13px rgba(139,92,246,.08);
+  transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease!important;
+}
+#movieGrid .movie-card:hover,#movieGrid .movie-card:focus-within{
+  transform:translateY(-4px)!important;
+  border-color:rgba(251,191,36,.78)!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.34),0 0 20px rgba(236,72,153,.19),0 0 18px rgba(139,92,246,.16),0 0 14px rgba(245,158,11,.10)!important;
+}
+#movieGrid .holo-stage{
+  border-radius:14px 14px 0 0!important;
+}
+#movieGrid .movie-card.holo-card::before{
+  background:conic-gradient(from var(--holo-angle,0deg),transparent 0deg,#EC4899 70deg,#8B5CF6 145deg,transparent 220deg,#F59E0B 300deg,transparent 360deg)!important;
+}
+#movieGrid .movie-card.holo-card:hover,#movieGrid .movie-card.holo-card:focus-within{
+  --holo-glow:rgba(236,72,153,.34);
+  border-color:rgba(244,114,182,.82)!important;
+}
+
+/* New always-visible title caption directly below each poster */
+#movieGrid .movie-card-caption{
+  position:relative;
+  display:block!important;
+  min-height:48px;
+  padding:11px 10px 12px;
+  background:linear-gradient(180deg,rgba(26,16,37,.98),rgba(10,10,15,.99));
+  border-top:1px solid rgba(244,114,182,.18);
+  text-align:center;
+}
+#movieGrid .movie-card-caption h3{
+  margin:0!important;
+  color:#FFF8FF!important;
+  font-size:clamp(12px,1.05vw,14px)!important;
+  line-height:1.35!important;
+  font-weight:800!important;
+  letter-spacing:.01em;
+  overflow-wrap:anywhere;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  text-shadow:0 1px 9px rgba(236,72,153,.18);
+}
+/* The separate caption replaces the hover-only duplicate title in poster/grid modes. */
+#movieGrid:not(.view-list) .holo-stage .movie-info h3{display:none!important}
+#movieGrid.view-list .movie-card-caption{display:none!important}
+#movieGrid.view-list .holo-stage .movie-info h3{display:block!important}
+
+/* Poster view must reserve space for the title below the 2:3 poster. */
+#movieGrid.view-poster .holo-stage{
+  aspect-ratio:2/3!important;
+  height:auto!important;
+  overflow:hidden;
+}
+#movieGrid.view-poster .holo-stage .poster{
+  inset:0!important;
+  height:100%!important;
+  bottom:0!important;
+}
+#movieGrid.view-poster .holo-stage .movie-info{display:none!important}
+#movieGrid.view-poster .movie-card-caption{
+  min-height:48px;
+  padding:10px 7px 11px;
+}
+#movieGrid.view-poster .movie-card-caption h3{font-size:12px!important}
+
+/* Compact and masonry retain their poster labels */
+#movieGrid.view-compact .movie-card-caption{min-height:42px;padding:8px 6px}
+#movieGrid.view-compact .movie-card-caption h3{font-size:11px!important}
+#movieGrid.view-masonry .movie-card-caption{min-height:44px}
+
+/* 08 — Ambient obsidian page atmosphere */
+body{
+  background:
+    radial-gradient(ellipse at 0% 12%,rgba(236,72,153,.13),transparent 32%),
+    radial-gradient(ellipse at 100% 24%,rgba(139,92,246,.15),transparent 34%),
+    radial-gradient(ellipse at 82% 100%,rgba(245,158,11,.08),transparent 36%),
+    linear-gradient(145deg,#0A0A0F 0%,#1A1025 52%,#0A0A0F 100%)!important;
+}
+@media(max-width:650px){
+  #movies.section{margin:14px 9px!important;padding:19px 13px!important;border-radius:17px!important}
+  #movies .gallery-toolbar{padding:9px}
+  #movieGrid .movie-card-caption{min-height:43px;padding:9px 6px}
+  #movieGrid .movie-card-caption h3{font-size:11px!important}
+  #movieGrid.view-poster .movie-card-caption h3{font-size:10.5px!important}
+  .hero{min-height:390px}
+  .hero-content{max-width:94%}
+}
+@media(prefers-reduced-motion:reduce){
+  #movieGrid .movie-card,#genreFilters .filter,header nav a::after{transition:none!important}
+}
+</style>
+
 </head>
 <body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="18.1">
 
@@ -2432,7 +2718,15 @@ hr,.section-divider,.rivora-divider{
         stage.style.setProperty("--holo-poster-image", poster.style.backgroundImage);
       }
       stage.append(poster, reflection, info);
-      card.append(stage);
+
+      // Dedicated movie title below the poster: remains visible in every poster-style view.
+      const caption = document.createElement("div");
+      caption.className = "movie-card-caption";
+      const captionTitle = document.createElement("h3");
+      captionTitle.textContent = title;
+      caption.append(captionTitle);
+
+      card.append(stage, caption);
       attachHolographicInteraction(card, stage);
       grid.insertBefore(card, empty);
     });
