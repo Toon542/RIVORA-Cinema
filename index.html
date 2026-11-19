@@ -1566,8 +1566,133 @@ header{
   }
 </style>
 
-</head>
-<body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="18.1">
+
+  <style id="obsidian-luxe-chroma-flux">
+    /* RIVORA HUB — OBSIDIAN LUXE + CHROMA FLUX SIGNATURE THEME */
+    :root{
+      color-scheme:dark;
+      --bg:#07070b;--panel:#101016;--panel-light:#171720;
+      --cyan:#55e7ff;--purple:#a78bfa;--pink:#ff5ebc;
+      --text:#f7f5ff;--muted:#aaa8ba;--border:rgba(170,145,255,.24);
+      --gold:#f2c879;--golden:#ffe4a1;--danger:#ff718e;
+      --flux:linear-gradient(112deg,#55e7ff 0%,#9b7bff 35%,#ff65bc 68%,#f2c879 100%);
+      --glass:rgba(18,17,27,.76);
+      --glow:0 0 22px rgba(132,105,255,.12),0 0 34px rgba(85,231,255,.06);
+    }
+    html{background:var(--bg);scrollbar-color:#65518c #09090e}
+    body{background:radial-gradient(ellipse at 12% 8%,rgba(87,55,130,.16),transparent 32%),radial-gradient(ellipse at 88% 24%,rgba(30,127,145,.12),transparent 30%),radial-gradient(ellipse at 55% 100%,rgba(150,77,125,.09),transparent 38%),#07070b!important;color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif;}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+    header{background:rgba(8,8,13,.82)!important;border-bottom:1px solid rgba(194,165,255,.2)!important;backdrop-filter:blur(22px) saturate(145%)!important;box-shadow:0 8px 30px rgba(0,0,0,.28)}
+    .logo-main,.brand-name,.nits-wordmark,.rivora-section-heading,.section-heading,.hero h1{background:var(--flux);background-size:220% auto;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;}
+    .logo-main{filter:drop-shadow(0 0 9px rgba(85,231,255,.24)) drop-shadow(0 0 14px rgba(255,94,188,.14))}
+    .logo-hub{background:linear-gradient(100deg,#f2c879,#ff8bc7,#9d8aff);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    nav a,.nav-button{color:#d0ccdc;transition:color .2s ease,text-shadow .2s ease}
+    nav a:hover,.nav-button:hover{color:var(--cyan);text-shadow:0 0 14px rgba(85,231,255,.5)}
+    .hero{background:linear-gradient(115deg,rgba(9,9,15,.96),rgba(25,17,38,.84),rgba(7,25,31,.72))!important;border-bottom:1px solid rgba(174,139,255,.25)!important}
+    .hero::before{background:linear-gradient(90deg,rgba(5,5,10,.98) 0%,rgba(7,7,14,.86) 38%,rgba(8,8,16,.3) 78%),linear-gradient(0deg,rgba(7,7,11,.96),transparent 48%)!important}
+    .hero .eyebrow,.eyebrow,.hero-meta{color:#d9d4e8}
+    .hero h1{filter:drop-shadow(0 4px 24px rgba(147,115,255,.2))}
+    .section,.quick-actions-panel,.popular-genres-panel,.time-vault-panel,.quick-access-panel,.side-panel,.surprise-section,.rivora-request-section,.rivora-ranking-section,.rivora-series-section,.rivora-discovery-section,.trending-section,.detail-block,.detail-overview,.dna-profile-block,.knowledge-graph-block,.series-detail-panel,.modal-content,.cinema-dashboard-grid>*,.hero-dashboard-grid>*{
+      background:linear-gradient(145deg,rgba(24,22,34,.82),rgba(12,12,19,.78))!important;
+      border:1px solid transparent!important;
+      background-clip:padding-box!important;
+      box-shadow:var(--glow),inset 0 1px 0 rgba(255,255,255,.045);
+      backdrop-filter:blur(18px) saturate(135%);
+      border-radius:18px;
+    }
+    .section,.quick-actions-panel,.popular-genres-panel,.time-vault-panel,.quick-access-panel,.side-panel,.surprise-section,.rivora-request-section,.rivora-ranking-section,.rivora-series-section,.rivora-discovery-section,.trending-section,.detail-block,.detail-overview,.dna-profile-block,.knowledge-graph-block,.series-detail-panel,.modal-content,.cinema-dashboard-grid>*,.hero-dashboard-grid>*{position:relative;isolation:isolate}
+    .section::before,.quick-actions-panel::before,.popular-genres-panel::before,.time-vault-panel::before,.quick-access-panel::before,.side-panel::before,.surprise-section::before,.rivora-request-section::before,.rivora-ranking-section::before,.rivora-series-section::before,.rivora-discovery-section::before,.trending-section::before,.detail-block::before,.detail-overview::before,.dna-profile-block::before,.knowledge-graph-block::before,.series-detail-panel::before,.modal-content::before,.cinema-dashboard-grid>*::before,.hero-dashboard-grid>*::before{
+      content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;pointer-events:none;z-index:-1;
+      background:linear-gradient(125deg,rgba(85,231,255,.5),rgba(167,139,250,.24) 38%,rgba(255,94,188,.3) 70%,rgba(242,200,121,.42));
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.68;
+    }
+    .movie-grid,.rivora-series-grid,.rivora-ranking-grid{gap:clamp(14px,2vw,24px)}
+    .movie-grid>* ,.rivora-series-grid>*,.rivora-ranking-grid>*{border-radius:15px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,.32);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+    .movie-grid>*:hover,.rivora-series-grid>*:hover,.rivora-ranking-grid>*:hover{transform:translateY(-5px);box-shadow:0 18px 38px rgba(0,0,0,.45),0 0 22px rgba(145,111,255,.16)}
+    button,.primary-button,.surprise-button,.time-vault-button,.gallery-view-button,.popular-genre,.quick-action,.watchlist-button,.hero-arrow,.hero-pause,.filter,.decade-chips>*{
+      border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease;
+    }
+    button,.primary-button,.surprise-button,.time-vault-button,.quick-action,.watchlist-button{border-color:rgba(178,151,255,.34)}
+    .primary-button,.surprise-button,.time-vault-button{background:linear-gradient(110deg,rgba(85,231,255,.16),rgba(167,139,250,.22),rgba(255,94,188,.14))!important;color:#fff!important;border:1px solid rgba(192,164,255,.52)!important;box-shadow:0 0 18px rgba(144,111,255,.16),inset 0 1px 0 rgba(255,255,255,.12)}
+    .primary-button:hover,.surprise-button:hover,.time-vault-button:hover,.quick-action:hover,.watchlist-button:hover{transform:translateY(-2px);border-color:var(--gold)!important;box-shadow:0 0 22px rgba(85,231,255,.18),0 0 28px rgba(255,94,188,.12)}
+    .hero-arrow,.hero-pause,.gallery-view-button{background:rgba(20,18,30,.72);border:1px solid rgba(178,151,255,.34);color:#eee9ff;backdrop-filter:blur(12px)}
+    .hero-arrow:hover,.hero-pause:hover,.gallery-view-button:hover,.gallery-view-button.active{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 16px rgba(85,231,255,.2)}
+    .popular-genre,.quick-action,.watchlist-button{background:rgba(255,255,255,.035);border:1px solid rgba(178,151,255,.2);color:#e9e4f4}
+    .popular-genre:hover,.quick-action:hover{background:rgba(125,100,180,.16);color:#fff}
+    input,select,textarea,.search-box{background:rgba(8,8,14,.78)!important;color:var(--text)!important;border:1px solid rgba(178,151,255,.32)!important;border-radius:12px!important;box-shadow:inset 0 1px 5px rgba(0,0,0,.3)}
+    input:focus,select:focus,textarea:focus{outline:1px solid var(--cyan)!important;box-shadow:0 0 0 3px rgba(85,231,255,.1),0 0 18px rgba(85,231,255,.12)!important}
+    .hero-meta span,.popular-genre,.filter,.decade-chips>*{backdrop-filter:blur(10px)}
+    .hero-dot[aria-current="true"]{background:var(--flux);box-shadow:0 0 12px rgba(85,231,255,.55)}
+    .status-message,.header-notice{border-color:rgba(242,200,121,.28);background:rgba(242,200,121,.07);border-radius:12px}
+    .modal{backdrop-filter:blur(12px);background:rgba(0,0,0,.78)}
+    .modal-close{border:1px solid rgba(242,200,121,.3);background:rgba(20,18,30,.8);color:var(--gold)}
+    a{transition:color .2s ease}
+    ::selection{background:rgba(167,139,250,.38);color:#fff}
+    @media(max-width:650px){header{background:rgba(8,8,13,.9)!important}.section,.quick-actions-panel,.popular-genres-panel,.time-vault-panel,.quick-access-panel,.side-panel,.surprise-section,.rivora-request-section,.rivora-ranking-section,.rivora-series-section,.rivora-discovery-section,.trending-section{border-radius:14px}.movie-grid>*:hover,.rivora-series-grid>*:hover,.rivora-ranking-grid>*:hover{transform:none}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
+
+
+<style id="rivora-number-2-structure">
+/* NUMBER 2 — responsive cinematic information architecture */
+.brand-lockup .brand-mark{display:inline-grid;place-items:center;width:76px;height:76px;font-size:62px;transform:perspective(260px) rotateY(-17deg) rotateX(9deg);color:#fff;background:linear-gradient(145deg,#fff1fa 0%,#ec4899 34%,#7c3aed 62%,#fbbf24 100%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(2px 3px 0 #4c174e) drop-shadow(0 0 12px rgba(236,72,153,.7)) drop-shadow(0 0 20px rgba(251,191,36,.35));}
+.brand-signature{align-items:flex-end!important;gap:6px!important}.nits-creator-name{font-size:14px!important;letter-spacing:3px;color:#f7d7ee;text-shadow:0 0 12px rgba(236,72,153,.6)}.nits-creator-tagline{font-size:11px!important;letter-spacing:.35px;color:#f5c76e!important}
+header nav a{display:inline-flex;align-items:center;gap:6px}header nav a span{font-size:15px;color:#f4bd65;text-shadow:0 0 9px rgba(236,72,153,.65)}
+.header-notice{position:relative}.notice-dot{position:absolute;right:2px;top:2px;width:7px;height:7px;border-radius:50%;background:#fbbf24;box-shadow:0 0 9px #fbbf24}
+.popular-genre{position:relative;isolation:isolate;overflow:hidden;background-size:cover!important}.popular-genre::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.8;background:linear-gradient(145deg,rgba(8,7,15,.15),rgba(8,7,15,.88)),radial-gradient(circle at 50% 28%,rgba(236,72,153,.55),transparent 54%)}
+.popular-genre:nth-child(2)::before,.popular-genre:nth-child(5)::before{background:linear-gradient(145deg,rgba(8,7,15,.1),rgba(8,7,15,.9)),radial-gradient(circle at 50% 28%,rgba(251,191,36,.48),transparent 56%)}
+.popular-genre span,.popular-genre b{position:relative;z-index:1}.popular-genre span{filter:drop-shadow(0 0 9px currentColor)}
+.time-vault-panel .decade-chips span{display:inline-flex;align-items:center;justify-content:center;min-width:54px;padding:7px 9px;border:1px solid rgba(251,191,36,.35);border-radius:20px;background:rgba(255,255,255,.06);color:#ffe1f1;font-size:11px;font-weight:800;box-shadow:inset 0 1px rgba(255,255,255,.08)}
+.quick-access-panel button,.quick-access-panel a{border-radius:11px;transition:transform .2s,border-color .2s,box-shadow .2s}.quick-access-panel button:hover,.quick-access-panel a:hover{transform:translateX(3px);border-color:#fbbf24;box-shadow:0 0 14px rgba(236,72,153,.2)}
+.rivora-footer{background:radial-gradient(ellipse at 12% 110%,rgba(236,72,153,.2),transparent 45%),radial-gradient(ellipse at 88% 110%,rgba(251,191,36,.17),transparent 42%),#08060d}
+.footer-social a{display:inline-grid;place-items:center;width:32px;height:32px;border:1px solid rgba(236,72,153,.4);border-radius:50%;background:rgba(255,255,255,.045);text-shadow:0 0 10px currentColor}
+@media(max-width:700px){.brand-signature{display:flex!important;align-items:flex-end!important;gap:3px!important}.brand-signature .nits-signature-box{padding:5px 10px}.nits-char{font-size:23px!important}.nits-creator-name{font-size:9px!important;letter-spacing:1.5px}.nits-creator-tagline{max-width:145px;text-align:right;font-size:7px!important;line-height:1.3}.brand-lockup{column-gap:7px}.brand-lockup .brand-mark{width:43px;height:48px;font-size:39px}.brand-name{font-size:clamp(21px,5.8vw,27px)}.brand-tagline{font-size:6px;letter-spacing:1.4px}.popular-genre{aspect-ratio:1.12}.footer-social{gap:8px}.footer-social a{width:29px;height:29px}}
+@media(max-width:420px){.brand-masthead{height:105px}.brand-masthead-inner{padding:8px}.brand-lockup{column-gap:5px}.brand-lockup .brand-mark{width:35px;font-size:33px}.brand-name{font-size:20px}.brand-signature .nits-signature-box{padding:4px 7px}.nits-creator-tagline{max-width:120px;font-size:6px!important}}
+</style>
+
+
+<style id="rivora-number-3-chroma-gradient-system">
+/* NUMBER 3 — CHROMA GRADIENT SYSTEM | Pink-Gold / Obsidian / Cyber / Ember */
+:root{
+ --chroma-pink:#EC4899;--chroma-gold:#FBBF24;--chroma-purple:#8B5CF6;--chroma-blue:#38BDF8;
+ --chroma-amber:#F59E0B;--chroma-coral:#EF4444;--chroma-obsidian:#0A0A0F;
+ --chroma-night:#1A1025;--chroma-plum:#2E153B;
+ --chroma-brand:linear-gradient(105deg,#EC4899 0%,#F472B6 34%,#FBBF24 100%);
+ --chroma-cyber:linear-gradient(115deg,#8B5CF6 0%,#6366F1 52%,#38BDF8 100%);
+ --chroma-ember:linear-gradient(110deg,#F59E0B 0%,#F97316 48%,#EF4444 100%);
+ --chroma-border:linear-gradient(125deg,#EC4899 0%,#8B5CF6 48%,#FBBF24 100%);
+}
+html,body{background-color:var(--chroma-obsidian)!important}
+body{background:radial-gradient(ellipse at 12% 8%,rgba(139,92,246,.17),transparent 34%),radial-gradient(ellipse at 88% 18%,rgba(236,72,153,.12),transparent 32%),radial-gradient(ellipse at 52% 100%,rgba(245,158,11,.07),transparent 38%),linear-gradient(145deg,#0A0A0F 0%,#1A1025 48%,#2E153B 72%,#0A0A0F 100%)!important}
+.brand-name b,.brand-mark,.logo-main,.logo-hub,footer strong{background:var(--chroma-brand)!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;filter:drop-shadow(0 0 10px rgba(236,72,153,.34)) drop-shadow(0 0 16px rgba(251,191,36,.12))}
+.logo-main{background-size:220% 100%!important;animation:chromaBrandFlow 8s ease-in-out infinite alternate!important}
+.logo-hub{background:linear-gradient(100deg,#F472B6,#EC4899 35%,#FBBF24)!important;background-clip:text!important;-webkit-background-clip:text!important}
+.hero{background:linear-gradient(125deg,#1A1025 0%,#2E153B 46%,#0A0A0F 100%)!important;border-bottom:1px solid rgba(236,72,153,.32)!important}
+.hero::before{background:linear-gradient(90deg,rgba(10,10,15,.97) 0%,rgba(26,16,37,.86) 42%,rgba(46,21,59,.32) 78%,rgba(10,10,15,.25) 100%),linear-gradient(0deg,rgba(10,10,15,.97),transparent 48%)!important}
+.hero h1,.section-heading h2,.rivora-section-heading h2,.rivora-series-heading h2{background:var(--chroma-brand)!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important}
+.hero .eyebrow,.section-heading h2::before{color:#FBBF24!important}
+/* Cyber gradient: Explore, category filters and futuristic genres */
+#exploreButton,.surprise-button,.surprise-details,.gallery-view-button[aria-pressed="true"],#genreFilters .filter.active{background:var(--chroma-cyber)!important;border-color:rgba(139,92,246,.72)!important;box-shadow:0 8px 24px rgba(99,102,241,.24),0 0 22px rgba(56,189,248,.12)!important}
+.popular-genre:nth-child(4),.popular-genre:nth-child(5),.rivora-genre-card:nth-child(4),.rivora-genre-card:nth-child(5){border-color:rgba(139,92,246,.58)!important;box-shadow:0 0 18px rgba(99,102,241,.16),inset 0 0 18px rgba(56,189,248,.035)!important}
+.popular-genre:hover,.rivora-genre-card:hover{border-color:#38BDF8!important;box-shadow:0 0 24px rgba(56,189,248,.2),0 0 28px rgba(139,92,246,.18)!important}
+/* High-attention ember CTA */
+.primary-button,.quick-action-primary,.time-vault-button,.watchlist-button,.download-link,.detail-download-cta{background:var(--chroma-ember)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;box-shadow:0 9px 25px rgba(239,68,68,.2),0 0 20px rgba(245,158,11,.16),inset 0 1px rgba(255,255,255,.2)!important}
+.primary-button:hover,.quick-action-primary:hover,.time-vault-button:hover,.watchlist-button:hover,.download-link:hover{filter:brightness(1.12) saturate(1.12)!important;box-shadow:0 12px 30px rgba(239,68,68,.3),0 0 26px rgba(245,158,11,.22)!important}
+.hero .primary-button{background:var(--chroma-ember)!important}
+/* Thin multi-gradient outlines and restrained neon glow */
+.movie-card,.rivora-rank-card,.rivora-series-card,.surprise-shell,.popular-genres-panel,.quick-actions-panel,.quick-access-panel,.time-vault-panel,.rivora-discovery-section,.rivora-ranking-section,.rivora-request-section{border:1px solid transparent!important;background-image:linear-gradient(145deg,rgba(26,16,37,.96),rgba(10,10,15,.97)),var(--chroma-border)!important;background-origin:border-box!important;background-clip:padding-box,border-box!important;box-shadow:0 12px 32px rgba(0,0,0,.3),0 0 16px rgba(139,92,246,.07)!important}
+.movie-card:hover,.rivora-rank-card:hover,.rivora-series-card:hover{box-shadow:0 18px 42px rgba(0,0,0,.38),0 0 20px rgba(236,72,153,.14),0 0 18px rgba(251,191,36,.08)!important}
+.rivora-rank-number{font-weight:1000!important;background:var(--chroma-brand)!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;filter:drop-shadow(0 0 8px rgba(236,72,153,.45))!important}
+.rivora-ranking-section{background:linear-gradient(135deg,#1A1025,#0A0A0F 56%,#2E153B)!important}
+.rivora-ranking-section .rivora-section-heading h2{background:var(--chroma-brand)!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important}
+.rivora-genre-card{border:1px solid rgba(139,92,246,.42)!important;background:linear-gradient(145deg,rgba(46,21,59,.82),rgba(10,10,15,.92))!important}
+.rivora-genre-card:nth-child(4),.rivora-genre-card:nth-child(5){border-color:rgba(56,189,248,.48)!important;background:linear-gradient(145deg,rgba(46,21,59,.9),rgba(10,10,15,.96))!important}
+.search-box button{background:var(--chroma-cyber)!important}
+.palette-gradient i{box-shadow:0 0 14px rgba(236,72,153,.2)}
+@keyframes chromaBrandFlow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+@media(prefers-reduced-motion:reduce){.logo-main{animation:none!important}}
+</style>\n</head>
+<body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="18.2">
 
   <section class="rivora-os-boot" id="rivoraOsBoot" aria-label="RIVORA OS startup" aria-live="polite">
     <canvas class="rivora-os-canvas" id="rivoraOsCanvas" aria-hidden="true"></canvas>
@@ -1610,8 +1735,8 @@ header{
     <div class="brand-trails" aria-hidden="true"></div>
     <div class="brand-masthead-inner">
       <div class="brand-lockup"><span class="brand-mark">▷</span><span class="brand-name">RIVORA <b>HUB</b></span><span class="brand-tagline">YOUR MOVIE UNIVERSE</span></div>
-      <div class="brand-signature" aria-label="NITS Signature">
-        <div class="nits-signature-box" title="NITS">
+      <div class="brand-signature" aria-label="NITS CREATES signature">
+        <div class="nits-signature-box" title="NITS CREATES">
           <span class="nits-wordmark" aria-label="NITS">
             <span class="nits-char c-n">N</span>
             <span class="nits-char c-i">I</span>
@@ -1619,6 +1744,8 @@ header{
             <span class="nits-char c-s">S</span>
           </span>
         </div>
+        <strong class="nits-creator-name">NITS CREATES</strong>
+        <span class="nits-creator-tagline">A Perfect Blend of Pink &amp; Golden Elegance</span>
       </div>
     </div>
   </div>
@@ -1643,19 +1770,19 @@ header{
       <span class="logo-tagline">YOUR MOVIE UNIVERSE</span>
     </a>
     <nav aria-label="Main navigation">
-      <a href="./">Home</a>
-      <a href="#movies">Explore</a>
-      <a href="#movies">Movies</a>
-      <a href="#genreDiscoverySection">Categories</a>
-      <a href="#seriesLibrarySection">Series</a>
-      <a href="#trendingSection">Trending</a>
-      <a href="#timeVaultSection">Cinema Time Vault</a>
-      <a href="#features">About</a>
+      <a href="./"><span aria-hidden="true">⌂</span> Home</a>
+      <a href="#movies"><span aria-hidden="true">✧</span> Explore</a>
+      <a href="#movies"><span aria-hidden="true">▣</span> Movies</a>
+      <a href="#genreDiscoverySection"><span aria-hidden="true">▦</span> Categories</a>
+      <a href="#seriesLibrarySection"><span aria-hidden="true">▤</span> Series</a>
+      <a href="#trendingSection"><span aria-hidden="true">↗</span> Trending</a>
+      <a href="#timeVaultSection"><span aria-hidden="true">◷</span> Cinema Time Vault</a>
+      <a href="#features"><span aria-hidden="true">ⓘ</span> About</a>
       <button class="nav-button" type="button" id="myListNav">My List</button>
     </nav>
     <div class="header-tools">
       <form class="header-search" id="headerSearchForm" role="search"><input id="headerSearchInput" type="search" placeholder="Search movies, series…" aria-label="Search movies and series"><button type="submit" aria-label="Search">⌕</button></form>
-      <a class="header-notice" href="#requestMovieSection" aria-label="Movie requests" title="Movie requests">♧</a>
+      <a class="header-notice" href="#requestMovieSection" aria-label="Notifications and movie requests" title="Notifications / Movie requests">♧<i class="notice-dot" aria-hidden="true"></i></a>
       <a class="header-profile" href="#features" aria-label="About RIVORA" title="About RIVORA">R</a>
     </div>
   </header>
@@ -1732,7 +1859,7 @@ header{
           </a>
         </div>
         <h2>QUICK ACTIONS</h2>
-        <button class="quick-action-primary" id="quickWatchNow" type="button"><span>▶</span> Watch Now</button>
+        <button class="quick-action-primary" id="quickWatchNow" type="button"><span>▷</span> Watch Trailer</button>
         <a class="quick-action" href="#movies"><span>◎</span> Explore More</a>
         <button class="quick-action" id="quickAddToList" type="button"><span>＋</span> Add to List</button>
         <button class="quick-action" id="quickShare" type="button"><span>⌯</span> Share</button>
@@ -1853,7 +1980,7 @@ header{
     </section>
     <aside class="quick-access-panel" aria-label="Quick access"><h2>⚡ Quick Access</h2>
       <button type="button" id="quickMyList">♧ <span>My List</span> <b>›</b></button>
-      <button type="button" id="quickSettings">⚙ <span>My Themes</span> <b>›</b></button>
+      <button type="button" id="quickSettings">⚙ <span>Settings</span> <b>›</b></button>
       <a href="#features">ⓘ <span>Help Center</span> <b>›</b></a>
       <a href="#features">ⓘ <span>About Us</span> <b>›</b></a>
     </aside>
@@ -1898,8 +2025,8 @@ header{
   <footer class="rivora-footer">
     <div class="footer-trails" aria-hidden="true"></div>
     <div class="footer-brand"><strong>▷ RIVORA <b>HUB</b></strong><span>YOUR MOVIE UNIVERSE</span><small>© <span id="currentYear">2026</span> RIVORA HUB. All rights reserved.</small></div>
-    <nav class="footer-links" aria-label="Footer navigation"><a href="#features">About</a><a href="#requestMovieSection">Contact</a><a href="#features">Privacy Policy</a><a href="#features">Terms of Service</a></nav>
-    <div class="footer-social"><span>Follow Us</span><a href="#features" aria-label="YouTube">▶</a><a href="#features" aria-label="Community">✦</a><a href="#features" aria-label="Social">𝕏</a><a href="#features" aria-label="Instagram">◎</a></div>
+    <nav class="footer-links" aria-label="Footer navigation"><a href="#features"><span aria-hidden="true">ⓘ</span> About</a><a href="#requestMovieSection">Contact</a><a href="#features">Privacy Policy</a><a href="#features">Terms of Service</a></nav>
+    <div class="footer-social"><span>Follow Us</span><a href="#features" aria-label="YouTube">▶</a><a href="#features" aria-label="Discord">◈</a><a href="#features" aria-label="X">𝕏</a><a href="#features" aria-label="Instagram">◎</a><a href="#features" aria-label="Telegram">➤</a></div>
   </footer>
 
   <div class="modal" id="movieModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
@@ -3621,7 +3748,7 @@ header{
   const $=id=>document.getElementById(id);
   const headerForm=$('headerSearchForm');
   if(headerForm)headerForm.addEventListener('submit',event=>{event.preventDefault();const source=$('headerSearchInput'),target=$('searchInput');if(!source||!target)return;target.value=source.value;target.dispatchEvent(new Event('input',{bubbles:true}));$('searchButton')?.click();$('movies')?.scrollIntoView({behavior:'smooth'});});
-  $('quickWatchNow')?.addEventListener('click',()=>{$('heroDetailsButton')?.click();});
+  $('quickWatchNow')?.addEventListener('click',()=>{$('heroDetailsButton')?.click();window.setTimeout(()=>{const trailer=$('detailTrailer');if(trailer&&!trailer.hidden&&trailer.href&&trailer.href!=='#')trailer.click();},450);});
   $('quickAddToList')?.addEventListener('click',()=>{$('heroDetailsButton')?.click();window.setTimeout(()=>$('watchlistButton')?.click(),120);});
   $('quickMyList')?.addEventListener('click',()=>$('myListNav')?.click());
   $('quickSettings')?.addEventListener('click',()=>$('rivoraOsManage')?.click());
