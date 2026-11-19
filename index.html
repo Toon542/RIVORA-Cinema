@@ -1691,7 +1691,24 @@ body{background:radial-gradient(ellipse at 12% 8%,rgba(139,92,246,.17),transpare
 .palette-gradient i{box-shadow:0 0 14px rgba(236,72,153,.2)}
 @keyframes chromaBrandFlow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
 @media(prefers-reduced-motion:reduce){.logo-main{animation:none!important}}
-</style>\n</head>
+</style>\n
+<style id="rivora-chromatic-glass-genre-system">
+/* RIVORA HUB — Chromatic Glass Genre Buttons */
+.rivora-genre-grid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))!important;gap:16px!important}
+.rivora-genre-card{position:relative;isolation:isolate;overflow:hidden;display:flex!important;flex-direction:column;align-items:flex-start;justify-content:center;min-height:142px!important;padding:20px!important;border:1px solid transparent!important;border-radius:20px!important;background:linear-gradient(145deg,rgba(36,29,48,.82),rgba(13,11,20,.88)) padding-box,linear-gradient(135deg,var(--genre-text-a),var(--genre-text-b)) border-box!important;backdrop-filter:blur(18px) saturate(135%)!important;-webkit-backdrop-filter:blur(18px) saturate(135%)!important;box-shadow:0 10px 28px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.10),0 0 13px color-mix(in srgb,var(--genre-glow) 20%,transparent)!important;transition:transform .28s ease,box-shadow .28s ease,background .28s ease!important}
+.rivora-genre-card::before{content:"";position:absolute;inset:1px;border-radius:19px;z-index:-1;background:radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--genre-text-a) 20%,transparent),transparent 55%),linear-gradient(145deg,rgba(255,255,255,.055),transparent 55%);pointer-events:none}
+.rivora-genre-card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(125deg,var(--genre-text-a),transparent 42%,var(--genre-text-b));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;pointer-events:none}
+.rivora-genre-card .genre-stamp{display:grid!important;place-items:center;width:48px!important;height:48px!important;margin:0 0 14px!important;border-radius:15px!important;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.025))!important;border:1px solid color-mix(in srgb,var(--genre-text-b) 70%,white 10%)!important;color:transparent!important;background-clip:padding-box!important;font-size:27px!important;font-weight:900;text-shadow:none!important;background-image:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.025)),linear-gradient(135deg,var(--genre-icon-a),var(--genre-icon-b))!important;background-origin:border-box!important;box-shadow:0 0 15px color-mix(in srgb,var(--genre-text-b) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.16)!important;-webkit-text-fill-color:transparent;background-clip:padding-box,text!important;-webkit-background-clip:padding-box,text!important}
+.rivora-genre-card strong{font-size:20px!important;letter-spacing:.1px;margin:0 0 7px!important;background:linear-gradient(100deg,var(--genre-text-a),var(--genre-text-b))!important;background-clip:text!important;-webkit-background-clip:text!important;color:transparent!important;-webkit-text-fill-color:transparent!important;text-shadow:0 0 17px color-mix(in srgb,var(--genre-glow) 23%,transparent)}
+.rivora-genre-card small{font-size:13px!important;color:rgba(235,229,246,.78)!important}
+.rivora-genre-card:hover{transform:translateY(-5px) scale(1.015)!important;border-color:transparent!important;box-shadow:0 16px 34px rgba(0,0,0,.34),0 0 23px color-mix(in srgb,var(--genre-glow) 34%,transparent),inset 0 1px 0 rgba(255,255,255,.16)!important}
+.rivora-genre-card[aria-pressed="true"]{border-color:transparent!important;box-shadow:0 0 0 1px var(--genre-text-a),0 0 27px color-mix(in srgb,var(--genre-glow) 48%,transparent),inset 0 0 22px color-mix(in srgb,var(--genre-glow) 12%,transparent)!important}
+.rivora-genre-card:focus-visible{outline:2px solid var(--genre-text-b)!important;outline-offset:4px}
+@media(max-width:680px){.rivora-genre-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important}.rivora-genre-card{min-height:132px!important;padding:15px!important;border-radius:17px!important}.rivora-genre-card .genre-stamp{width:42px!important;height:42px!important;font-size:24px!important}.rivora-genre-card strong{font-size:17px!important}.rivora-genre-card small{font-size:11px!important}}
+@media(prefers-reduced-motion:reduce){.rivora-genre-card{transition:none!important}.rivora-genre-card:hover{transform:none!important}}
+</style>
+
+</head>
 <body data-rivora-design="obsidian-luxe-chroma-flux" data-rivora-build="18.2">
 
   <section class="rivora-os-boot" id="rivoraOsBoot" aria-label="RIVORA OS startup" aria-live="polite">
@@ -3205,12 +3222,14 @@ body{background:radial-gradient(ellipse at 12% 8%,rgba(139,92,246,.17),transpare
     });
     // RIVORA V18.1 — database-driven discovery pages and quality directory.
     const genrePalette = {
-      "Action":["#ef4444","#f59e0b"],"Adventure":["#22c55e","#a3e635"],"Comedy":["#facc15","#f97316"],
-      "Drama":["#8b5cf6","#ec4899"],"Horror":["#991b1b","#111827"],"Romance":["#f9a8d4","#ec4899"],
-      "Sci-Fi":["#38bdf8","#06b6d4"],"Fantasy":["#8b5cf6","#fbbf24"],"Mystery":["#581c87","#a855f7"],
-      "Thriller":["#b91c1c","#111827"],"History":["#b45309","#365314"],"Mythology":["#991b1b","#d4a72c"]
+      "Action":["#F97316","#EF4444"],"Adventure":["#10B981","#A3E635"],"Comedy":["#FACC15","#FB923C"],
+      "Drama":["#7C3AED","#C4B5FD"],"Horror":["#EF4444","#581C87"],"Romance":["#FB7185","#FDBA74"],
+      "Sci-Fi":["#22D3EE","#2563EB"],"Fantasy":["#8B5CF6","#EC4899"],"Mystery":["#6D28D9","#C084FC"],
+      "Thriller":["#DC2626","#7F1D1D"],"History":["#D97706","#92400E"],"Mythology":["#D4A72C","#991B1B"],
+      "Crime":["#D946EF","#7C3AED"],"Family":["#FB7185","#FDBA74"]
     };
-    const genreSymbols = {Action:"✦",Adventure:"➤",Comedy:"☺",Drama:"◆",Horror:"☾",Romance:"♥","Sci-Fi":"✧",Fantasy:"♜",Mystery:"◈",Thriller:"⚡",History:"⌛",Mythology:"✥"};
+    // Compact, meaning-led pictograms; icon gradient is the exact reverse of its title gradient.
+    const genreSymbols = {Action:"⚔︎",Adventure:"⌖",Comedy:"☺︎",Drama:"♢",Horror:"☠︎",Romance:"♥","Sci-Fi":"◎",Fantasy:"✧",Mystery:"⌕",Thriller:"ϟ",History:"⌛︎",Mythology:"♜",Crime:"◈",Family:"⌂"};
     const genreColors = name => genrePalette[name] || ["#8b5cf6","#ec4899"];
     document.querySelectorAll("#genreFilters .filter:not([data-category='All'])").forEach(button=>{const colors=genreColors(button.dataset.category||"");button.classList.add("genre-gradient-label");button.style.backgroundImage=`linear-gradient(90deg,${colors[0]},${colors[1]})`;button.style.backgroundClip="text";button.style.webkitBackgroundClip="text";button.style.color="transparent";});
     // Apply each movie's own genre gradient to its glass card and glow.
@@ -3282,8 +3301,10 @@ body{background:radial-gradient(ellipse at 12% 8%,rgba(139,92,246,.17),transpare
     const genreRoot=document.getElementById("genreDiscoveryGrid");
     [...genreCounts.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).forEach(([name,count])=>{
       const colors=genreColors(name),card=document.createElement("button");card.type="button";card.className="rivora-genre-card";
-      card.style.setProperty("--genre-text-a",colors[0]);card.style.setProperty("--genre-text-b",colors[1]);card.style.setProperty("--genre-stamp-a",colors[1]);card.style.setProperty("--genre-stamp-b",colors[0]);
-      const stamp=document.createElement("span");stamp.className="genre-stamp";stamp.textContent=genreSymbols[name]||"✦";
+      card.style.setProperty("--genre-text-a",colors[0]);card.style.setProperty("--genre-text-b",colors[1]);
+      card.style.setProperty("--genre-icon-a",colors[1]);card.style.setProperty("--genre-icon-b",colors[0]);
+      card.style.setProperty("--genre-glow",colors[0]);card.setAttribute("aria-label",name+", "+count+" published movies");
+      const stamp=document.createElement("span");stamp.className="genre-stamp";stamp.setAttribute("aria-hidden","true");stamp.textContent=genreSymbols[name]||"✦";
       const title=document.createElement("strong");title.textContent=name;
       const sub=document.createElement("small");sub.textContent=count+" published movie"+(count===1?"":"s");card.append(stamp,title,sub);
       card.setAttribute("aria-pressed","false");
