@@ -577,7 +577,9 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
 <script>
 "use strict";
 
+// RIVORA Admin UI v8 — publishing controls and series publication actions.
 // Public project configuration only. Never put service_role or sb_secret keys here.
+const RIVORA_ADMIN_BUILD = "v8";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_6kW6wqf70UwlzAVJQ18jLw_QP1st4s6";
 const ADMIN_URL = "https://vvzjecoegcpzmlhqjwpu.supabase.co/functions/v1/knowledge-graph";
 
@@ -1211,12 +1213,17 @@ async function loadPublishingQueue() {
   const refresh = $("publishingRefreshBtn");
   refresh.disabled = true;
   try {
+    const allowedPublishingFilters = new Set(["all", "draft", "scheduled", "publishing", "published", "failed", "cancelled", "unpublished"]);
+    const selectedFilter = String($("publishingFilter").value || "all").trim().toLowerCase();
+    const safeFilter = allowedPublishingFilters.has(selectedFilter) ? selectedFilter : "all";
     const result = await postJson(ADMIN_URL, {
-      action: "list_movies", status: $("publishingFilter").value,
-      limit: PUBLISHING_PAGE_SIZE, offset: publishingOffset, sort_by: "created_at", sort_order: "desc"
+      action: "list_movies", status: safeFilter,
+      limit: PUBLISHING_PAGE_SIZE, offset: publishingOffset, sort_by: "created_at", sort_order: "desc",
+      client_build: RIVORA_ADMIN_BUILD
     }, adminSessionToken, true);
     if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "Could not load publication queue.");
     await loadPublishingHistory();
+    await loadSeriesPublishingQueue();
     const total = Number(result.total ?? 0);
     const pageCount = Math.ceil(total / PUBLISHING_PAGE_SIZE);
     const currentPage = total ? Math.floor(publishingOffset / PUBLISHING_PAGE_SIZE) + 1 : 0;
@@ -1293,7 +1300,6 @@ async function loadPublishingQueue() {
       list.append(card);
     }
     setStatus("publishingStatus", `Showing ${publishingOffset + 1}–${publishingOffset + result.movies.length} of ${total} movies.`, "success");
-    await loadSeriesPublishingQueue();
   } catch (error) {
     setStatus("publishingStatus", error.message || "Could not load publication controls.", "error");
   } finally { refresh.disabled = false; }
