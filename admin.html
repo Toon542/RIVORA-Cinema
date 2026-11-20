@@ -1109,7 +1109,7 @@ function renderDraftBox() {
   const list = $("draftBoxList");
   list.replaceChildren();
   if (!draftBoxRows.length) {
-    list.append(libraryElement("p", "draft-empty", "No saved drafts yet. Use the movie editor below and choose SAVE TO DRAFTS."));
+    list.append(libraryElement("p", "draft-empty", "No private movies yet. Draft, Scheduled, Unpublished, Cancelled and Failed movies will appear here."));
     return;
   }
   for (const movie of draftBoxRows) {
@@ -1127,24 +1127,28 @@ function renderDraftBox() {
     const copy = libraryElement("span", "draft-card-copy");
     copy.append(libraryElement("strong", "", movie.title || "Untitled movie"));
     const genres = Array.isArray(movie.genres) ? movie.genres.join(" · ") : (movie.genres || "No genre");
-    copy.append(libraryElement("small", "", `${movie.release_year || "Year unknown"} · ${genres}
+    copy.append(libraryElement("small", "", `${movie.release_year || "Year unknown"} · ${genres} · STATUS: ${String(movie.status || "draft").toUpperCase()}
 Tap to open saved details and edit`));
     card.append(copy);
     card.addEventListener("click", () => loadDraftIntoForm(movie, draftBoxImages, draftBoxLinks));
     wrap.append(card);
 
     const actions = libraryElement("div", "draft-actions");
-    const editBtn = libraryElement("button", "draft-edit-btn", "✎ EDIT DRAFT");
+    const editBtn = libraryElement("button", "draft-edit-btn", movie.status === "draft" ? "✎ EDIT DRAFT" : "✎ EDIT / MOVE TO DRAFT");
     editBtn.type = "button";
     editBtn.setAttribute("aria-label", `Edit draft ${movie.title || "Untitled movie"}`);
     editBtn.addEventListener("click", () => loadDraftIntoForm(movie, draftBoxImages, draftBoxLinks));
     actions.append(editBtn);
 
-    const deleteBtn = libraryElement("button", "draft-delete-btn", "✕ PERMANENTLY DELETE");
-    deleteBtn.type = "button";
-    deleteBtn.setAttribute("aria-label", `Permanently delete draft ${movie.title || "Untitled movie"}`);
-    deleteBtn.addEventListener("click", () => permanentlyDeleteDraft(movie, deleteBtn));
-    actions.append(deleteBtn);
+    // Permanent deletion is intentionally limited to true Draft records.
+    // Scheduled items must be cancelled first; Unpublished/Failed items remain recoverable.
+    if (movie.status === "draft") {
+      const deleteBtn = libraryElement("button", "draft-delete-btn", "✕ PERMANENTLY DELETE");
+      deleteBtn.type = "button";
+      deleteBtn.setAttribute("aria-label", `Permanently delete draft ${movie.title || "Untitled movie"}`);
+      deleteBtn.addEventListener("click", () => permanentlyDeleteDraft(movie, deleteBtn));
+      actions.append(deleteBtn);
+    }
     wrap.append(actions);
     list.append(wrap);
   }
@@ -1191,7 +1195,10 @@ async function loadDraftBox() {
     seriesDraftEpisodes = Array.isArray(result.series_episodes) ? result.series_episodes : [];
     renderDraftBox();
     renderSeriesDraftBox();
-    setStatus("draftBoxStatus", `${draftBoxRows.length} movie draft(s) · ${seriesDraftRows.length} series draft(s) · private and not visible on the public website.`, "success");
+    const privateMovieCount = draftBoxRows.length;
+    const movieStateCounts = draftBoxRows.reduce((counts, movie) => { const state = String(movie.status || "draft"); counts[state] = (counts[state] || 0) + 1; return counts; }, {});
+    const movieStateSummary = Object.entries(movieStateCounts).map(([state, count]) => `${count} ${state}`).join(" · ");
+    setStatus("draftBoxStatus", `${privateMovieCount} private movie(s)${movieStateSummary ? ` (${movieStateSummary})` : ""} · ${seriesDraftRows.length} series draft(s). Published movies are excluded.`, "success");
   } catch (error) {
     draftBoxRows = []; draftBoxImages = []; draftBoxLinks = [];
     seriesDraftRows = []; seriesDraftEpisodes = [];
