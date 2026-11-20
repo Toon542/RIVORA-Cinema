@@ -405,7 +405,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
     <div><label for="uploadTmdb">TMDB ID (optional)</label><input id="uploadTmdb" type="number" min="1" placeholder="Movie ID"></div>
   </div>
   <label for="uploadTrailer">Official Trailer URL (HTTPS)</label><input id="uploadTrailer" type="url" placeholder="https://...">
-  <p class="notice" id="movieFormMode">New movie · Save as Draft or schedule it for automatic publication.</p>
+  <p class="notice" id="movieFormMode">New movie · Save as Draft, publish immediately, or schedule automatic publication.</p>
   <div class="upload-panel" id="movieSchedulePanel">
     <h3>Smart Publishing Schedule</h3>
     <p class="notice">Schedule time is interpreted in Asia/Kolkata (IST). The RIVORA Scheduler Worker checks due movies every minute. A scheduled movie stays hidden from the public website until its status becomes Published.</p>
@@ -448,6 +448,7 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
   </div>
   <div class="field-row" style="margin-top:18px">
     <button class="secondary" id="saveToDraftsBtn" type="button">SAVE TO DRAFTS</button>
+    <button class="primary" id="publishNowBtn" type="button" style="margin-top:0;background:linear-gradient(100deg,#16834f,#087d9a)">PUBLISH NOW</button>
     <button class="primary" id="publishToPublicBtn" type="button" style="margin-top:0">SCHEDULE MOVIE</button>
   </div>
   <button class="small-btn hidden" id="cancelMovieEditBtn" type="button" style="width:100%;margin-top:10px">CANCEL EDITING</button>
@@ -623,7 +624,7 @@ async function postJson(url, body, token = null, needsPublicKey = false) {
     if (response.status === 403 && data && typeof data.reason === "string") return data;
     const reason = data?.error || data?.message || data?.reason || `Request failed (HTTP ${response.status}).`;
     const details = [];
-    if (body?.action === "save_movie" && typeof data?.details === "string") details.push(data.details);
+    if (typeof data?.details === "string" && data.details.trim()) details.push(data.details.trim());
     if (Array.isArray(data?.outcomes)) {
       for (const item of data.outcomes) {
         if (item && item.status === "failed") {
@@ -1965,10 +1966,11 @@ function setMovieFormMode(movie = null) {
   editingDraftId = movie?.id || null;
   $("movieFormMode").textContent = movie
     ? `Editing ${movie.status || "movie"} · ${movie.title || "Untitled movie"} · The same movie UUID and linked records will be preserved.`
-    : "New movie · Save as Draft or schedule it for automatic publication.";
+    : "New movie · Save as Draft, publish immediately, or schedule automatic publication.";
   $("cancelMovieEditBtn").classList.toggle("hidden", !movie);
   $("saveToDraftsBtn").textContent = movie ? "UPDATE TO DRAFT" : "SAVE TO DRAFTS";
   $("publishToPublicBtn").textContent = movie ? "UPDATE & SCHEDULE" : "SCHEDULE MOVIE";
+  $("publishNowBtn").textContent = movie ? "UPDATE & PUBLISH NOW" : "PUBLISH NOW";
 }
 
 function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = libraryLinks) {
@@ -1997,7 +1999,7 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   loadDownloadQualityFields(links);
   ["posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   setMovieFormMode(movie);
-  setStatus("movieUploadStatus", `${movie.status} movie loaded: ${movie.title}. Edit details, save as Draft, or schedule it again.`, "success");
+  setStatus("movieUploadStatus", `${movie.status} movie loaded: ${movie.title}. Edit details, save as Draft, publish immediately, or schedule it again.`, "success");
   if (typeof window.rivoraNexusShowView === "function") {
     window.rivoraNexusShowView("movie");
   }
@@ -2124,7 +2126,8 @@ async function submitMovieWithStatus(targetStatus) {
   }
 
   if (targetStatus === "scheduled" && !window.confirm(`Schedule “${title}” for automatic publication at ${$("movieScheduledAt").value} IST? It will remain hidden until then.`)) return;
-  const buttons = [$("saveToDraftsBtn"), $("publishToPublicBtn")];
+  if (targetStatus === "published" && !window.confirm(`Publish “${title}” to the public RIVORA website immediately?`)) return;
+  const buttons = [$("saveToDraftsBtn"), $("publishNowBtn"), $("publishToPublicBtn")];
   buttons.forEach(button => button.disabled = true);
 
   try {
@@ -2245,21 +2248,22 @@ async function submitMovieWithStatus(targetStatus) {
       images, download_links: downloadLinks
     };
 
-    setStatus("movieUploadStatus", targetStatus === "scheduled" ? "Saving movie details and adding it to the publication queue..." : "Saving complete movie details to Draft Store...");
+    setStatus("movieUploadStatus", targetStatus === "scheduled" ? "Saving movie details and adding it to the publication queue..." : targetStatus === "published" ? "Publishing movie to the public website..." : "Saving complete movie details to Draft Store...");
     const saved = await postJson(ADMIN_URL, payload, adminSessionToken, true);
     if (saved.success !== true) {
       const partial = saved.movie_id ? ` Movie ID: ${saved.movie_id}.` : "";
       const detail = typeof saved.details === "string" ? ` | Details: ${saved.details}` : "";
       throw new Error((saved.error || "Movie save failed.") + detail + partial);
     }
-    const verb = saved.status === "scheduled" ? "added to the automatic publishing queue" : "saved to Draft Store";
-    setStatus("movieUploadStatus", `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.filter(row => !row._delete).length} · Links saved: ${downloadLinks.filter(row => !row._delete).length}.`, "success");
+    const verb = saved.status === "scheduled" ? "added to the automatic publishing queue" : saved.status === "published" ? "published to the public website" : "saved to Draft Store";
+    const successMessage = `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.filter(row => !row._delete).length} · Links saved: ${downloadLinks.filter(row => !row._delete).length}.`;
     resetMovieForm();
     await loadMovieLibrary(0);
     await loadDraftBox();
     await loadPublishingQueue();
     await loadDashboard();
     await loadMediaAssets(0);
+    setStatus("movieUploadStatus", successMessage, "success");
   } catch (error) {
     setStatus("movieUploadStatus", error.message || "Upload/save failed.", "error");
   } finally {
@@ -2267,6 +2271,7 @@ async function submitMovieWithStatus(targetStatus) {
   }
 }
 $("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
+$("publishNowBtn").addEventListener("click", () => submitMovieWithStatus("published"));
 $("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("scheduled"));
 
 // AUTO CINEMATIC ASSET STUDIO — Admin V18 front-end integration.
