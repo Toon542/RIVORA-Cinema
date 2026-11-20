@@ -1127,8 +1127,11 @@ function renderDraftBox() {
     const copy = libraryElement("span", "draft-card-copy");
     copy.append(libraryElement("strong", "", movie.title || "Untitled movie"));
     const genres = Array.isArray(movie.genres) ? movie.genres.join(" · ") : (movie.genres || "No genre");
-    copy.append(libraryElement("small", "", `${movie.release_year || "Year unknown"} · ${genres} · STATUS: ${String(movie.status || "draft").toUpperCase()}
-Tap to open saved details and edit`));
+    const statusLine = `STATUS: ${String(movie.status || "draft").toUpperCase()}`;
+    const scheduleLine = movie.status === "scheduled" && movie.scheduled_at
+      ? `SCHEDULE TIME (IST): ${new Date(movie.scheduled_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })}`
+      : "";
+    copy.append(libraryElement("small", "", [movie.release_year || "Year unknown", genres, statusLine, scheduleLine, "Tap to open saved details and edit"].filter(Boolean).join(" · ")));
     card.append(copy);
     card.addEventListener("click", () => loadDraftIntoForm(movie, draftBoxImages, draftBoxLinks));
     wrap.append(card);
@@ -1140,15 +1143,13 @@ Tap to open saved details and edit`));
     editBtn.addEventListener("click", () => loadDraftIntoForm(movie, draftBoxImages, draftBoxLinks));
     actions.append(editBtn);
 
-    // Permanent deletion is intentionally limited to true Draft records.
-    // Scheduled items must be cancelled first; Unpublished/Failed items remain recoverable.
-    if (movie.status === "draft") {
-      const deleteBtn = libraryElement("button", "draft-delete-btn", "✕ PERMANENTLY DELETE");
-      deleteBtn.type = "button";
-      deleteBtn.setAttribute("aria-label", `Permanently delete draft ${movie.title || "Untitled movie"}`);
-      deleteBtn.addEventListener("click", () => permanentlyDeleteDraft(movie, deleteBtn));
-      actions.append(deleteBtn);
-    }
+    // Every private movie shown in Draft Box can be permanently deleted.
+    // Published and Publishing records are not returned by list_drafts and are rejected server-side.
+    const deleteBtn = libraryElement("button", "draft-delete-btn", "✕ PERMANENTLY DELETE");
+    deleteBtn.type = "button";
+    deleteBtn.setAttribute("aria-label", `Permanently delete ${movie.title || "Untitled movie"}`);
+    deleteBtn.addEventListener("click", () => permanentlyDeleteDraft(movie, deleteBtn));
+    actions.append(deleteBtn);
     wrap.append(actions);
     list.append(wrap);
   }
@@ -1156,7 +1157,7 @@ Tap to open saved details and edit`));
 async function permanentlyDeleteDraft(movie, button) {
   if (!adminSessionToken || !movie?.id) return;
   const title = movie.title || "Untitled movie";
-  const confirmed = window.confirm(`PERMANENT DELETE WARNING\n\n“${title}” and its saved movie details, image records, download-link records, and uploaded RIVORA image files will be permanently deleted. This cannot be undone.\n\nContinue?`);
+  const confirmed = window.confirm(`PERMANENT DELETE WARNING\n\n“${title}” (current status: ${String(movie.status || "draft").toUpperCase()}) and its saved movie details, publishing history, image records, download-link records, and uploaded RIVORA image files will be permanently deleted. This cannot be undone.\n\nContinue?`);
   if (!confirmed) return;
   const typed = window.prompt(`To confirm permanent deletion, type DELETE exactly.\nMovie: ${title}`);
   if (typed !== "DELETE") {
