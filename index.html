@@ -2851,7 +2851,7 @@ body{background:radial-gradient(ellipse at 12% 8%,rgba(139,92,246,.17),transpare
   try {
     const response = await fetch(
       SUPABASE_URL +
-      "/rest/v1/movies?select=id,title,release_year,overview,poster_path,backdrop_path,genres,cast_members,runtime,rating,trailer_url,tmdb_id,status,created_at&status=eq.published&order=created_at.desc",
+      "/rest/v1/movies?select=id,title,release_year,overview,poster_path,backdrop_path,genres,cast_members,runtime,rating,trailer_url,tmdb_id,status,published_at,created_at&status=eq.published&order=published_at.desc.nullslast,created_at.desc",
       {
         headers: {
           apikey: SUPABASE_KEY,
