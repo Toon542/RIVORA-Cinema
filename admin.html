@@ -277,7 +277,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   <p class="notice">Browse all movie records securely. Search, filter, sort and inspect saved details. Removing a published movie from the public site moves it back to Draft; no movie record is deleted.</p>
   <div class="library-toolbar">
     <input id="librarySearch" type="search" maxlength="100" placeholder="Search movie title" aria-label="Search movie title">
-    <select id="libraryStatus" aria-label="Filter by status"><option value="all">All statuses</option><option value="draft">Draft Store</option><option value="published">Published</option><option value="archived">Archived</option></select>
+    <select id="libraryStatus" aria-label="Filter by status"><option value="all">All statuses</option><option value="draft">Draft</option><option value="scheduled">Scheduled</option><option value="publishing">Publishing</option><option value="published">Published</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option><option value="unpublished">Unpublished</option></select>
     <input id="libraryGenre" type="text" maxlength="80" placeholder="Genre (exact)" aria-label="Filter by genre">
     <input id="libraryYear" type="number" min="1880" max="2100" placeholder="Release year" aria-label="Filter by release year">
     <select id="librarySort" aria-label="Sort movies"><option value="created_at:desc">Latest added</option><option value="created_at:asc">Oldest added</option><option value="release_year:desc">Release year: newest</option><option value="release_year:asc">Release year: oldest</option><option value="title:asc">Title: A–Z</option><option value="title:desc">Title: Z–A</option></select>
@@ -290,18 +290,25 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
 
 <section class="panel hidden" id="publishingPanel">
   <div class="topline"><h2>02 / Publishing Control</h2><span class="spacer"></span><span class="pill">STATUS CONTROL</span></div>
-  <p class="notice">Control movie and series publication states. Published series can be moved back to Draft without deleting the series or its episodes.</p>
+  <p class="notice">Manage Draft, Scheduled, Publishing, Published, Failed, Cancelled and Unpublished movie states. Scheduled movies remain private until the Worker completes publication. All movie UUIDs and publishing history are preserved.</p>
   <div class="publish-toolbar">
     <select id="publishingFilter" aria-label="Filter publication state">
       <option value="all">All publication states</option>
-      <option value="draft">Draft queue</option>
+      <option value="draft">Draft</option>
+      <option value="scheduled">Scheduled queue</option>
+      <option value="publishing">Publishing now</option>
       <option value="published">Published movies</option>
-      <option value="archived">Archived movies</option>
+      <option value="failed">Failed / needs attention</option>
+      <option value="cancelled">Cancelled schedules</option>
+      <option value="unpublished">Unpublished movies</option>
     </select>
     <button class="secondary" id="publishingRefreshBtn" type="button">↻ REFRESH</button>
   </div>
   <p class="status" id="publishingStatus" aria-live="polite">Publishing controls will load after login.</p>
   <div class="publish-list" id="publishingList" aria-live="polite"></div>
+  <div class="topline" style="margin-top:24px"><h3>Movie Publishing History</h3><span class="spacer"></span><button class="secondary" id="publishingHistoryRefreshBtn" type="button">↻ HISTORY</button></div>
+  <p class="status" id="publishingHistoryStatus" aria-live="polite">Publication events will load after login.</p>
+  <div class="publish-list" id="publishingHistoryList" aria-live="polite"></div>
   <div class="topline" style="margin-top:24px"><h3>Series Publication</h3><span class="spacer"></span><span class="pill">SERIES STATUS</span></div>
   <p class="status" id="seriesPublishingStatus" aria-live="polite">Series publication controls will load after login.</p>
   <div class="publish-list" id="seriesPublishingList" aria-live="polite"></div>
@@ -313,7 +320,7 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
   <p class="notice">Browse image assets linked to movie records: posters, backdrops, thumbnails and screenshots. Preview images, copy their public URL or open them separately. Assets are never deleted from this panel, helping prevent broken movie pages.</p>
   <div class="media-toolbar">
     <input id="mediaSearch" type="search" maxlength="100" placeholder="Search movie title" aria-label="Search movie title">
-    <select id="mediaStatusFilter" aria-label="Filter by movie status"><option value="all">All movie statuses</option><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select>
+    <select id="mediaStatusFilter" aria-label="Filter by movie status"><option value="all">All movie statuses</option><option value="draft">Draft</option><option value="scheduled">Scheduled</option><option value="publishing">Publishing</option><option value="published">Published</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option><option value="unpublished">Unpublished</option></select>
     <select id="mediaTypeFilter" aria-label="Filter by asset type"><option value="all">All asset types</option><option value="poster">Poster</option><option value="backdrop">Backdrop</option><option value="thumbnail">Thumbnail</option><option value="screenshot">Screenshot</option><option value="other">Other images</option></select>
   </div>
   <div class="topline"><p class="status" id="mediaAssetStatus" aria-live="polite">Media assets will load after login.</p><span class="spacer"></span><button class="secondary" id="mediaAssetRefreshBtn" type="button">↻ REFRESH</button></div>
@@ -398,7 +405,13 @@ button{border-radius:8px}input,textarea,select{border-radius:8px}label{font-size
     <div><label for="uploadTmdb">TMDB ID (optional)</label><input id="uploadTmdb" type="number" min="1" placeholder="Movie ID"></div>
   </div>
   <label for="uploadTrailer">Official Trailer URL (HTTPS)</label><input id="uploadTrailer" type="url" placeholder="https://...">
-  <p class="notice" id="movieFormMode">New movie · Choose how to save it after reviewing all details.</p>
+  <p class="notice" id="movieFormMode">New movie · Save as Draft or schedule it for automatic publication.</p>
+  <div class="upload-panel" id="movieSchedulePanel">
+    <h3>Smart Publishing Schedule</h3>
+    <p class="notice">Schedule time is interpreted in Asia/Kolkata (IST). The RIVORA Scheduler Worker checks due movies every minute. A scheduled movie stays hidden from the public website until its status becomes Published.</p>
+    <label for="movieScheduledAt">Publish date and time (IST)</label>
+    <input id="movieScheduledAt" type="datetime-local" step="60">
+  </div>
   <div class="upload-panel">
     <h3>Movie Images</h3>
     <div class="upload-grid">
@@ -435,7 +448,7 @@ https://your-image-host.example/screenshot-2.jpg"></textarea></div>
   </div>
   <div class="field-row" style="margin-top:18px">
     <button class="secondary" id="saveToDraftsBtn" type="button">SAVE TO DRAFTS</button>
-    <button class="primary" id="publishToPublicBtn" type="button" style="margin-top:0">PUBLISH TO PUBLIC</button>
+    <button class="primary" id="publishToPublicBtn" type="button" style="margin-top:0">SCHEDULE MOVIE</button>
   </div>
   <button class="small-btn hidden" id="cancelMovieEditBtn" type="button" style="width:100%;margin-top:10px">CANCEL EDITING</button>
   <p class="status" id="movieUploadStatus" aria-live="polite">Fill the movie details, then save it to Drafts or publish it.</p>
@@ -812,22 +825,22 @@ function renderMovieLibrary() {
       renderMovieLibrary();
     });
     actions.append(detailBtn);
-    if (movie.status === "draft") {
-      const editBtn = libraryElement("button", "secondary", "EDIT DRAFT");
+    if (["draft", "scheduled", "cancelled", "unpublished", "failed"].includes(String(movie.status))) {
+      const editBtn = libraryElement("button", "secondary", "EDIT DETAILS");
       editBtn.type = "button";
-      editBtn.addEventListener("click", () => loadDraftIntoForm(movie));
+      editBtn.addEventListener("click", () => loadDraftIntoForm(movie, libraryImages, libraryLinks));
       actions.append(editBtn);
     }
     if (movie.status === "published") {
       const unpublishBtn = libraryElement("button", "library-danger", "REMOVE FROM PUBLIC");
       unpublishBtn.type = "button";
       unpublishBtn.addEventListener("click", async () => {
-        if (!adminSessionToken || !confirm(`Move “${movie.title || "this movie"}” back to Draft? It will disappear from the public website. The record and images will not be deleted.`)) return;
+        if (!adminSessionToken || !confirm(`Unpublish “${movie.title || "this movie"}”? It will disappear from the public website. The record, images, links and history will be preserved.`)) return;
         unpublishBtn.disabled = true;
         try {
           const result = await postJson(ADMIN_URL, { action: "unpublish_movie", movie_id: movie.id }, adminSessionToken, true);
-          if (result.success !== true || result.status !== "draft") throw new Error(result.error || "Movie status was not changed.");
-          setStatus("libraryStatusText", "Movie moved to Draft. No data was deleted.", "success");
+          if (result.success !== true || result.status !== "unpublished") throw new Error(result.error || "Movie status was not changed.");
+          setStatus("libraryStatusText", "Movie unpublished. Its UUID, images, links and history were preserved.", "success");
           await loadMovieLibrary(libraryOffset);
           loadDashboard();
         } catch (error) {
@@ -1202,6 +1215,7 @@ async function loadPublishingQueue() {
       limit: PUBLISHING_PAGE_SIZE, offset: publishingOffset, sort_by: "created_at", sort_order: "desc"
     }, adminSessionToken, true);
     if (result.success !== true || !Array.isArray(result.movies)) throw new Error(result.error || "Could not load publication queue.");
+    await loadPublishingHistory();
     const total = Number(result.total ?? 0);
     const pageCount = Math.ceil(total / PUBLISHING_PAGE_SIZE);
     const currentPage = total ? Math.floor(publishingOffset / PUBLISHING_PAGE_SIZE) + 1 : 0;
@@ -1222,44 +1236,58 @@ async function loadPublishingQueue() {
       head.append(info, libraryElement("span", "publish-state", movie.status || "unknown"));
       card.append(head);
       const actions = libraryElement("div", "publish-actions");
-      const addAction = (label, nextStatus, confirmText) => {
-        const btn = libraryElement("button", nextStatus === "archived" ? "library-danger" : "secondary", label);
+      const runSchedulerAction = async (label, action, extra = {}, confirmText = "") => {
+        const btn = libraryElement("button", action === "schedule_cancel" || action === "unpublish_movie" ? "library-danger" : "secondary", label);
         btn.type = "button";
         btn.addEventListener("click", async () => {
-          if (!window.confirm(confirmText)) return;
+          if (confirmText && !window.confirm(confirmText)) return;
           btn.disabled = true;
           try {
-            const changed = await postJson(ADMIN_URL, { action: "set_movie_status", movie_id: movie.id, status: nextStatus }, adminSessionToken, true);
-            if (changed.success !== true || changed.status !== nextStatus) throw new Error(changed.error || "Publication state was not changed.");
-            setStatus("publishingStatus", `${movie.title} moved to ${nextStatus}.`, "success");
-            await loadPublishingQueue();
-            await loadMovieLibrary(0);
-            await loadDashboard();
-          } catch (error) {
-            setStatus("publishingStatus", error.message || "Could not update publication state.", "error");
-            btn.disabled = false;
-          }
+            const changed = await postJson(ADMIN_URL, { action, movie_id: movie.id, ...extra }, adminSessionToken, true);
+            if (changed.success !== true) throw new Error(changed.error || "Scheduler action failed.");
+            setStatus("publishingStatus", `${movie.title}: ${changed.status || "updated"}.`, "success");
+            await loadPublishingQueue(); await loadMovieLibrary(0); await loadDashboard();
+          } catch (error) { setStatus("publishingStatus", error.message || "Scheduler action failed.", "error"); btn.disabled = false; }
         });
         actions.append(btn);
       };
-      if (movie.status === "draft") addAction("PUBLISH MOVIE", "published", `Publish “${movie.title}” on the public website?`);
-      if (movie.status === "published") addAction("ARCHIVE MOVIE", "archived", `Archive “${movie.title}”? It will no longer appear on the public website.`);
-      if (movie.status === "archived") addAction("RESTORE TO DRAFT", "draft", `Restore “${movie.title}” to Draft?`);
-      if (movie.status === "published") {
-        const draftBtn = libraryElement("button", "library-danger", "UNPUBLISH TO DRAFT");
-        draftBtn.type = "button";
-        draftBtn.addEventListener("click", async () => {
-          if (!window.confirm(`Move “${movie.title}” back to Draft?`)) return;
-          draftBtn.disabled = true;
-          try {
-            const changed = await postJson(ADMIN_URL, { action: "unpublish_movie", movie_id: movie.id }, adminSessionToken, true);
-            if (changed.success !== true || changed.status !== "draft") throw new Error(changed.error || "Could not unpublish movie.");
-            await loadPublishingQueue(); await loadMovieLibrary(0); await loadDashboard();
-            setStatus("publishingStatus", `${movie.title} moved to Draft.`, "success");
-          } catch (error) { setStatus("publishingStatus", error.message || "Could not unpublish movie.", "error"); draftBtn.disabled = false; }
+      const editBtn = libraryElement("button", "secondary", "EDIT DETAILS");
+      editBtn.type = "button";
+      editBtn.addEventListener("click", () => loadDraftIntoForm(movie, result.images || [], result.download_links || []));
+      if (["draft", "scheduled", "cancelled", "unpublished", "failed"].includes(String(movie.status))) actions.append(editBtn);
+      if (movie.status === "scheduled") {
+        if (movie.scheduled_at) card.append(libraryElement("p", "notice", `Scheduled (IST): ${new Date(movie.scheduled_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`));
+        runSchedulerAction("PUBLISH NOW", "schedule_publish_now", {}, `Publish “${movie.title}” immediately? This will also shift later scheduled items forward in the queue.`);
+        const rescheduleBtn = libraryElement("button", "secondary", "RESCHEDULE");
+        rescheduleBtn.type = "button";
+        rescheduleBtn.addEventListener("click", async () => {
+          const value = window.prompt("Enter new date/time in IST as YYYY-MM-DDTHH:mm", movie.scheduled_at ? new Date(movie.scheduled_at).toLocaleString("sv-SE", { timeZone: "Asia/Kolkata" }).replace(" ", "T").slice(0,16) : "");
+          if (!value) return;
+          const date = new Date(value + ":00+05:30");
+          if (!Number.isFinite(date.getTime()) || date.getTime() <= Date.now()) { setStatus("publishingStatus", "Enter a valid future date and time.", "error"); return; }
+          rescheduleBtn.disabled = true;
+          try { await postJson(ADMIN_URL, { action: "schedule_reschedule", movie_id: movie.id, scheduled_at: date.toISOString() }, adminSessionToken, true); await loadPublishingQueue(); setStatus("publishingStatus", `${movie.title} rescheduled.`, "success"); }
+          catch (error) { setStatus("publishingStatus", error.message || "Could not reschedule movie.", "error"); rescheduleBtn.disabled = false; }
         });
-        actions.append(draftBtn);
+        actions.append(rescheduleBtn);
+        runSchedulerAction("CANCEL SCHEDULE", "schedule_cancel", {}, `Cancel the scheduled publication for “${movie.title}”? The movie and its history will be preserved.`);
       }
+      if (movie.status === "failed") {
+        if (movie.failure_reason) card.append(libraryElement("p", "notice", `Failure: ${movie.failure_reason}`));
+        const retryBtn = libraryElement("button", "secondary", "RETRY SCHEDULE");
+        retryBtn.type = "button";
+        retryBtn.addEventListener("click", async () => {
+          const value = window.prompt("Retry date/time in IST (YYYY-MM-DDTHH:mm)", "");
+          if (!value) return;
+          const date = new Date(value + ":00+05:30");
+          if (!Number.isFinite(date.getTime()) || date.getTime() <= Date.now()) { setStatus("publishingStatus", "Enter a valid future date and time.", "error"); return; }
+          retryBtn.disabled = true;
+          try { await postJson(ADMIN_URL, { action: "schedule_retry", movie_id: movie.id, scheduled_at: date.toISOString() }, adminSessionToken, true); await loadPublishingQueue(); await loadDashboard(); setStatus("publishingStatus", `${movie.title} added back to the schedule.`, "success"); }
+          catch (error) { setStatus("publishingStatus", error.message || "Retry could not be scheduled.", "error"); retryBtn.disabled = false; }
+        });
+        actions.append(retryBtn);
+      }
+      if (movie.status === "published") runSchedulerAction("UNPUBLISH", "unpublish_movie", {}, `Unpublish “${movie.title}”? It will disappear from the public website; its movie UUID, images, links and history will be retained.`);
       card.append(actions);
       list.append(card);
     }
@@ -1269,6 +1297,32 @@ async function loadPublishingQueue() {
     setStatus("publishingStatus", error.message || "Could not load publication controls.", "error");
   } finally { refresh.disabled = false; }
 }
+
+async function loadPublishingHistory() {
+  if (!adminSessionToken) return;
+  const root = $("publishingHistoryList");
+  if (!root) return;
+  root.replaceChildren();
+  setStatus("publishingHistoryStatus", "Loading recent movie publication events…");
+  try {
+    const result = await postJson(ADMIN_URL, { action: "list_publishing_history", limit: 50 }, adminSessionToken, true);
+    if (result.success !== true || !Array.isArray(result.history)) throw new Error(result.error || "Publishing history could not be loaded.");
+    if (!result.history.length) root.append(libraryElement("p", "notice", "No movie publication events have been recorded yet."));
+    for (const event of result.history) {
+      const card = libraryElement("article", "publish-item");
+      const title = event.movie_title || `Movie ${String(event.movie_id || "").slice(0,8)}`;
+      card.append(libraryElement("h3", "", title));
+      const transition = [event.from_status, event.to_status].filter(Boolean).join(" → ") || event.to_status || "Created";
+      card.append(libraryElement("p", "", `${String(event.event_type || "event").replaceAll("_", " ")} · ${transition} · ${event.occurred_at ? new Date(event.occurred_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) + " IST" : "Time unavailable"}`));
+      if (event.new_scheduled_at) card.append(libraryElement("p", "", `Scheduled time: ${new Date(event.new_scheduled_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST`));
+      if (event.details?.failure_reason) card.append(libraryElement("p", "", `Reason: ${event.details.failure_reason}`));
+      root.append(card);
+    }
+    setStatus("publishingHistoryStatus", `Loaded ${result.history.length} recent event(s).`, "success");
+  } catch (error) { setStatus("publishingHistoryStatus", error.message || "Publishing history could not be loaded.", "error"); }
+}
+
+$("publishingHistoryRefreshBtn")?.addEventListener("click", loadPublishingHistory);
 
 async function loadSeriesPublishingQueue() {
   if (!adminSessionToken) return;
@@ -1910,16 +1964,16 @@ let editingDraftDownloadRows = [];
 function setMovieFormMode(movie = null) {
   editingDraftId = movie?.id || null;
   $("movieFormMode").textContent = movie
-    ? `Editing Draft · ${movie.title || "Untitled movie"} · Changes will update this same movie record.`
-    : "New movie · Choose how to save it after reviewing all details.";
+    ? `Editing ${movie.status || "movie"} · ${movie.title || "Untitled movie"} · The same movie UUID and linked records will be preserved.`
+    : "New movie · Save as Draft or schedule it for automatic publication.";
   $("cancelMovieEditBtn").classList.toggle("hidden", !movie);
   $("saveToDraftsBtn").textContent = movie ? "UPDATE TO DRAFT" : "SAVE TO DRAFTS";
-  $("publishToPublicBtn").textContent = movie ? "UPDATE & PUBLISH" : "PUBLISH TO PUBLIC";
+  $("publishToPublicBtn").textContent = movie ? "UPDATE & SCHEDULE" : "SCHEDULE MOVIE";
 }
 
 function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = libraryLinks) {
-  if (!movie || movie.status !== "draft") {
-    setStatus("libraryStatusText", "Only Draft movies can be edited here.", "error");
+  if (!movie || !["draft", "scheduled", "cancelled", "unpublished", "failed"].includes(String(movie.status))) {
+    setStatus("libraryStatusText", "This movie is not in an editable publication state.", "error");
     return;
   }
   const imageRows = sourceImages.filter(row => row.movie_id === movie.id);
@@ -1935,6 +1989,7 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   $("uploadRating").value = movie.rating ?? "";
   $("uploadTmdb").value = movie.tmdb_id ?? "";
   $("uploadTrailer").value = movie.trailer_url || "";
+  $("movieScheduledAt").value = movie.scheduled_at ? new Date(movie.scheduled_at).toLocaleString("sv-SE", { timeZone: "Asia/Kolkata" }).replace(" ", "T").slice(0,16) : "";
   $("posterUrl").value = libraryImageUrl(movie.poster_path);
   $("backdropUrl").value = libraryImageUrl(movie.backdrop_path);
   $("thumbnailUrls").value = imageRows.filter(row => row.image_type === "thumbnail").map(row => libraryImageUrl(row.image_path)).filter(Boolean).join("\n");
@@ -1942,7 +1997,7 @@ function loadDraftIntoForm(movie, sourceImages = libraryImages, sourceLinks = li
   loadDownloadQualityFields(links);
   ["posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   setMovieFormMode(movie);
-  setStatus("movieUploadStatus", `Draft loaded: ${movie.title}. Review or edit the details, then Update Draft or Update & Publish.`, "success");
+  setStatus("movieUploadStatus", `${movie.status} movie loaded: ${movie.title}. Edit details, save as Draft, or schedule it again.`, "success");
   if (typeof window.rivoraNexusShowView === "function") {
     window.rivoraNexusShowView("movie");
   }
@@ -2001,7 +2056,7 @@ for (const field of RIVORA_QUALITY_FIELDS) {
 $("legacyDownloadLinks").addEventListener("input", syncDownloadQualityFields);
 
 function resetMovieForm() {
-  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "legacyDownloadLinks", ...RIVORA_QUALITY_FIELDS.flatMap(field => field.ids), "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
+  ["uploadTitle", "uploadYear", "uploadRuntime", "uploadOverview", "uploadGenres", "uploadCast", "uploadRating", "uploadTmdb", "uploadTrailer", "movieScheduledAt", "posterUrl", "backdropUrl", "thumbnailUrls", "screenshotUrls", "downloadLinks", "legacyDownloadLinks", ...RIVORA_QUALITY_FIELDS.flatMap(field => field.ids), "posterFile", "backdropFile", "thumbnailFiles", "screenshotFiles"].forEach(id => { $(id).value = ""; });
   editingDraftImageRows = [];
   editingDraftDownloadRows = [];
   setMovieFormMode(null);
@@ -2022,6 +2077,14 @@ async function submitMovieWithStatus(targetStatus) {
   const rating = ratingText === "" ? null : Number(ratingText);
   if (rating !== null && (!Number.isFinite(rating) || rating < 0 || rating > 10)) {
     setStatus("movieUploadStatus", "Rating must be between 0 and 10.", "error"); return;
+  }
+  let scheduledAt = null;
+  if (targetStatus === "scheduled") {
+    const localValue = $("movieScheduledAt").value;
+    if (!localValue) { setStatus("movieUploadStatus", "Choose the date and time for automatic publication (IST).", "error"); return; }
+    const localDate = new Date(localValue + ":00+05:30");
+    if (!Number.isFinite(localDate.getTime()) || localDate.getTime() <= Date.now()) { setStatus("movieUploadStatus", "Schedule date and time must be in the future.", "error"); return; }
+    scheduledAt = localDate.toISOString();
   }
 
   syncDownloadQualityFields();
@@ -2060,7 +2123,7 @@ async function submitMovieWithStatus(targetStatus) {
     setStatus("movieUploadStatus", "Maximum 20 download links allowed by the current database function.", "error"); return;
   }
 
-  if (targetStatus === "published" && !window.confirm(`Publish “${title}” to the public RIVORA website now?`)) return;
+  if (targetStatus === "scheduled" && !window.confirm(`Schedule “${title}” for automatic publication at ${$("movieScheduledAt").value} IST? It will remain hidden until then.`)) return;
   const buttons = [$("saveToDraftsBtn"), $("publishToPublicBtn")];
   buttons.forEach(button => button.disabled = true);
 
@@ -2176,18 +2239,20 @@ async function submitMovieWithStatus(targetStatus) {
       rating, tmdb_id: $("uploadTmdb").value.trim() || null,
       trailer_url: $("uploadTrailer").value.trim() || null,
       status: targetStatus,
+      scheduled_at: scheduledAt,
+      schedule_timezone: "Asia/Kolkata",
       poster_path: posterPath, backdrop_path: backdropPath,
       images, download_links: downloadLinks
     };
 
-    setStatus("movieUploadStatus", targetStatus === "published" ? "Saving details and publishing to the public website..." : "Saving complete movie details to Draft Store...");
+    setStatus("movieUploadStatus", targetStatus === "scheduled" ? "Saving movie details and adding it to the publication queue..." : "Saving complete movie details to Draft Store...");
     const saved = await postJson(ADMIN_URL, payload, adminSessionToken, true);
     if (saved.success !== true) {
       const partial = saved.movie_id ? ` Movie ID: ${saved.movie_id}.` : "";
       const detail = typeof saved.details === "string" ? ` | Details: ${saved.details}` : "";
       throw new Error((saved.error || "Movie save failed.") + detail + partial);
     }
-    const verb = saved.status === "published" ? "published to the public website" : "saved to Draft Store";
+    const verb = saved.status === "scheduled" ? "added to the automatic publishing queue" : "saved to Draft Store";
     setStatus("movieUploadStatus", `Movie ${verb}. Movie ID: ${saved.movie_id} · Status: ${saved.status} · Images saved: ${images.filter(row => !row._delete).length} · Links saved: ${downloadLinks.filter(row => !row._delete).length}.`, "success");
     resetMovieForm();
     await loadMovieLibrary(0);
@@ -2202,7 +2267,7 @@ async function submitMovieWithStatus(targetStatus) {
   }
 }
 $("saveToDraftsBtn").addEventListener("click", () => submitMovieWithStatus("draft"));
-$("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("published"));
+$("publishToPublicBtn").addEventListener("click", () => submitMovieWithStatus("scheduled"));
 
 // AUTO CINEMATIC ASSET STUDIO — Admin V18 front-end integration.
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
